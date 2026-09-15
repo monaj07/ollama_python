@@ -27,9 +27,22 @@ The [Week 2 extended notebook](src/week_02_extended.ipynb) adds:
 
 Try `Save the text "Hello from Ollama" to answer.log` to explore file saving. The file is written relative to the notebook kernel's working directory; an existing file with the same name is overwritten.
 
+The [Week 3 notebook](src/week_03.ipynb) adds a step-by-step SQLite memory layer:
+
+- Sessions and saved user/assistant messages.
+- Persistent facts with a simple parameterized `LIKE` search.
+- Tools to remember facts, search memories, create tasks, and list tasks.
+- An in-memory example you can run without Ollama, followed by the interactive chat.
+
+Run its numbered steps in order. The persistent database is `week_03_memory.sqlite3`
+in the kernel's working directory (the notebook prints its full path). Reuse that
+file across runs to retain memories and tasks. Each chat starts a new session;
+stored chat history is available for inspection but is not automatically reloaded
+into the model. Local database files are ignored by Git.
+
 ## Getting started
 
-Use Python 3.14 or newer with the `ollama` package installed and a Jupyter-compatible editor, such as VS Code. The extended notebook also requires Pydantic 2. Start Ollama locally and download the models used in the notebooks (`qwen3.5:2b` and `gemma4:e2b`), or update the model names to ones installed.
+Use Python 3.14 or newer with the `ollama` package installed and a Jupyter-compatible editor, such as VS Code. The extended and Week 3 notebooks also require Pydantic 2. Start Ollama locally and download the models used in the notebooks (`qwen3.5:2b` and `gemma4:e2b`), or update the model names to ones installed.
 
 Start with `src/week_01.ipynb`, then explore tool calling in `src/week_02.ipynb` and input validation in `src/week_02_extended.ipynb`. Run each notebook's cells in order. Enter `exit` or `quit` to end a conversation loop.
 

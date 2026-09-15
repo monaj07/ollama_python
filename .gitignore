@@ -13,3 +13,6 @@ wheels/
 *.toml
 *.lock
 .python-version
+
+# Local notebook memory (including SQLite sidecar files)
+week_03_memory.sqlite3*
