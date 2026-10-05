@@ -40,6 +40,14 @@ file across runs to retain memories and tasks. Each chat starts a new session;
 stored chat history is available for inspection but is not automatically reloaded
 into the model. Local database files are ignored by Git.
 
+The [Week 4 benchmark](src/week_04/benchmark_README.md) compares small local
+models on a Raspberry Pi with an API model. It includes controlled timing,
+32 knowledge/reasoning/grounding/uncertainty cases, offline rescoring and
+Markdown/CSV/JSON comparison tables. The documentation records the commands
+and results for Qwen3.5 2B/4B, Gemma4 E2B/E4B and GPT-6 Luna. This experiment
+keeps the original v2 prompts and the corrected scorer; no reruns of previous
+models are required to add another model under the same conditions.
+
 ## Getting started
 
 Use Python 3.14 or newer with the `ollama` package installed and a Jupyter-compatible editor, such as VS Code. The extended and Week 3 notebooks also require Pydantic 2. Start Ollama locally and download the models used in the notebooks (`qwen3.5:2b` and `gemma4:e2b`), or update the model names to ones installed.

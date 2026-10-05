@@ -1,0 +1,196 @@
+{
+  "provenance": "Summaries reported by Mohammad in the conversation on 2026-10-05; not measured by the documentation environment.",
+  "full_raw_reports_available": false,
+  "dataset": "edge-ai-mini-v2",
+  "dataset_sha256": "c04ebc66b7b34d7d3fcd159a1139ae13c3564745408ea14c12a8ea7c61726e04",
+  "scorer_version": "typed-answer-values-v2",
+  "conditions": {
+    "local_hardware": "Raspberry Pi 5, 8 GB RAM, Raspberry Pi OS Lite, 128 GB storage",
+    "quality_tokens": 512,
+    "speed_tokens": 128,
+    "speed_runs": 3,
+    "quality_runs": 1,
+    "temperature": 0,
+    "local_num_ctx": 2048,
+    "local_think": false,
+    "api_reasoning_effort": "none",
+    "schema_constraint": false
+  },
+  "models": [
+    {
+      "model": "qwen3.5:4b",
+      "provider": "ollama",
+      "content_diagnostic": {
+        "correct_answers": 29,
+        "accuracy_percent": 90.6
+      },
+      "speed_summary": {
+        "warm_runs_count": 3,
+        "invalid_warm_runs": 0,
+        "error_count": 0,
+        "tokens_per_second": 3.578515709963538,
+        "end_to_end_tokens_per_second": null,
+        "median_wall_time_s": 36.10408956199899,
+        "min_tokens_per_second": 3.5721014301549934,
+        "max_tokens_per_second": 3.582276552421524
+      },
+      "quality_summary": {
+        "unique_cases": 32,
+        "attempts": 32,
+        "passed": 27,
+        "correct_answers": 29,
+        "accuracy_percent": 84.4,
+        "answer_accuracy_percent": 90.6,
+        "format_valid_percent": 93.8,
+        "completed_answers": 32,
+        "false_abstentions": 1,
+        "status_counts": {
+          "invalid_format": 2,
+          "pass": 27,
+          "wrong_answer": 3
+        },
+        "median_response_s": 7.552761033501156
+      }
+    },
+    {
+      "model": "qwen3.5:2b",
+      "provider": "ollama",
+      "content_diagnostic": {
+        "correct_answers": 23,
+        "accuracy_percent": 71.9
+      },
+      "speed_summary": {
+        "warm_runs_count": 3,
+        "invalid_warm_runs": 0,
+        "error_count": 0,
+        "tokens_per_second": 4.926085119056293,
+        "end_to_end_tokens_per_second": null,
+        "median_wall_time_s": 26.223818041000413,
+        "min_tokens_per_second": 4.919902639739169,
+        "max_tokens_per_second": 4.932042237701471
+      },
+      "quality_summary": {
+        "unique_cases": 32,
+        "attempts": 32,
+        "passed": 11,
+        "correct_answers": 14,
+        "accuracy_percent": 34.4,
+        "answer_accuracy_percent": 43.8,
+        "format_valid_percent": 68.8,
+        "completed_answers": 32,
+        "false_abstentions": 0,
+        "status_counts": {
+          "invalid_format": 10,
+          "pass": 11,
+          "wrong_answer": 11
+        },
+        "median_response_s": 5.24061237800106
+      }
+    },
+    {
+      "model": "gemma4:e4b",
+      "provider": "ollama",
+      "content_diagnostic": {
+        "correct_answers": 29,
+        "accuracy_percent": 90.6
+      },
+      "speed_summary": {
+        "warm_runs_count": 3,
+        "invalid_warm_runs": 0,
+        "error_count": 0,
+        "tokens_per_second": 5.72416594840061,
+        "end_to_end_tokens_per_second": null,
+        "median_wall_time_s": 23.00671528699968,
+        "min_tokens_per_second": 5.703080688344017,
+        "max_tokens_per_second": 5.738964285528538
+      },
+      "quality_summary": {
+        "unique_cases": 32,
+        "attempts": 32,
+        "passed": 22,
+        "correct_answers": 27,
+        "accuracy_percent": 68.8,
+        "answer_accuracy_percent": 84.4,
+        "format_valid_percent": 81.2,
+        "completed_answers": 32,
+        "false_abstentions": 0,
+        "status_counts": {
+          "invalid_format": 6,
+          "pass": 22,
+          "wrong_answer": 4
+        },
+        "median_response_s": 8.119610940500024
+      }
+    },
+    {
+      "model": "gpt-6-luna",
+      "provider": "openai",
+      "content_diagnostic": {
+        "correct_answers": 31,
+        "accuracy_percent": 96.9
+      },
+      "speed_summary": {
+        "warm_runs_count": 3,
+        "invalid_warm_runs": 0,
+        "error_count": 0,
+        "tokens_per_second": null,
+        "end_to_end_tokens_per_second": 43.55863698086789,
+        "median_wall_time_s": 3.09908218900091,
+        "min_tokens_per_second": null,
+        "max_tokens_per_second": null
+      },
+      "quality_summary": {
+        "unique_cases": 32,
+        "attempts": 32,
+        "passed": 23,
+        "correct_answers": 31,
+        "accuracy_percent": 71.9,
+        "answer_accuracy_percent": 96.9,
+        "format_valid_percent": 75.0,
+        "completed_answers": 32,
+        "false_abstentions": 0,
+        "status_counts": {
+          "invalid_format": 8,
+          "pass": 23,
+          "wrong_answer": 1
+        },
+        "median_response_s": 1.258065183998042
+      }
+    },
+    {
+      "model": "gemma4:e2b",
+      "provider": "ollama",
+      "content_diagnostic": {
+        "correct_answers": 23,
+        "accuracy_percent": 71.9
+      },
+      "speed_summary": {
+        "warm_runs_count": 3,
+        "invalid_warm_runs": 0,
+        "error_count": 0,
+        "tokens_per_second": 7.846181015441713,
+        "end_to_end_tokens_per_second": 7.7062931707184505,
+        "median_wall_time_s": 16.607279474999814,
+        "min_tokens_per_second": 7.811758588586105,
+        "max_tokens_per_second": 7.878913896643669
+      },
+      "quality_summary": {
+        "unique_cases": 32,
+        "attempts": 32,
+        "passed": 19,
+        "correct_answers": 23,
+        "accuracy_percent": 59.4,
+        "answer_accuracy_percent": 71.9,
+        "format_valid_percent": 71.9,
+        "completed_answers": 32,
+        "false_abstentions": 0,
+        "status_counts": {
+          "invalid_format": 9,
+          "pass": 19,
+          "wrong_answer": 4
+        },
+        "median_response_s": 4.160598599999503
+      }
+    }
+  ]
+}
