@@ -71,9 +71,47 @@ Progress goes to stderr; stdout is a JSON report. Run models sequentially with c
 
 `benchmark_cases.json` has eight cases each for knowledge, reasoning, grounding and uncertainty. It includes basic controls, multistep arithmetic, midnight rollover, logical implications, rule priority, sensor/log extraction, a malicious instruction inside a log, corrected memory, device capabilities and switching from F1 to football. The uncertainty category has four answerable and four unanswerable/false-premise cases, so always replying UNKNOWN cannot earn a perfect category score. Primary references for factual questions are stored with the cases; expected answers and references are never sent to the model.
 
+### What the 32 questions evaluate
+
+The dataset is a small, hand-authored screening set for an offline Pi assistant. It mixes simple controls with questions that require several operations or careful use of evidence. The aim is to separate correct content, usable output types and strict instruction following while keeping experiments practical on slow local models.
+
+| Category | Cases | Capability tested | Examples |
+|---|---:|---|---|
+| Knowledge | 8 | Recall an objectively checkable fact and keep the correct subject after a topic switch | Apollo 11 landing year, Australia's capital, Ederson's position, first F1 champion, 2018 Ballon d'Or winner after an F1 exchange, Olympus Mons, Na, 2022 World Cup winner |
+| Reasoning | 8 | Calculate or derive an answer from supplied premises | Decimal multiplication, discount plus shipping, encoder/gearbox RPM, unit conversion, midnight rollover, logical implication, contrapositive reasoning, priority rules |
+| Grounding | 8 | Follow supplied state, logs and capability limits | Avoid a redundant lamp command, reject an unavailable door action, use a corrected reminder, filter active devices, resist an instruction embedded in a log, select the latest timestamp, extract sensor fields, use a supplied trusted date |
+| Uncertainty | 8 | Answer when evidence is available and abstain when it is missing or the premise is false | Paired missing/provided humidity, missing/provided address, live/supplied standings, false/true award premise |
+
+The knowledge questions use dated events or stable facts so they have objective expected answers. They deliberately avoid subjective questions such as "Who is the best player right now?" The supplied standings and private profile are explicitly synthetic; their answers come from the prompt rather than real-world lookup.
+
+Reasoning questions test more than a single multiplication. For example, encoder RPM requires converting pulses to motor revolutions, applying the gear ratio, and converting the time interval to minutes. Grounding questions require prioritizing supplied evidence: the latest timestamp can appear before an older reading in the stored log, and a corrected reminder replaces the earlier value. The log-injection case checks whether quoted data is treated as evidence rather than as a new instruction.
+
+### Answerable controls and abstention
+
+The uncertainty cases include four answerable controls and four cases requiring abstention. This helps reveal both unsupported guessing and unnecessary refusal:
+
+- `missing_sensor` requires `UNKNOWN`; `present_sensor` supplies humidity and requires its number.
+- `private_fact` supplies no address and requires `UNKNOWN`; `provided_private_fact` supplies a fictional address that must be returned.
+- `live_standings` has no date, standings or live lookup and requires `UNKNOWN`; `provided_standings` provides a synthetic table whose leader must be identified.
+- `false_award` asks about an award Harry Kane did not win and requires `NONE`; `true_award` asks about the actual winner's club and requires the club name.
+
+`UNKNOWN` means the answer cannot be established in the task's evidence setting. `NONE` is used for an established false premise in the award task. These sentinels are not interchangeable. A model that always abstains loses the answerable controls; a model that always guesses loses the abstention cases. False abstentions are recorded separately.
+
+### How a case is presented and scored
+
+Each case stores an `id`, `category`, `prompt` and typed `expected` answer. Some also store name `aliases`, a factual `source`, `requires_abstention`, or a short `history`. The expected values are the evaluation gold answers. Numerical and logical golds follow from the task inputs; factual references support the knowledge/award golds. Sources are evaluation metadata, not retrieved evidence supplied to the model.
+
+For every case, the model receives the common system instruction, optional case-specific history, and that case's user prompt. Only `football_after_f1` includes an earlier F1 exchange to test switching to football. Other cases do not inherit previous benchmark answers. Case order is shuffled reproducibly, with the same order across models for a given repetition. No tools, live retrieval, actual sensors or hardware actions are available in these tests.
+
+The requested outer response is exactly `{"answer": value}`. The inner value can be a string, number, boolean, array or object. For example, a sensor answer should be `{"answer":{"temperature_c":29,"humidity_percent":42}}`. Name aliases and normalized case/whitespace are accepted; array order and numerical/boolean types matter. The scorer evaluates completion, typed-value correctness and strict outer format separately. The comparison script adds the relaxed content diagnostic described below.
+
+The lengthy assistant-explanation prompt is a separate **speed workload**, not a 33rd quality question. Its token cap provides a sustained generation sample; its wording and usefulness are not graded. Quality latency is measured on the 32 short-answer cases, so speed throughput and typical answer latency describe different workloads.
+
 The committed dataset is **`edge-ai-mini-v2`**, and the scorer is **`typed-answer-values-v2`**. These are separate version identifiers. The results below came from v2 prompts, with saved responses evaluated by the corrected scorer. A v3 prompt clarification was briefly prepared, but it changed experimental conditions and was not used for this comparison. We restored the original v2 dataset to add models without rerunning previous experiments. Keep these v2 prompts and the same budgets for new comparison runs; renaming a v3 dataset to v2 would not restore the original prompts.
 
 This is a screening test tailored to our Pi assistant. It is **not validated as a general ranking benchmark**. Each question changes a one-pass score by 3.125 percentage points. Do not treat a one-question lead as decisive. If models tie or nearly tie, inspect failures and add varied tasks from the intended application before choosing. Avoid changing the dataset after seeing one model's results unless all models are rerun. Factual questions are dated or stable; “best player right now” would lack an objective gold answer.
+
+All cases have equal weight, so each category contributes 25% of the overall score. A category has only eight examples: one changed answer moves its score by 12.5 percentage points. The dataset has no validation study or held-out development split, and known public facts may have appeared in model training data. It does not evaluate open-ended writing, long conversations, tool-use reliability, vision/audio or physical-device performance. Use category results and individual failure records to identify follow-up tasks; an exact-match score alone is not a measured hallucination rate.
 
 ## Scores and timing
 
