@@ -1,0 +1,101 @@
+{
+  "provenance": "User-reported terminal outputs and traces from the Week 05 session on 2026-10-07; not collected automatically in this checkout.",
+  "hardware": "Raspberry Pi 5, 8 GB",
+  "settings": {
+    "think": false,
+    "temperature": 0,
+    "num_ctx": 2048,
+    "num_predict": 128,
+    "keep_alive": "10m"
+  },
+  "requests": [
+    {
+      "model": "gemma4:e2b",
+      "instruction": "Ready",
+      "expected": "green",
+      "observed": "green",
+      "request_and_action_s": 1.27
+    },
+    {
+      "model": "gemma4:e2b",
+      "instruction": "System error",
+      "expected": "red",
+      "observed": "red",
+      "request_and_action_s": 1.38
+    },
+    {
+      "model": "gemma4:e2b",
+      "instruction": "All tests passed",
+      "expected": "green",
+      "observed": "green",
+      "request_and_action_s": 1.39
+    },
+    {
+      "model": "gemma4:e2b",
+      "instruction": "Finish and turn off",
+      "expected": "off",
+      "observed": "off",
+      "request_and_action_s": 1.49
+    },
+    {
+      "model": "qwen3.5:4b",
+      "instruction": "Everything is ready.",
+      "expected": "green",
+      "observed": "green",
+      "request_and_action_s": 24.64
+    },
+    {
+      "model": "qwen3.5:4b",
+      "instruction": "The operation failed.",
+      "expected": "red",
+      "observed": "red",
+      "request_and_action_s": 24.63
+    },
+    {
+      "model": "qwen3.5:4b",
+      "instruction": "Clear the indicator.",
+      "expected": "off",
+      "observed": "off",
+      "request_and_action_s": 24.59
+    },
+    {
+      "model": "qwen3.5:4b",
+      "instruction": "Done",
+      "expected": "green",
+      "observed": "green",
+      "request_and_action_s": 25.02
+    }
+  ],
+  "unsupported_request": {
+    "model": "gemma4:e2b",
+    "instruction": "Turn on a blue LED.",
+    "expected": "off",
+    "observed": "off",
+    "request_and_action_s": null
+  },
+  "later_gemma_observation": {
+    "approximate_average_request_and_action_s": 5,
+    "sample_count": null,
+    "raw_traces_available": false,
+    "cause": "Unresolved; inspect timing metadata before attributing a cause."
+  },
+  "qwen_dry_run": {
+    "correct_cases": 5,
+    "total_cases": 5,
+    "elapsed_s": [
+      66.65,
+      23.75,
+      23.7,
+      23.7,
+      23.78
+    ]
+  },
+  "user_confirmed_checks": [
+    "Both LEDs and button hardware test",
+    "Valid tool execution and four invalid requests rejected",
+    "Repeated presses do not overlap/replay requests",
+    "Ctrl+C clears LEDs",
+    "Connection failure clears LEDs and returns to prompt"
+  ],
+  "comparison_limit": "Different instructions and only four exact requests per model; comparison of observed requests, not a controlled benchmark."
+}

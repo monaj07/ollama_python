@@ -48,6 +48,12 @@ and results for Qwen3.5 2B/4B, Gemma4 E2B/E4B and GPT-6 Luna. This experiment
 keeps the original v2 prompts and the corrected scorer; no reruns of previous
 models are required to add another model under the same conditions.
 
+The [Week 5 AI button](src/week_05/README.md) connects a physical
+button to a local model and a validated LED tool on Raspberry Pi 5. It includes
+wiring instructions, the original hardware photo, staged tests, failure handling,
+JSONL tracing, and reported Gemma4 E2B versus Qwen3.5 4B request timings.
+Its standalone scripts use Python 3.10+ and the Pi setup described in that README.
+
 ## Getting started
 
 Use Python 3.14 or newer with the `ollama` package installed and a Jupyter-compatible editor, such as VS Code. The extended and Week 3 notebooks also require Pydantic 2. Start Ollama locally and download the models used in the notebooks (`qwen3.5:2b` and `gemma4:e2b`), or update the model names to ones installed.
