@@ -54,6 +54,12 @@ wiring instructions, the original hardware photo, staged tests, failure handling
 JSONL tracing, and reported Gemma4 E2B versus Qwen3.5 4B request timings.
 Its standalone scripts use Python 3.10+ and the Pi setup described in that README.
 
+The [Week 6 environment agent](src/week_06/README.md) lets a local model choose
+when to read a PIR motion sensor through a validated `detect_motion()` tool.
+It covers Pi wiring, hardware and agent checks, timestamped observations,
+bounded tool calling, JSONL tracing, and the limits of inferring occupancy
+from motion signals.
+
 ## Getting started
 
 Use Python 3.14 or newer with the `ollama` package installed and a Jupyter-compatible editor, such as VS Code. The extended and Week 3 notebooks also require Pydantic 2. Start Ollama locally and download the models used in the notebooks (`qwen3.5:2b` and `gemma4:e2b`), or update the model names to ones installed.
