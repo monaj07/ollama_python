@@ -1,5 +1,8 @@
+from datetime import datetime, timezone
 import json
+from pathlib import Path
 import time
+from uuid import uuid4
 
 import ollama
 from pydantic import BaseModel, ConfigDict
@@ -34,6 +37,22 @@ You have no other sensors, other than the PIR sensor.
 Answer in at most three short sentences.
 """
 
+TRACE_PATH = Path(__file__).resolve().parent / "logs" / "events.jsonl"
+
+def trace_event(request_id, event, **details):
+    record = {
+        "request_id": request_id,
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "event": event,
+        **details,
+    }
+    TRACE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with TRACE_PATH.open("a", encoding="utf-8") as file:
+        file.write(json.dumps(record, ensure_ascii=False) + "\n")
+
+
+
+
 
 class MotionArguments(BaseModel):
     # This tool accepts no arguments, including no GPIO pin argument.
@@ -53,7 +72,10 @@ TOOL_SCHEMA = {
 }
 
 
-def answer_question(client, hardware, question):
+def answer_question(client, hardware, question, request_id=None):
+    if request_id is None:
+        request_id = str(uuid4())
+
     # Each question starts fresh, so previous observations cannot be reused.
     messages = [
         {"role": "system", "content": SYSTEM_PROMPT},
@@ -75,6 +97,12 @@ def answer_question(client, hardware, question):
         )
 
         message = response.message
+        trace_event(
+            request_id, 
+            "model_response", 
+            round_number=round_number, 
+            message=message.model_dump(exclude_none=True)
+        )
         messages.append(message.model_dump(exclude_none=True))
         calls = message.tool_calls or []
 
@@ -97,6 +125,12 @@ def answer_question(client, hardware, question):
             raise ValueError(f"Unregistered tool: {call.name}")
 
         MotionArguments.model_validate(call.arguments)
+        trace_event(
+            request_id, 
+            "tool_call", 
+            name=call.name, 
+            arguments=call.arguments
+        )
 
         print(f"[tool] {call.name}({call.arguments})", flush=True)
 
@@ -106,6 +140,12 @@ def answer_question(client, hardware, question):
             result = {"ok": False, "error": str(exc)}
 
         print(f"[result] {json.dumps(result)}", flush=True)
+        trace_event(
+            request_id=request_id,
+            event="tool_result",
+            name=call.name,
+            result=result
+        )
 
         messages.append({
             "role": "tool",
@@ -131,21 +171,53 @@ def main():
         while True:
             question = input("\nYou: ").strip()
             if question.lower() in {"quit", "exit"}:
+                trace_event(None, "user_exit", reason="quit")
                 break
             if not question:
                 continue
 
+            request_id = uuid4().hex
             started = time.perf_counter()
+
             try:
-                answer = answer_question(client, hardware, question)
+                trace_event(
+                    request_id, "user_request", question=question
+                )
+                answer = answer_question(
+                    client, hardware, question,
+                    request_id=request_id,
+                )
+                trace_event(
+                    request_id, "final_answer", answer=answer
+                )
                 print(f"Agent: {answer}")
+
+            except (KeyboardInterrupt, EOFError):
+                trace_event(request_id, "request_interrupted")
+                raise
+
             except Exception as exc:
+                trace_event(
+                    request_id,
+                    "request_error",
+                    error_type=type(exc).__name__,
+                    error=str(exc),
+                )
                 print(f"Request failed: {exc}")
 
-            print(f"[elapsed] {time.perf_counter() - started:.2f} s")
+            finally:
+                elapsed = time.perf_counter() - started
+                trace_event(
+                    request_id,
+                    "request_finished",
+                    elapsed_s=elapsed,
+                )
+                print(f"[elapsed] {elapsed:.2f} s")
 
     except (KeyboardInterrupt, EOFError):
+        trace_event(None, "user_exit", reason="interrupted")
         print("\nStopped.")
+
     finally:
         hardware.close()
 
