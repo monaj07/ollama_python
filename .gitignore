@@ -19,3 +19,6 @@ week_03_memory.sqlite3*
 
 # Local Week 5 runtime traces (curated reported evidence lives under results/)
 src/week_05/ai_button_events.jsonl
+
+# Local Week 6 runtime traces
+src/week_06/logs/
