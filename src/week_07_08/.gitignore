@@ -1,0 +1,5 @@
+.venv-camera/
+.venv-vision/
+outputs/
+models/
+__pycache__/

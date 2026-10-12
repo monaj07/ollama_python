@@ -1,5 +1,6 @@
 # Python-generated files
 __pycache__/
+.DS_Store
 *.py[oc]
 build/
 dist/
@@ -20,5 +21,7 @@ week_03_memory.sqlite3*
 # Local Week 5 runtime traces (curated reported evidence lives under results/)
 src/week_05/ai_button_events.jsonl
 
-# Local Week 6 runtime traces
+# Local logs/traces/outputs/models
 src/week_06/logs/
+outputs/
+models/
