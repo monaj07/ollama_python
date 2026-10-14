@@ -35,8 +35,14 @@ def main():
     load_ms = (time.perf_counter() - t0) * 1000
 
     def predict():
-        return model.predict(image, imgsz=args.imgsz, conf=args.conf,
-                             device="cpu", verbose=False)[0]
+        return model.predict(
+            image,
+            imgsz=args.imgsz,
+            conf=args.conf,
+            device="cpu",
+            rect=False,
+            verbose=False,
+        )[0]
 
     t0 = time.perf_counter()
     predict()  # Exclude cold first prediction from warmed measurements.
@@ -67,7 +73,10 @@ def main():
     if not cv2.imwrite(str(outdir / "annotated.jpg"), result.plot()):
         raise OSError("Could not save annotated image")
     median = float(np.median(durations))
-    metrics = {"model": args.model, "input_size": args.imgsz, "warm_runs": args.runs,
+    metrics = {"model": args.model, 
+               "input_size_requested": args.imgsz,
+                "predictor_image_size": list(model.predictor.imgsz), 
+               "warm_runs": args.runs,
                "model_construct_ms": round(load_ms, 2),
                "first_predict_ms": round(first_ms, 2),
                "warm_predict_median_ms": round(median, 2),
