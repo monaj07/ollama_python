@@ -1,0 +1,3881 @@
+{
+  "provenance": "Computed from the user-supplied observations.zip, 2026-10-15. Times below are measured on Raspberry Pi 5; no new model inference was run while preparing documentation.",
+  "total_frames": 38,
+  "steady_frames": 36,
+  "process_first_frames_excluded": 2,
+  "steady_timings": {
+    "prediction_ms": {
+      "n": 36,
+      "median_ms": 620.978,
+      "p95_ms": 626.482,
+      "min_ms": 613.439,
+      "max_ms": 627.851
+    },
+    "capture_process_ms": {
+      "n": 36,
+      "median_ms": 4315.37,
+      "p95_ms": 4343.372,
+      "min_ms": 4240.408,
+      "max_ms": 4358.852
+    },
+    "observe_scene_total_ms": {
+      "n": 36,
+      "median_ms": 4942.192,
+      "p95_ms": 4976.365,
+      "min_ms": 4865.457,
+      "max_ms": 4987.159
+    }
+  },
+  "first_calls": [
+    {
+      "run_id": "20261015T022921_f48a9c43",
+      "metrics": {
+        "model_construct_ms": 2378.61,
+        "targets_changed": false,
+        "prompt_setup_ms": 0.001,
+        "prediction_index_in_process": 1,
+        "prediction_ms": 786.65,
+        "warm_runs": 0,
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+        "pre_capture_prompt_setup_ms": 29376.433,
+        "pre_capture_targets_changed": true,
+        "capture_process_ms": 4291.273,
+        "observe_scene_total_ms": 34480.606,
+        "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+      }
+    },
+    {
+      "run_id": "20261015T024644_d2acdb9d",
+      "metrics": {
+        "model_construct_ms": 119.099,
+        "targets_changed": false,
+        "prompt_setup_ms": 0.001,
+        "prediction_index_in_process": 1,
+        "prediction_ms": 841.141,
+        "warm_runs": 0,
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+        "pre_capture_prompt_setup_ms": 4007.682,
+        "pre_capture_targets_changed": true,
+        "capture_process_ms": 4289.071,
+        "observe_scene_total_ms": 9160.263,
+        "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+      }
+    }
+  ],
+  "frames": [
+    {
+      "run_id": "20261015T022921_f48a9c43",
+      "observation": {
+        "schema_version": "pi-vision-v1",
+        "received_at_utc": "2026-10-15T02:29:25.390377+00:00",
+        "processed_at_utc": "2026-10-15T02:29:26.329106+00:00",
+        "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T022921_f48a9c43/scene.jpg",
+        "model": "yoloe-26n-seg.pt",
+        "targets": [
+          "cup",
+          "glasses",
+          "fingers",
+          "hand",
+          "bottle"
+        ],
+        "image_size": [
+          640,
+          480
+        ],
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "confidence_threshold": 0.2,
+        "counts": {
+          "cup": 2,
+          "glasses": 0,
+          "fingers": 0,
+          "hand": 0,
+          "bottle": 1
+        },
+        "detections": [
+          {
+            "label": "cup",
+            "confidence": 0.48068246245384216,
+            "bbox_xyxy": [
+              274.81890869140625,
+              352.68115234375,
+              366.37933349609375,
+              429.75201416015625
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.2593019902706146,
+            "bbox_xyxy": [
+              274.7241516113281,
+              352.61444091796875,
+              336.3888854980469,
+              428.92926025390625
+            ]
+          },
+          {
+            "label": "bottle",
+            "confidence": 0.2513003349304199,
+            "bbox_xyxy": [
+              584.09033203125,
+              149.5928955078125,
+              639.9556884765625,
+              479.0491943359375
+            ]
+          }
+        ],
+        "metrics": {
+          "model_construct_ms": 2378.61,
+          "targets_changed": false,
+          "prompt_setup_ms": 0.001,
+          "prediction_index_in_process": 1,
+          "prediction_ms": 786.65,
+          "warm_runs": 0,
+          "input_size_requested": 640,
+          "predictor_image_size": [
+            640,
+            640
+          ],
+          "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+          "pre_capture_prompt_setup_ms": 29376.433,
+          "pre_capture_targets_changed": true,
+          "capture_process_ms": 4291.273,
+          "observe_scene_total_ms": 34480.606,
+          "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+        },
+        "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+      },
+      "camera_metadata": {
+        "received_at_utc": "2026-10-15T02:29:25.390377+00:00",
+        "sensor_timestamp_ns": 3323970232000,
+        "frame_shape": [
+          480,
+          640,
+          3
+        ],
+        "capture_wait_ms": 66.56,
+        "note": "Receipt time is not the exact sensor exposure time."
+      }
+    },
+    {
+      "run_id": "20261015T022936_d6a91e5f",
+      "observation": {
+        "schema_version": "pi-vision-v1",
+        "received_at_utc": "2026-10-15T02:29:40.465815+00:00",
+        "processed_at_utc": "2026-10-15T02:29:41.239191+00:00",
+        "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T022936_d6a91e5f/scene.jpg",
+        "model": "yoloe-26n-seg.pt",
+        "targets": [
+          "cup",
+          "glasses",
+          "fingers",
+          "hand",
+          "bottle"
+        ],
+        "image_size": [
+          640,
+          480
+        ],
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "confidence_threshold": 0.2,
+        "counts": {
+          "cup": 3,
+          "glasses": 0,
+          "fingers": 0,
+          "hand": 0,
+          "bottle": 2
+        },
+        "detections": [
+          {
+            "label": "bottle",
+            "confidence": 0.47681134939193726,
+            "bbox_xyxy": [
+              394.1017150878906,
+              308.18096923828125,
+              452.5951232910156,
+              409.40032958984375
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.46204113960266113,
+            "bbox_xyxy": [
+              274.7349853515625,
+              352.9808349609375,
+              368.26971435546875,
+              430.32452392578125
+            ]
+          },
+          {
+            "label": "bottle",
+            "confidence": 0.36637672781944275,
+            "bbox_xyxy": [
+              583.886474609375,
+              147.97564697265625,
+              639.9564208984375,
+              479.04833984375
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.30529525876045227,
+            "bbox_xyxy": [
+              274.548828125,
+              352.998046875,
+              335.4390869140625,
+              429.10986328125
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.22118307650089264,
+            "bbox_xyxy": [
+              431.13507080078125,
+              342.281494140625,
+              501.3114013671875,
+              417.4395751953125
+            ]
+          }
+        ],
+        "metrics": {
+          "model_construct_ms": 2378.61,
+          "targets_changed": false,
+          "prompt_setup_ms": 0.001,
+          "prediction_index_in_process": 2,
+          "prediction_ms": 620.886,
+          "warm_runs": 0,
+          "input_size_requested": 640,
+          "predictor_image_size": [
+            640,
+            640
+          ],
+          "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+          "pre_capture_prompt_setup_ms": 0.001,
+          "pre_capture_targets_changed": false,
+          "capture_process_ms": 4264.419,
+          "observe_scene_total_ms": 4893.146,
+          "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+        },
+        "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+      },
+      "camera_metadata": {
+        "received_at_utc": "2026-10-15T02:29:40.465815+00:00",
+        "sensor_timestamp_ns": 3339045420000,
+        "frame_shape": [
+          480,
+          640,
+          3
+        ],
+        "capture_wait_ms": 2.05,
+        "note": "Receipt time is not the exact sensor exposure time."
+      }
+    },
+    {
+      "run_id": "20261015T022951_a16fcd9b",
+      "observation": {
+        "schema_version": "pi-vision-v1",
+        "received_at_utc": "2026-10-15T02:29:55.361869+00:00",
+        "processed_at_utc": "2026-10-15T02:29:56.135371+00:00",
+        "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T022951_a16fcd9b/scene.jpg",
+        "model": "yoloe-26n-seg.pt",
+        "targets": [
+          "cup",
+          "glasses",
+          "fingers",
+          "hand",
+          "bottle"
+        ],
+        "image_size": [
+          640,
+          480
+        ],
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "confidence_threshold": 0.2,
+        "counts": {
+          "cup": 2,
+          "glasses": 0,
+          "fingers": 0,
+          "hand": 0,
+          "bottle": 2
+        },
+        "detections": [
+          {
+            "label": "bottle",
+            "confidence": 0.4028118848800659,
+            "bbox_xyxy": [
+              394.01812744140625,
+              308.3748779296875,
+              452.40887451171875,
+              414.4041748046875
+            ]
+          },
+          {
+            "label": "bottle",
+            "confidence": 0.3348141014575958,
+            "bbox_xyxy": [
+              585.8804931640625,
+              146.3338623046875,
+              639.9462890625,
+              480.0
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.23489750921726227,
+            "bbox_xyxy": [
+              266.45758056640625,
+              352.1934814453125,
+              338.99908447265625,
+              428.9849853515625
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.22910238802433014,
+            "bbox_xyxy": [
+              431.344482421875,
+              342.3702392578125,
+              501.766845703125,
+              418.3807373046875
+            ]
+          }
+        ],
+        "metrics": {
+          "model_construct_ms": 2378.61,
+          "targets_changed": false,
+          "prompt_setup_ms": 0.001,
+          "prediction_index_in_process": 3,
+          "prediction_ms": 621.364,
+          "warm_runs": 0,
+          "input_size_requested": 640,
+          "predictor_image_size": [
+            640,
+            640
+          ],
+          "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+          "pre_capture_prompt_setup_ms": 0.001,
+          "pre_capture_targets_changed": false,
+          "capture_process_ms": 4260.569,
+          "observe_scene_total_ms": 4889.265,
+          "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+        },
+        "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+      },
+      "camera_metadata": {
+        "received_at_utc": "2026-10-15T02:29:55.361869+00:00",
+        "sensor_timestamp_ns": 3353941430000,
+        "frame_shape": [
+          480,
+          640,
+          3
+        ],
+        "capture_wait_ms": 2.06,
+        "note": "Receipt time is not the exact sensor exposure time."
+      }
+    },
+    {
+      "run_id": "20261015T023006_d9e83686",
+      "observation": {
+        "schema_version": "pi-vision-v1",
+        "received_at_utc": "2026-10-15T02:30:10.339351+00:00",
+        "processed_at_utc": "2026-10-15T02:30:11.115511+00:00",
+        "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T023006_d9e83686/scene.jpg",
+        "model": "yoloe-26n-seg.pt",
+        "targets": [
+          "cup",
+          "glasses",
+          "fingers",
+          "hand",
+          "bottle"
+        ],
+        "image_size": [
+          640,
+          480
+        ],
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "confidence_threshold": 0.2,
+        "counts": {
+          "cup": 3,
+          "glasses": 0,
+          "fingers": 0,
+          "hand": 0,
+          "bottle": 3
+        },
+        "detections": [
+          {
+            "label": "cup",
+            "confidence": 0.510185718536377,
+            "bbox_xyxy": [
+              278.068603515625,
+              388.4862060546875,
+              341.1502685546875,
+              430.1533203125
+            ]
+          },
+          {
+            "label": "bottle",
+            "confidence": 0.3440150320529938,
+            "bbox_xyxy": [
+              393.4847412109375,
+              307.7998046875,
+              451.7755126953125,
+              415.163818359375
+            ]
+          },
+          {
+            "label": "bottle",
+            "confidence": 0.33136501908302307,
+            "bbox_xyxy": [
+              419.84820556640625,
+              308.0356140136719,
+              452.19586181640625,
+              412.5779724121094
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.3265570402145386,
+            "bbox_xyxy": [
+              430.2550048828125,
+              342.11712646484375,
+              501.86932373046875,
+              417.92767333984375
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.31840255856513977,
+            "bbox_xyxy": [
+              585.7218017578125,
+              148.2173614501953,
+              639.9921875,
+              480.0
+            ]
+          },
+          {
+            "label": "bottle",
+            "confidence": 0.26462867856025696,
+            "bbox_xyxy": [
+              428.1405029296875,
+              307.93194580078125,
+              451.5706787109375,
+              399.62054443359375
+            ]
+          }
+        ],
+        "metrics": {
+          "model_construct_ms": 2378.61,
+          "targets_changed": false,
+          "prompt_setup_ms": 0.001,
+          "prediction_index_in_process": 4,
+          "prediction_ms": 626.117,
+          "warm_runs": 0,
+          "input_size_requested": 640,
+          "predictor_image_size": [
+            640,
+            640
+          ],
+          "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+          "pre_capture_prompt_setup_ms": 0.001,
+          "pre_capture_targets_changed": false,
+          "capture_process_ms": 4340.037,
+          "observe_scene_total_ms": 4973.639,
+          "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+        },
+        "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+      },
+      "camera_metadata": {
+        "received_at_utc": "2026-10-15T02:30:10.339351+00:00",
+        "sensor_timestamp_ns": 3368918172000,
+        "frame_shape": [
+          480,
+          640,
+          3
+        ],
+        "capture_wait_ms": 67.5,
+        "note": "Receipt time is not the exact sensor exposure time."
+      }
+    },
+    {
+      "run_id": "20261015T023021_f6de2127",
+      "observation": {
+        "schema_version": "pi-vision-v1",
+        "received_at_utc": "2026-10-15T02:30:25.246445+00:00",
+        "processed_at_utc": "2026-10-15T02:30:26.021657+00:00",
+        "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T023021_f6de2127/scene.jpg",
+        "model": "yoloe-26n-seg.pt",
+        "targets": [
+          "cup",
+          "glasses",
+          "fingers",
+          "hand",
+          "bottle"
+        ],
+        "image_size": [
+          640,
+          480
+        ],
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "confidence_threshold": 0.2,
+        "counts": {
+          "cup": 3,
+          "glasses": 0,
+          "fingers": 0,
+          "hand": 0,
+          "bottle": 2
+        },
+        "detections": [
+          {
+            "label": "bottle",
+            "confidence": 0.48584604263305664,
+            "bbox_xyxy": [
+              394.31005859375,
+              308.3016357421875,
+              452.96722412109375,
+              406.28497314453125
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.4680687189102173,
+            "bbox_xyxy": [
+              275.08526611328125,
+              352.91778564453125,
+              368.97576904296875,
+              430.43829345703125
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.4182896018028259,
+            "bbox_xyxy": [
+              275.49407958984375,
+              353.1602783203125,
+              339.7901611328125,
+              429.51263427734375
+            ]
+          },
+          {
+            "label": "bottle",
+            "confidence": 0.2702845633029938,
+            "bbox_xyxy": [
+              584.7903442382812,
+              144.08526611328125,
+              639.9397583007812,
+              479.09991455078125
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.20570945739746094,
+            "bbox_xyxy": [
+              431.2530517578125,
+              342.6602783203125,
+              501.7413330078125,
+              417.73175048828125
+            ]
+          }
+        ],
+        "metrics": {
+          "model_construct_ms": 2378.61,
+          "targets_changed": false,
+          "prompt_setup_ms": 0.001,
+          "prediction_index_in_process": 5,
+          "prediction_ms": 623.776,
+          "warm_runs": 0,
+          "input_size_requested": 640,
+          "predictor_image_size": [
+            640,
+            640
+          ],
+          "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+          "pre_capture_prompt_setup_ms": 0.001,
+          "pre_capture_targets_changed": false,
+          "capture_process_ms": 4268.073,
+          "observe_scene_total_ms": 4899.499,
+          "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+        },
+        "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+      },
+      "camera_metadata": {
+        "received_at_utc": "2026-10-15T02:30:25.246445+00:00",
+        "sensor_timestamp_ns": 3383825298000,
+        "frame_shape": [
+          480,
+          640,
+          3
+        ],
+        "capture_wait_ms": 2.64,
+        "note": "Receipt time is not the exact sensor exposure time."
+      }
+    },
+    {
+      "run_id": "20261015T023036_615255f4",
+      "observation": {
+        "schema_version": "pi-vision-v1",
+        "received_at_utc": "2026-10-15T02:30:40.141575+00:00",
+        "processed_at_utc": "2026-10-15T02:30:40.915963+00:00",
+        "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T023036_615255f4/scene.jpg",
+        "model": "yoloe-26n-seg.pt",
+        "targets": [
+          "cup",
+          "glasses",
+          "fingers",
+          "hand",
+          "bottle"
+        ],
+        "image_size": [
+          640,
+          480
+        ],
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "confidence_threshold": 0.2,
+        "counts": {
+          "cup": 3,
+          "glasses": 0,
+          "fingers": 0,
+          "hand": 0,
+          "bottle": 2
+        },
+        "detections": [
+          {
+            "label": "bottle",
+            "confidence": 0.4595635235309601,
+            "bbox_xyxy": [
+              394.2725524902344,
+              308.1395263671875,
+              452.6993713378906,
+              405.5977783203125
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.4077204763889313,
+            "bbox_xyxy": [
+              275.58111572265625,
+              352.8963623046875,
+              339.63873291015625,
+              429.6832275390625
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.3273175358772278,
+            "bbox_xyxy": [
+              275.35076904296875,
+              352.8118896484375,
+              367.61566162109375,
+              430.27972412109375
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.27859535813331604,
+            "bbox_xyxy": [
+              430.7117919921875,
+              342.5714111328125,
+              501.8934326171875,
+              417.9798583984375
+            ]
+          },
+          {
+            "label": "bottle",
+            "confidence": 0.22953353822231293,
+            "bbox_xyxy": [
+              584.9094848632812,
+              146.474609375,
+              639.9607543945312,
+              479.094970703125
+            ]
+          }
+        ],
+        "metrics": {
+          "model_construct_ms": 2378.61,
+          "targets_changed": false,
+          "prompt_setup_ms": 0.001,
+          "prediction_index_in_process": 6,
+          "prediction_ms": 622.773,
+          "warm_runs": 0,
+          "input_size_requested": 640,
+          "predictor_image_size": [
+            640,
+            640
+          ],
+          "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+          "pre_capture_prompt_setup_ms": 0.001,
+          "pre_capture_targets_changed": false,
+          "capture_process_ms": 4254.672,
+          "observe_scene_total_ms": 4885.105,
+          "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+        },
+        "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+      },
+      "camera_metadata": {
+        "received_at_utc": "2026-10-15T02:30:40.141575+00:00",
+        "sensor_timestamp_ns": 3398721484000,
+        "frame_shape": [
+          480,
+          640,
+          3
+        ],
+        "capture_wait_ms": 1.71,
+        "note": "Receipt time is not the exact sensor exposure time."
+      }
+    },
+    {
+      "run_id": "20261015T023050_33b600ea",
+      "observation": {
+        "schema_version": "pi-vision-v1",
+        "received_at_utc": "2026-10-15T02:30:55.049517+00:00",
+        "processed_at_utc": "2026-10-15T02:30:55.821269+00:00",
+        "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T023050_33b600ea/scene.jpg",
+        "model": "yoloe-26n-seg.pt",
+        "targets": [
+          "cup",
+          "glasses",
+          "fingers",
+          "hand",
+          "bottle"
+        ],
+        "image_size": [
+          640,
+          480
+        ],
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "confidence_threshold": 0.2,
+        "counts": {
+          "cup": 3,
+          "glasses": 0,
+          "fingers": 0,
+          "hand": 0,
+          "bottle": 2
+        },
+        "detections": [
+          {
+            "label": "cup",
+            "confidence": 0.459879070520401,
+            "bbox_xyxy": [
+              275.125732421875,
+              352.9486083984375,
+              339.0506591796875,
+              429.62396240234375
+            ]
+          },
+          {
+            "label": "bottle",
+            "confidence": 0.3880641758441925,
+            "bbox_xyxy": [
+              394.16619873046875,
+              308.45684814453125,
+              453.48919677734375,
+              414.76104736328125
+            ]
+          },
+          {
+            "label": "bottle",
+            "confidence": 0.3712572753429413,
+            "bbox_xyxy": [
+              586.323974609375,
+              145.0535888671875,
+              639.947265625,
+              479.82684326171875
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.34443050622940063,
+            "bbox_xyxy": [
+              274.72247314453125,
+              352.79327392578125,
+              367.70892333984375,
+              429.97198486328125
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.2978050708770752,
+            "bbox_xyxy": [
+              431.77593994140625,
+              342.17681884765625,
+              501.88775634765625,
+              418.82720947265625
+            ]
+          }
+        ],
+        "metrics": {
+          "model_construct_ms": 2378.61,
+          "targets_changed": false,
+          "prompt_setup_ms": 0.001,
+          "prediction_index_in_process": 7,
+          "prediction_ms": 620.025,
+          "warm_runs": 0,
+          "input_size_requested": 640,
+          "predictor_image_size": [
+            640,
+            640
+          ],
+          "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+          "pre_capture_prompt_setup_ms": 0.001,
+          "pre_capture_targets_changed": false,
+          "capture_process_ms": 4270.984,
+          "observe_scene_total_ms": 4898.652,
+          "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+        },
+        "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+      },
+      "camera_metadata": {
+        "received_at_utc": "2026-10-15T02:30:55.049517+00:00",
+        "sensor_timestamp_ns": 3413629417000,
+        "frame_shape": [
+          480,
+          640,
+          3
+        ],
+        "capture_wait_ms": 1.72,
+        "note": "Receipt time is not the exact sensor exposure time."
+      }
+    },
+    {
+      "run_id": "20261015T023105_276aa500",
+      "observation": {
+        "schema_version": "pi-vision-v1",
+        "received_at_utc": "2026-10-15T02:31:09.960982+00:00",
+        "processed_at_utc": "2026-10-15T02:31:10.726910+00:00",
+        "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T023105_276aa500/scene.jpg",
+        "model": "yoloe-26n-seg.pt",
+        "targets": [
+          "cup",
+          "glasses",
+          "fingers",
+          "hand",
+          "bottle"
+        ],
+        "image_size": [
+          640,
+          480
+        ],
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "confidence_threshold": 0.2,
+        "counts": {
+          "cup": 1,
+          "glasses": 0,
+          "fingers": 0,
+          "hand": 0,
+          "bottle": 2
+        },
+        "detections": [
+          {
+            "label": "cup",
+            "confidence": 0.557101845741272,
+            "bbox_xyxy": [
+              272.5301513671875,
+              352.70184326171875,
+              365.81976318359375,
+              430.14447021484375
+            ]
+          },
+          {
+            "label": "bottle",
+            "confidence": 0.4077953100204468,
+            "bbox_xyxy": [
+              586.573974609375,
+              144.80384826660156,
+              639.95068359375,
+              479.4736328125
+            ]
+          },
+          {
+            "label": "bottle",
+            "confidence": 0.22217626869678497,
+            "bbox_xyxy": [
+              394.04742431640625,
+              308.29010009765625,
+              501.68035888671875,
+              417.0452880859375
+            ]
+          }
+        ],
+        "metrics": {
+          "model_construct_ms": 2378.61,
+          "targets_changed": false,
+          "prompt_setup_ms": 0.0,
+          "prediction_index_in_process": 8,
+          "prediction_ms": 616.629,
+          "warm_runs": 0,
+          "input_size_requested": 640,
+          "predictor_image_size": [
+            640,
+            640
+          ],
+          "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+          "pre_capture_prompt_setup_ms": 0.001,
+          "pre_capture_targets_changed": false,
+          "capture_process_ms": 4274.736,
+          "observe_scene_total_ms": 4898.821,
+          "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+        },
+        "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+      },
+      "camera_metadata": {
+        "received_at_utc": "2026-10-15T02:31:09.960982+00:00",
+        "sensor_timestamp_ns": 3428539539000,
+        "frame_shape": [
+          480,
+          640,
+          3
+        ],
+        "capture_wait_ms": 1.18,
+        "note": "Receipt time is not the exact sensor exposure time."
+      }
+    },
+    {
+      "run_id": "20261015T023120_b2b02047",
+      "observation": {
+        "schema_version": "pi-vision-v1",
+        "received_at_utc": "2026-10-15T02:31:24.919637+00:00",
+        "processed_at_utc": "2026-10-15T02:31:25.693395+00:00",
+        "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T023120_b2b02047/scene.jpg",
+        "model": "yoloe-26n-seg.pt",
+        "targets": [
+          "cup",
+          "glasses",
+          "fingers",
+          "hand",
+          "bottle"
+        ],
+        "image_size": [
+          640,
+          480
+        ],
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "confidence_threshold": 0.2,
+        "counts": {
+          "cup": 3,
+          "glasses": 0,
+          "fingers": 0,
+          "hand": 0,
+          "bottle": 3
+        },
+        "detections": [
+          {
+            "label": "bottle",
+            "confidence": 0.38583579659461975,
+            "bbox_xyxy": [
+              586.118408203125,
+              145.9854736328125,
+              639.9405517578125,
+              480.0
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.34102287888526917,
+            "bbox_xyxy": [
+              266.25384521484375,
+              353.97271728515625,
+              368.63580322265625,
+              430.58856201171875
+            ]
+          },
+          {
+            "label": "bottle",
+            "confidence": 0.2665054500102997,
+            "bbox_xyxy": [
+              394.225830078125,
+              308.3458251953125,
+              451.57861328125,
+              408.6044921875
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.22913356125354767,
+            "bbox_xyxy": [
+              432.12060546875,
+              341.9047546386719,
+              502.04547119140625,
+              418.8471984863281
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.21497824788093567,
+            "bbox_xyxy": [
+              67.79058837890625,
+              308.80889892578125,
+              196.668212890625,
+              479.68072509765625
+            ]
+          },
+          {
+            "label": "bottle",
+            "confidence": 0.20989654958248138,
+            "bbox_xyxy": [
+              394.27508544921875,
+              308.09619140625,
+              501.09759521484375,
+              416.4351806640625
+            ]
+          }
+        ],
+        "metrics": {
+          "model_construct_ms": 2378.61,
+          "targets_changed": false,
+          "prompt_setup_ms": 0.001,
+          "prediction_index_in_process": 9,
+          "prediction_ms": 624.493,
+          "warm_runs": 0,
+          "input_size_requested": 640,
+          "predictor_image_size": [
+            640,
+            640
+          ],
+          "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+          "pre_capture_prompt_setup_ms": 0.001,
+          "pre_capture_targets_changed": false,
+          "capture_process_ms": 4327.145,
+          "observe_scene_total_ms": 4959.557,
+          "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+        },
+        "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+      },
+      "camera_metadata": {
+        "received_at_utc": "2026-10-15T02:31:24.919637+00:00",
+        "sensor_timestamp_ns": 3443498177000,
+        "frame_shape": [
+          480,
+          640,
+          3
+        ],
+        "capture_wait_ms": 67.83,
+        "note": "Receipt time is not the exact sensor exposure time."
+      }
+    },
+    {
+      "run_id": "20261015T023135_dd85d147",
+      "observation": {
+        "schema_version": "pi-vision-v1",
+        "received_at_utc": "2026-10-15T02:31:39.878633+00:00",
+        "processed_at_utc": "2026-10-15T02:31:40.652971+00:00",
+        "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T023135_dd85d147/scene.jpg",
+        "model": "yoloe-26n-seg.pt",
+        "targets": [
+          "cup",
+          "glasses",
+          "fingers",
+          "hand",
+          "bottle"
+        ],
+        "image_size": [
+          640,
+          480
+        ],
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "confidence_threshold": 0.2,
+        "counts": {
+          "cup": 2,
+          "glasses": 0,
+          "fingers": 0,
+          "hand": 0,
+          "bottle": 2
+        },
+        "detections": [
+          {
+            "label": "cup",
+            "confidence": 0.607681393623352,
+            "bbox_xyxy": [
+              273.1466064453125,
+              352.9295654296875,
+              367.25341796875,
+              430.3563232421875
+            ]
+          },
+          {
+            "label": "bottle",
+            "confidence": 0.28275033831596375,
+            "bbox_xyxy": [
+              586.3617553710938,
+              146.6500701904297,
+              639.9492797851562,
+              479.78765869140625
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.213312029838562,
+            "bbox_xyxy": [
+              432.05615234375,
+              342.05712890625,
+              501.959228515625,
+              418.813232421875
+            ]
+          },
+          {
+            "label": "bottle",
+            "confidence": 0.20373056828975677,
+            "bbox_xyxy": [
+              394.3021240234375,
+              308.3338623046875,
+              454.675537109375,
+              415.32000732421875
+            ]
+          }
+        ],
+        "metrics": {
+          "model_construct_ms": 2378.61,
+          "targets_changed": false,
+          "prompt_setup_ms": 0.001,
+          "prediction_index_in_process": 10,
+          "prediction_ms": 621.734,
+          "warm_runs": 0,
+          "input_size_requested": 640,
+          "predictor_image_size": [
+            640,
+            640
+          ],
+          "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+          "pre_capture_prompt_setup_ms": 0.001,
+          "pre_capture_targets_changed": false,
+          "capture_process_ms": 4320.906,
+          "observe_scene_total_ms": 4950.091,
+          "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+        },
+        "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+      },
+      "camera_metadata": {
+        "received_at_utc": "2026-10-15T02:31:39.878633+00:00",
+        "sensor_timestamp_ns": 3458458053000,
+        "frame_shape": [
+          480,
+          640,
+          3
+        ],
+        "capture_wait_ms": 66.82,
+        "note": "Receipt time is not the exact sensor exposure time."
+      }
+    },
+    {
+      "run_id": "20261015T023150_e3cccfc5",
+      "observation": {
+        "schema_version": "pi-vision-v1",
+        "received_at_utc": "2026-10-15T02:31:54.757488+00:00",
+        "processed_at_utc": "2026-10-15T02:31:55.527841+00:00",
+        "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T023150_e3cccfc5/scene.jpg",
+        "model": "yoloe-26n-seg.pt",
+        "targets": [
+          "cup",
+          "glasses",
+          "fingers",
+          "hand",
+          "bottle"
+        ],
+        "image_size": [
+          640,
+          480
+        ],
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "confidence_threshold": 0.2,
+        "counts": {
+          "cup": 1,
+          "glasses": 0,
+          "fingers": 0,
+          "hand": 0,
+          "bottle": 2
+        },
+        "detections": [
+          {
+            "label": "cup",
+            "confidence": 0.5422834157943726,
+            "bbox_xyxy": [
+              270.3201904296875,
+              352.9906005859375,
+              366.8931884765625,
+              430.5360107421875
+            ]
+          },
+          {
+            "label": "bottle",
+            "confidence": 0.3060263395309448,
+            "bbox_xyxy": [
+              586.787841796875,
+              147.817138671875,
+              639.950439453125,
+              480.0
+            ]
+          },
+          {
+            "label": "bottle",
+            "confidence": 0.20433151721954346,
+            "bbox_xyxy": [
+              394.392333984375,
+              308.60693359375,
+              469.7752685546875,
+              415.995361328125
+            ]
+          }
+        ],
+        "metrics": {
+          "model_construct_ms": 2378.61,
+          "targets_changed": false,
+          "prompt_setup_ms": 0.001,
+          "prediction_index_in_process": 11,
+          "prediction_ms": 620.374,
+          "warm_runs": 0,
+          "input_size_requested": 640,
+          "predictor_image_size": [
+            640,
+            640
+          ],
+          "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+          "pre_capture_prompt_setup_ms": 0.001,
+          "pre_capture_targets_changed": false,
+          "capture_process_ms": 4240.408,
+          "observe_scene_total_ms": 4868.077,
+          "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+        },
+        "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+      },
+      "camera_metadata": {
+        "received_at_utc": "2026-10-15T02:31:54.757488+00:00",
+        "sensor_timestamp_ns": 3473335525000,
+        "frame_shape": [
+          480,
+          640,
+          3
+        ],
+        "capture_wait_ms": 1.67,
+        "note": "Receipt time is not the exact sensor exposure time."
+      }
+    },
+    {
+      "run_id": "20261015T023205_04720a62",
+      "observation": {
+        "schema_version": "pi-vision-v1",
+        "received_at_utc": "2026-10-15T02:32:09.702698+00:00",
+        "processed_at_utc": "2026-10-15T02:32:10.473367+00:00",
+        "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T023205_04720a62/scene.jpg",
+        "model": "yoloe-26n-seg.pt",
+        "targets": [
+          "cup",
+          "glasses",
+          "fingers",
+          "hand",
+          "bottle"
+        ],
+        "image_size": [
+          640,
+          480
+        ],
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "confidence_threshold": 0.2,
+        "counts": {
+          "cup": 1,
+          "glasses": 0,
+          "fingers": 0,
+          "hand": 0,
+          "bottle": 2
+        },
+        "detections": [
+          {
+            "label": "cup",
+            "confidence": 0.4371173083782196,
+            "bbox_xyxy": [
+              272.2529296875,
+              352.894287109375,
+              343.4658203125,
+              429.8131103515625
+            ]
+          },
+          {
+            "label": "bottle",
+            "confidence": 0.34241044521331787,
+            "bbox_xyxy": [
+              587.178955078125,
+              147.04368591308594,
+              639.950927734375,
+              480.0
+            ]
+          },
+          {
+            "label": "bottle",
+            "confidence": 0.28122860193252563,
+            "bbox_xyxy": [
+              394.4390869140625,
+              308.8102722167969,
+              453.4959716796875,
+              415.3000183105469
+            ]
+          }
+        ],
+        "metrics": {
+          "model_construct_ms": 2378.61,
+          "targets_changed": false,
+          "prompt_setup_ms": 0.001,
+          "prediction_index_in_process": 12,
+          "prediction_ms": 618.676,
+          "warm_runs": 0,
+          "input_size_requested": 640,
+          "predictor_image_size": [
+            640,
+            640
+          ],
+          "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+          "pre_capture_prompt_setup_ms": 0.001,
+          "pre_capture_targets_changed": false,
+          "capture_process_ms": 4312.846,
+          "observe_scene_total_ms": 4938.994,
+          "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+        },
+        "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+      },
+      "camera_metadata": {
+        "received_at_utc": "2026-10-15T02:32:09.702698+00:00",
+        "sensor_timestamp_ns": 3488282189000,
+        "frame_shape": [
+          480,
+          640,
+          3
+        ],
+        "capture_wait_ms": 66.89,
+        "note": "Receipt time is not the exact sensor exposure time."
+      }
+    },
+    {
+      "run_id": "20261015T023220_e92bf657",
+      "observation": {
+        "schema_version": "pi-vision-v1",
+        "received_at_utc": "2026-10-15T02:32:24.690258+00:00",
+        "processed_at_utc": "2026-10-15T02:32:25.467302+00:00",
+        "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T023220_e92bf657/scene.jpg",
+        "model": "yoloe-26n-seg.pt",
+        "targets": [
+          "cup",
+          "glasses",
+          "fingers",
+          "hand",
+          "bottle"
+        ],
+        "image_size": [
+          640,
+          480
+        ],
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "confidence_threshold": 0.2,
+        "counts": {
+          "cup": 1,
+          "glasses": 0,
+          "fingers": 0,
+          "hand": 0,
+          "bottle": 2
+        },
+        "detections": [
+          {
+            "label": "bottle",
+            "confidence": 0.4142988920211792,
+            "bbox_xyxy": [
+              586.9593505859375,
+              143.63951110839844,
+              639.9547119140625,
+              480.0
+            ]
+          },
+          {
+            "label": "bottle",
+            "confidence": 0.22371311485767365,
+            "bbox_xyxy": [
+              394.31524658203125,
+              308.63836669921875,
+              455.70697021484375,
+              415.29620361328125
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.200408473610878,
+            "bbox_xyxy": [
+              432.5426025390625,
+              341.86572265625,
+              502.5743408203125,
+              419.306640625
+            ]
+          }
+        ],
+        "metrics": {
+          "model_construct_ms": 2378.61,
+          "targets_changed": false,
+          "prompt_setup_ms": 0.001,
+          "prediction_index_in_process": 13,
+          "prediction_ms": 623.952,
+          "warm_runs": 0,
+          "input_size_requested": 640,
+          "predictor_image_size": [
+            640,
+            640
+          ],
+          "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+          "pre_capture_prompt_setup_ms": 0.001,
+          "pre_capture_targets_changed": false,
+          "capture_process_ms": 4353.375,
+          "observe_scene_total_ms": 4984.545,
+          "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+        },
+        "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+      },
+      "camera_metadata": {
+        "received_at_utc": "2026-10-15T02:32:24.690258+00:00",
+        "sensor_timestamp_ns": 3503270069000,
+        "frame_shape": [
+          480,
+          640,
+          3
+        ],
+        "capture_wait_ms": 66.48,
+        "note": "Receipt time is not the exact sensor exposure time."
+      }
+    },
+    {
+      "run_id": "20261015T023235_a4933365",
+      "observation": {
+        "schema_version": "pi-vision-v1",
+        "received_at_utc": "2026-10-15T02:32:39.658648+00:00",
+        "processed_at_utc": "2026-10-15T02:32:40.429995+00:00",
+        "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T023235_a4933365/scene.jpg",
+        "model": "yoloe-26n-seg.pt",
+        "targets": [
+          "cup",
+          "glasses",
+          "fingers",
+          "hand",
+          "bottle"
+        ],
+        "image_size": [
+          640,
+          480
+        ],
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "confidence_threshold": 0.2,
+        "counts": {
+          "cup": 0,
+          "glasses": 0,
+          "fingers": 0,
+          "hand": 0,
+          "bottle": 2
+        },
+        "detections": [
+          {
+            "label": "bottle",
+            "confidence": 0.5160167217254639,
+            "bbox_xyxy": [
+              586.9952392578125,
+              145.73529052734375,
+              639.9512939453125,
+              479.999755859375
+            ]
+          },
+          {
+            "label": "bottle",
+            "confidence": 0.32003840804100037,
+            "bbox_xyxy": [
+              394.2489318847656,
+              308.6231689453125,
+              502.4466247558594,
+              417.04150390625
+            ]
+          }
+        ],
+        "metrics": {
+          "model_construct_ms": 2378.61,
+          "targets_changed": false,
+          "prompt_setup_ms": 0.001,
+          "prediction_index_in_process": 14,
+          "prediction_ms": 620.28,
+          "warm_runs": 0,
+          "input_size_requested": 640,
+          "predictor_image_size": [
+            640,
+            640
+          ],
+          "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+          "pre_capture_prompt_setup_ms": 0.001,
+          "pre_capture_targets_changed": false,
+          "capture_process_ms": 4328.525,
+          "observe_scene_total_ms": 4955.983,
+          "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+        },
+        "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+      },
+      "camera_metadata": {
+        "received_at_utc": "2026-10-15T02:32:39.658648+00:00",
+        "sensor_timestamp_ns": 3518238053000,
+        "frame_shape": [
+          480,
+          640,
+          3
+        ],
+        "capture_wait_ms": 66.86,
+        "note": "Receipt time is not the exact sensor exposure time."
+      }
+    },
+    {
+      "run_id": "20261015T023250_12a34145",
+      "observation": {
+        "schema_version": "pi-vision-v1",
+        "received_at_utc": "2026-10-15T02:32:54.606710+00:00",
+        "processed_at_utc": "2026-10-15T02:32:55.379387+00:00",
+        "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T023250_12a34145/scene.jpg",
+        "model": "yoloe-26n-seg.pt",
+        "targets": [
+          "cup",
+          "glasses",
+          "fingers",
+          "hand",
+          "bottle"
+        ],
+        "image_size": [
+          640,
+          480
+        ],
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "confidence_threshold": 0.2,
+        "counts": {
+          "cup": 2,
+          "glasses": 0,
+          "fingers": 0,
+          "hand": 0,
+          "bottle": 1
+        },
+        "detections": [
+          {
+            "label": "bottle",
+            "confidence": 0.48613548278808594,
+            "bbox_xyxy": [
+              586.4927978515625,
+              147.75010681152344,
+              639.9505615234375,
+              479.993408203125
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.4349520206451416,
+            "bbox_xyxy": [
+              276.5690612792969,
+              352.7518615722656,
+              366.3987121582031,
+              429.8997497558594
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.2640100121498108,
+            "bbox_xyxy": [
+              432.0736083984375,
+              342.01800537109375,
+              502.02813720703125,
+              419.06939697265625
+            ]
+          }
+        ],
+        "metrics": {
+          "model_construct_ms": 2378.61,
+          "targets_changed": false,
+          "prompt_setup_ms": 0.0,
+          "prediction_index_in_process": 15,
+          "prediction_ms": 622.999,
+          "warm_runs": 0,
+          "input_size_requested": 640,
+          "predictor_image_size": [
+            640,
+            640
+          ],
+          "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+          "pre_capture_prompt_setup_ms": 0.001,
+          "pre_capture_targets_changed": false,
+          "capture_process_ms": 4312.457,
+          "observe_scene_total_ms": 4942.79,
+          "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+        },
+        "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+      },
+      "camera_metadata": {
+        "received_at_utc": "2026-10-15T02:32:54.606710+00:00",
+        "sensor_timestamp_ns": 3533186179000,
+        "frame_shape": [
+          480,
+          640,
+          3
+        ],
+        "capture_wait_ms": 66.84,
+        "note": "Receipt time is not the exact sensor exposure time."
+      }
+    },
+    {
+      "run_id": "20261015T023305_00de5b94",
+      "observation": {
+        "schema_version": "pi-vision-v1",
+        "received_at_utc": "2026-10-15T02:33:09.509893+00:00",
+        "processed_at_utc": "2026-10-15T02:33:10.281154+00:00",
+        "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T023305_00de5b94/scene.jpg",
+        "model": "yoloe-26n-seg.pt",
+        "targets": [
+          "cup",
+          "glasses",
+          "fingers",
+          "hand",
+          "bottle"
+        ],
+        "image_size": [
+          640,
+          480
+        ],
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "confidence_threshold": 0.2,
+        "counts": {
+          "cup": 1,
+          "glasses": 0,
+          "fingers": 0,
+          "hand": 0,
+          "bottle": 1
+        },
+        "detections": [
+          {
+            "label": "bottle",
+            "confidence": 0.25033998489379883,
+            "bbox_xyxy": [
+              394.71453857421875,
+              308.7554931640625,
+              498.46270751953125,
+              417.12396240234375
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.23288346827030182,
+            "bbox_xyxy": [
+              575.4244384765625,
+              334.2415771484375,
+              640.0,
+              409.96728515625
+            ]
+          }
+        ],
+        "metrics": {
+          "model_construct_ms": 2378.61,
+          "targets_changed": false,
+          "prompt_setup_ms": 0.001,
+          "prediction_index_in_process": 16,
+          "prediction_ms": 621.393,
+          "warm_runs": 0,
+          "input_size_requested": 640,
+          "predictor_image_size": [
+            640,
+            640
+          ],
+          "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+          "pre_capture_prompt_setup_ms": 0.001,
+          "pre_capture_targets_changed": false,
+          "capture_process_ms": 4266.508,
+          "observe_scene_total_ms": 4894.826,
+          "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+        },
+        "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+      },
+      "camera_metadata": {
+        "received_at_utc": "2026-10-15T02:33:09.509893+00:00",
+        "sensor_timestamp_ns": 3548087537000,
+        "frame_shape": [
+          480,
+          640,
+          3
+        ],
+        "capture_wait_ms": 2.11,
+        "note": "Receipt time is not the exact sensor exposure time."
+      }
+    },
+    {
+      "run_id": "20261015T023320_747935d9",
+      "observation": {
+        "schema_version": "pi-vision-v1",
+        "received_at_utc": "2026-10-15T02:33:24.389523+00:00",
+        "processed_at_utc": "2026-10-15T02:33:25.156188+00:00",
+        "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T023320_747935d9/scene.jpg",
+        "model": "yoloe-26n-seg.pt",
+        "targets": [
+          "cup",
+          "glasses",
+          "fingers",
+          "hand",
+          "bottle"
+        ],
+        "image_size": [
+          640,
+          480
+        ],
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "confidence_threshold": 0.2,
+        "counts": {
+          "cup": 0,
+          "glasses": 0,
+          "fingers": 0,
+          "hand": 0,
+          "bottle": 0
+        },
+        "detections": [],
+        "metrics": {
+          "model_construct_ms": 2378.61,
+          "targets_changed": false,
+          "prompt_setup_ms": 0.001,
+          "prediction_index_in_process": 17,
+          "prediction_ms": 615.595,
+          "warm_runs": 0,
+          "input_size_requested": 640,
+          "predictor_image_size": [
+            640,
+            640
+          ],
+          "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+          "pre_capture_prompt_setup_ms": 0.001,
+          "pre_capture_targets_changed": false,
+          "capture_process_ms": 4243.664,
+          "observe_scene_total_ms": 4865.691,
+          "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+        },
+        "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+      },
+      "camera_metadata": {
+        "received_at_utc": "2026-10-15T02:33:24.389523+00:00",
+        "sensor_timestamp_ns": 3562969453000,
+        "frame_shape": [
+          480,
+          640,
+          3
+        ],
+        "capture_wait_ms": 1.7,
+        "note": "Receipt time is not the exact sensor exposure time."
+      }
+    },
+    {
+      "run_id": "20261015T023335_f58ca28b",
+      "observation": {
+        "schema_version": "pi-vision-v1",
+        "received_at_utc": "2026-10-15T02:33:39.282424+00:00",
+        "processed_at_utc": "2026-10-15T02:33:40.057694+00:00",
+        "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T023335_f58ca28b/scene.jpg",
+        "model": "yoloe-26n-seg.pt",
+        "targets": [
+          "cup",
+          "glasses",
+          "fingers",
+          "hand",
+          "bottle"
+        ],
+        "image_size": [
+          640,
+          480
+        ],
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "confidence_threshold": 0.2,
+        "counts": {
+          "cup": 3,
+          "glasses": 0,
+          "fingers": 0,
+          "hand": 1,
+          "bottle": 1
+        },
+        "detections": [
+          {
+            "label": "cup",
+            "confidence": 0.7635430097579956,
+            "bbox_xyxy": [
+              70.66233825683594,
+              156.10821533203125,
+              253.6155242919922,
+              328.26312255859375
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.46374449133872986,
+            "bbox_xyxy": [
+              275.6234436035156,
+              353.61480712890625,
+              340.4335632324219,
+              431.19903564453125
+            ]
+          },
+          {
+            "label": "hand",
+            "confidence": 0.3265041708946228,
+            "bbox_xyxy": [
+              0.0,
+              323.359375,
+              277.05755615234375,
+              479.3619384765625
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.2663938105106354,
+            "bbox_xyxy": [
+              574.3436279296875,
+              334.05059814453125,
+              640.0,
+              410.25372314453125
+            ]
+          },
+          {
+            "label": "bottle",
+            "confidence": 0.2139446884393692,
+            "bbox_xyxy": [
+              394.3653869628906,
+              308.84796142578125,
+              501.9337463378906,
+              417.60638427734375
+            ]
+          }
+        ],
+        "metrics": {
+          "model_construct_ms": 2378.61,
+          "targets_changed": false,
+          "prompt_setup_ms": 0.0,
+          "prediction_index_in_process": 18,
+          "prediction_ms": 624.319,
+          "warm_runs": 0,
+          "input_size_requested": 640,
+          "predictor_image_size": [
+            640,
+            640
+          ],
+          "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+          "pre_capture_prompt_setup_ms": 0.001,
+          "pre_capture_targets_changed": false,
+          "capture_process_ms": 4263.812,
+          "observe_scene_total_ms": 4895.808,
+          "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+        },
+        "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+      },
+      "camera_metadata": {
+        "received_at_utc": "2026-10-15T02:33:39.282424+00:00",
+        "sensor_timestamp_ns": 3577861326000,
+        "frame_shape": [
+          480,
+          640,
+          3
+        ],
+        "capture_wait_ms": 2.61,
+        "note": "Receipt time is not the exact sensor exposure time."
+      }
+    },
+    {
+      "run_id": "20261015T023350_ddf3c0d8",
+      "observation": {
+        "schema_version": "pi-vision-v1",
+        "received_at_utc": "2026-10-15T02:33:54.238289+00:00",
+        "processed_at_utc": "2026-10-15T02:33:55.013907+00:00",
+        "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T023350_ddf3c0d8/scene.jpg",
+        "model": "yoloe-26n-seg.pt",
+        "targets": [
+          "cup",
+          "glasses",
+          "fingers",
+          "hand",
+          "bottle"
+        ],
+        "image_size": [
+          640,
+          480
+        ],
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "confidence_threshold": 0.2,
+        "counts": {
+          "cup": 3,
+          "glasses": 0,
+          "fingers": 0,
+          "hand": 1,
+          "bottle": 1
+        },
+        "detections": [
+          {
+            "label": "cup",
+            "confidence": 0.628501832485199,
+            "bbox_xyxy": [
+              86.24200439453125,
+              135.28189086914062,
+              279.2190856933594,
+              327.2730407714844
+            ]
+          },
+          {
+            "label": "hand",
+            "confidence": 0.4730987846851349,
+            "bbox_xyxy": [
+              0.0,
+              321.73004150390625,
+              298.1970520019531,
+              479.5115966796875
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.3226097524166107,
+            "bbox_xyxy": [
+              265.0723876953125,
+              353.72930908203125,
+              340.489990234375,
+              430.83551025390625
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.2821384370326996,
+            "bbox_xyxy": [
+              574.44384765625,
+              334.1732177734375,
+              640.0,
+              410.73095703125
+            ]
+          },
+          {
+            "label": "bottle",
+            "confidence": 0.25104475021362305,
+            "bbox_xyxy": [
+              394.280029296875,
+              308.8134460449219,
+              501.792236328125,
+              418.0761413574219
+            ]
+          }
+        ],
+        "metrics": {
+          "model_construct_ms": 2378.61,
+          "targets_changed": false,
+          "prompt_setup_ms": 0.001,
+          "prediction_index_in_process": 19,
+          "prediction_ms": 624.408,
+          "warm_runs": 0,
+          "input_size_requested": 640,
+          "predictor_image_size": [
+            640,
+            640
+          ],
+          "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+          "pre_capture_prompt_setup_ms": 0.001,
+          "pre_capture_targets_changed": false,
+          "capture_process_ms": 4317.408,
+          "observe_scene_total_ms": 4949.207,
+          "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+        },
+        "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+      },
+      "camera_metadata": {
+        "received_at_utc": "2026-10-15T02:33:54.238289+00:00",
+        "sensor_timestamp_ns": 3592818056000,
+        "frame_shape": [
+          480,
+          640,
+          3
+        ],
+        "capture_wait_ms": 66.49,
+        "note": "Receipt time is not the exact sensor exposure time."
+      }
+    },
+    {
+      "run_id": "20261015T023405_8f1c85b4",
+      "observation": {
+        "schema_version": "pi-vision-v1",
+        "received_at_utc": "2026-10-15T02:34:09.194736+00:00",
+        "processed_at_utc": "2026-10-15T02:34:09.967873+00:00",
+        "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T023405_8f1c85b4/scene.jpg",
+        "model": "yoloe-26n-seg.pt",
+        "targets": [
+          "cup",
+          "glasses",
+          "fingers",
+          "hand",
+          "bottle"
+        ],
+        "image_size": [
+          640,
+          480
+        ],
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "confidence_threshold": 0.2,
+        "counts": {
+          "cup": 2,
+          "glasses": 0,
+          "fingers": 0,
+          "hand": 1,
+          "bottle": 1
+        },
+        "detections": [
+          {
+            "label": "cup",
+            "confidence": 0.5766348838806152,
+            "bbox_xyxy": [
+              88.06258392333984,
+              133.20216369628906,
+              279.6725769042969,
+              327.0645751953125
+            ]
+          },
+          {
+            "label": "hand",
+            "confidence": 0.4763503670692444,
+            "bbox_xyxy": [
+              0.0,
+              321.93841552734375,
+              298.53466796875,
+              479.57952880859375
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.34123319387435913,
+            "bbox_xyxy": [
+              574.2965087890625,
+              334.1021423339844,
+              640.0,
+              410.5276184082031
+            ]
+          },
+          {
+            "label": "bottle",
+            "confidence": 0.3030330240726471,
+            "bbox_xyxy": [
+              394.4197998046875,
+              308.82781982421875,
+              501.14599609375,
+              418.52313232421875
+            ]
+          }
+        ],
+        "metrics": {
+          "model_construct_ms": 2378.61,
+          "targets_changed": false,
+          "prompt_setup_ms": 0.001,
+          "prediction_index_in_process": 20,
+          "prediction_ms": 622.786,
+          "warm_runs": 0,
+          "input_size_requested": 640,
+          "predictor_image_size": [
+            640,
+            640
+          ],
+          "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+          "pre_capture_prompt_setup_ms": 0.001,
+          "pre_capture_targets_changed": false,
+          "capture_process_ms": 4317.202,
+          "observe_scene_total_ms": 4947.231,
+          "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+        },
+        "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+      },
+      "camera_metadata": {
+        "received_at_utc": "2026-10-15T02:34:09.194736+00:00",
+        "sensor_timestamp_ns": 3607774226000,
+        "frame_shape": [
+          480,
+          640,
+          3
+        ],
+        "capture_wait_ms": 66.94,
+        "note": "Receipt time is not the exact sensor exposure time."
+      }
+    },
+    {
+      "run_id": "20261015T023419_7461223b",
+      "observation": {
+        "schema_version": "pi-vision-v1",
+        "received_at_utc": "2026-10-15T02:34:24.167323+00:00",
+        "processed_at_utc": "2026-10-15T02:34:24.944723+00:00",
+        "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T023419_7461223b/scene.jpg",
+        "model": "yoloe-26n-seg.pt",
+        "targets": [
+          "cup",
+          "glasses",
+          "fingers",
+          "hand",
+          "bottle"
+        ],
+        "image_size": [
+          640,
+          480
+        ],
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "confidence_threshold": 0.2,
+        "counts": {
+          "cup": 4,
+          "glasses": 0,
+          "fingers": 0,
+          "hand": 1,
+          "bottle": 1
+        },
+        "detections": [
+          {
+            "label": "cup",
+            "confidence": 0.7888936996459961,
+            "bbox_xyxy": [
+              90.46514892578125,
+              130.73240661621094,
+              287.34136962890625,
+              327.7689208984375
+            ]
+          },
+          {
+            "label": "hand",
+            "confidence": 0.4630918502807617,
+            "bbox_xyxy": [
+              0.0,
+              321.43804931640625,
+              302.4217529296875,
+              479.5111083984375
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.3917410373687744,
+            "bbox_xyxy": [
+              287.3259582519531,
+              354.4394226074219,
+              339.4266052246094,
+              430.8819885253906
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.3393889367580414,
+            "bbox_xyxy": [
+              573.7440185546875,
+              334.1327819824219,
+              640.0,
+              410.3713073730469
+            ]
+          },
+          {
+            "label": "bottle",
+            "confidence": 0.3096977472305298,
+            "bbox_xyxy": [
+              394.47802734375,
+              308.68035888671875,
+              502.097412109375,
+              418.25970458984375
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.23859573900699615,
+            "bbox_xyxy": [
+              287.0777282714844,
+              354.10302734375,
+              367.6734313964844,
+              431.044921875
+            ]
+          }
+        ],
+        "metrics": {
+          "model_construct_ms": 2378.61,
+          "targets_changed": false,
+          "prompt_setup_ms": 0.001,
+          "prediction_index_in_process": 21,
+          "prediction_ms": 627.579,
+          "warm_runs": 0,
+          "input_size_requested": 640,
+          "predictor_image_size": [
+            640,
+            640
+          ],
+          "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+          "pre_capture_prompt_setup_ms": 0.001,
+          "pre_capture_targets_changed": false,
+          "capture_process_ms": 4335.319,
+          "observe_scene_total_ms": 4970.349,
+          "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+        },
+        "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+      },
+      "camera_metadata": {
+        "received_at_utc": "2026-10-15T02:34:24.167323+00:00",
+        "sensor_timestamp_ns": 3622746137000,
+        "frame_shape": [
+          480,
+          640,
+          3
+        ],
+        "capture_wait_ms": 67.54,
+        "note": "Receipt time is not the exact sensor exposure time."
+      }
+    },
+    {
+      "run_id": "20261015T023434_86f3e109",
+      "observation": {
+        "schema_version": "pi-vision-v1",
+        "received_at_utc": "2026-10-15T02:34:39.110344+00:00",
+        "processed_at_utc": "2026-10-15T02:34:39.889469+00:00",
+        "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T023434_86f3e109/scene.jpg",
+        "model": "yoloe-26n-seg.pt",
+        "targets": [
+          "cup",
+          "glasses",
+          "fingers",
+          "hand",
+          "bottle"
+        ],
+        "image_size": [
+          640,
+          480
+        ],
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "confidence_threshold": 0.2,
+        "counts": {
+          "cup": 3,
+          "glasses": 0,
+          "fingers": 0,
+          "hand": 1,
+          "bottle": 1
+        },
+        "detections": [
+          {
+            "label": "cup",
+            "confidence": 0.8208214640617371,
+            "bbox_xyxy": [
+              92.46286010742188,
+              126.83705139160156,
+              290.4961853027344,
+              327.63525390625
+            ]
+          },
+          {
+            "label": "hand",
+            "confidence": 0.44745370745658875,
+            "bbox_xyxy": [
+              0.0,
+              320.86834716796875,
+              305.2880859375,
+              479.60943603515625
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.32694053649902344,
+            "bbox_xyxy": [
+              573.812255859375,
+              334.0525207519531,
+              640.0,
+              410.5909729003906
+            ]
+          },
+          {
+            "label": "bottle",
+            "confidence": 0.2712000608444214,
+            "bbox_xyxy": [
+              394.336669921875,
+              308.81866455078125,
+              501.9127197265625,
+              418.19476318359375
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.2570018470287323,
+            "bbox_xyxy": [
+              287.77056884765625,
+              354.564208984375,
+              339.57025146484375,
+              432.034423828125
+            ]
+          }
+        ],
+        "metrics": {
+          "model_construct_ms": 2378.61,
+          "targets_changed": false,
+          "prompt_setup_ms": 0.0,
+          "prediction_index_in_process": 22,
+          "prediction_ms": 627.851,
+          "warm_runs": 0,
+          "input_size_requested": 640,
+          "predictor_image_size": [
+            640,
+            640
+          ],
+          "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+          "pre_capture_prompt_setup_ms": 0.001,
+          "pre_capture_targets_changed": false,
+          "capture_process_ms": 4300.73,
+          "observe_scene_total_ms": 4935.952,
+          "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+        },
+        "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+      },
+      "camera_metadata": {
+        "received_at_utc": "2026-10-15T02:34:39.110344+00:00",
+        "sensor_timestamp_ns": 3637690182000,
+        "frame_shape": [
+          480,
+          640,
+          3
+        ],
+        "capture_wait_ms": 66.51,
+        "note": "Receipt time is not the exact sensor exposure time."
+      }
+    },
+    {
+      "run_id": "20261015T023449_64fd552e",
+      "observation": {
+        "schema_version": "pi-vision-v1",
+        "received_at_utc": "2026-10-15T02:34:54.074244+00:00",
+        "processed_at_utc": "2026-10-15T02:34:54.846763+00:00",
+        "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T023449_64fd552e/scene.jpg",
+        "model": "yoloe-26n-seg.pt",
+        "targets": [
+          "cup",
+          "glasses",
+          "fingers",
+          "hand",
+          "bottle"
+        ],
+        "image_size": [
+          640,
+          480
+        ],
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "confidence_threshold": 0.2,
+        "counts": {
+          "cup": 3,
+          "glasses": 0,
+          "fingers": 0,
+          "hand": 1,
+          "bottle": 1
+        },
+        "detections": [
+          {
+            "label": "cup",
+            "confidence": 0.8039150834083557,
+            "bbox_xyxy": [
+              94.26290893554688,
+              127.14350891113281,
+              290.16693115234375,
+              327.59564208984375
+            ]
+          },
+          {
+            "label": "hand",
+            "confidence": 0.4563972055912018,
+            "bbox_xyxy": [
+              0.0,
+              320.5517578125,
+              306.71142578125,
+              479.4971923828125
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.3167220950126648,
+            "bbox_xyxy": [
+              574.3869018554688,
+              333.71099853515625,
+              640.0,
+              410.49053955078125
+            ]
+          },
+          {
+            "label": "bottle",
+            "confidence": 0.24262210726737976,
+            "bbox_xyxy": [
+              394.42669677734375,
+              308.811279296875,
+              501.62725830078125,
+              417.7279052734375
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.23355302214622498,
+            "bbox_xyxy": [
+              289.77496337890625,
+              354.4996337890625,
+              339.22210693359375,
+              431.4892578125
+            ]
+          }
+        ],
+        "metrics": {
+          "model_construct_ms": 2378.61,
+          "targets_changed": false,
+          "prompt_setup_ms": 0.001,
+          "prediction_index_in_process": 23,
+          "prediction_ms": 621.701,
+          "warm_runs": 0,
+          "input_size_requested": 640,
+          "predictor_image_size": [
+            640,
+            640
+          ],
+          "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+          "pre_capture_prompt_setup_ms": 0.001,
+          "pre_capture_targets_changed": false,
+          "capture_process_ms": 4321.589,
+          "observe_scene_total_ms": 4950.612,
+          "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+        },
+        "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+      },
+      "camera_metadata": {
+        "received_at_utc": "2026-10-15T02:34:54.074244+00:00",
+        "sensor_timestamp_ns": 3652654050000,
+        "frame_shape": [
+          480,
+          640,
+          3
+        ],
+        "capture_wait_ms": 66.44,
+        "note": "Receipt time is not the exact sensor exposure time."
+      }
+    },
+    {
+      "run_id": "20261015T023504_c2027879",
+      "observation": {
+        "schema_version": "pi-vision-v1",
+        "received_at_utc": "2026-10-15T02:35:09.030253+00:00",
+        "processed_at_utc": "2026-10-15T02:35:09.804299+00:00",
+        "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T023504_c2027879/scene.jpg",
+        "model": "yoloe-26n-seg.pt",
+        "targets": [
+          "cup",
+          "glasses",
+          "fingers",
+          "hand",
+          "bottle"
+        ],
+        "image_size": [
+          640,
+          480
+        ],
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "confidence_threshold": 0.2,
+        "counts": {
+          "cup": 2,
+          "glasses": 0,
+          "fingers": 0,
+          "hand": 1,
+          "bottle": 1
+        },
+        "detections": [
+          {
+            "label": "cup",
+            "confidence": 0.7940192818641663,
+            "bbox_xyxy": [
+              95.72018432617188,
+              127.59173583984375,
+              290.8369140625,
+              326.84796142578125
+            ]
+          },
+          {
+            "label": "hand",
+            "confidence": 0.4189395010471344,
+            "bbox_xyxy": [
+              0.0,
+              320.083251953125,
+              308.9766845703125,
+              479.4942626953125
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.33005669713020325,
+            "bbox_xyxy": [
+              574.1587524414062,
+              334.04595947265625,
+              640.0,
+              410.93975830078125
+            ]
+          },
+          {
+            "label": "bottle",
+            "confidence": 0.29752475023269653,
+            "bbox_xyxy": [
+              394.4541931152344,
+              308.5732421875,
+              502.0968933105469,
+              418.5625
+            ]
+          }
+        ],
+        "metrics": {
+          "model_construct_ms": 2378.61,
+          "targets_changed": false,
+          "prompt_setup_ms": 0.001,
+          "prediction_index_in_process": 24,
+          "prediction_ms": 623.337,
+          "warm_runs": 0,
+          "input_size_requested": 640,
+          "predictor_image_size": [
+            640,
+            640
+          ],
+          "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+          "pre_capture_prompt_setup_ms": 0.001,
+          "pre_capture_targets_changed": false,
+          "capture_process_ms": 4319.597,
+          "observe_scene_total_ms": 4950.238,
+          "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+        },
+        "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+      },
+      "camera_metadata": {
+        "received_at_utc": "2026-10-15T02:35:09.030253+00:00",
+        "sensor_timestamp_ns": 3667610059000,
+        "frame_shape": [
+          480,
+          640,
+          3
+        ],
+        "capture_wait_ms": 66.45,
+        "note": "Receipt time is not the exact sensor exposure time."
+      }
+    },
+    {
+      "run_id": "20261015T024644_d2acdb9d",
+      "observation": {
+        "schema_version": "pi-vision-v1",
+        "received_at_utc": "2026-10-15T02:46:48.818356+00:00",
+        "processed_at_utc": "2026-10-15T02:46:49.811139+00:00",
+        "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T024644_d2acdb9d/scene.jpg",
+        "model": "yoloe-26n-seg.pt",
+        "targets": [
+          "cup",
+          "glasses",
+          "fingers",
+          "hand",
+          "bottle"
+        ],
+        "image_size": [
+          640,
+          480
+        ],
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "confidence_threshold": 0.2,
+        "counts": {
+          "cup": 3,
+          "glasses": 0,
+          "fingers": 0,
+          "hand": 0,
+          "bottle": 1
+        },
+        "detections": [
+          {
+            "label": "cup",
+            "confidence": 0.5212045907974243,
+            "bbox_xyxy": [
+              274.44091796875,
+              352.8395080566406,
+              366.232177734375,
+              430.1817321777344
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.3101142346858978,
+            "bbox_xyxy": [
+              274.65765380859375,
+              352.6156921386719,
+              336.1212158203125,
+              429.2138366699219
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.29494425654411316,
+            "bbox_xyxy": [
+              431.83428955078125,
+              341.37890625,
+              499.19598388671875,
+              416.9541015625
+            ]
+          },
+          {
+            "label": "bottle",
+            "confidence": 0.23395580053329468,
+            "bbox_xyxy": [
+              393.97564697265625,
+              307.83978271484375,
+              458.85809326171875,
+              401.84832763671875
+            ]
+          }
+        ],
+        "metrics": {
+          "model_construct_ms": 119.099,
+          "targets_changed": false,
+          "prompt_setup_ms": 0.001,
+          "prediction_index_in_process": 1,
+          "prediction_ms": 841.141,
+          "warm_runs": 0,
+          "input_size_requested": 640,
+          "predictor_image_size": [
+            640,
+            640
+          ],
+          "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+          "pre_capture_prompt_setup_ms": 4007.682,
+          "pre_capture_targets_changed": true,
+          "capture_process_ms": 4289.071,
+          "observe_scene_total_ms": 9160.263,
+          "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+        },
+        "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+      },
+      "camera_metadata": {
+        "received_at_utc": "2026-10-15T02:46:48.818356+00:00",
+        "sensor_timestamp_ns": 4367398154000,
+        "frame_shape": [
+          480,
+          640,
+          3
+        ],
+        "capture_wait_ms": 66.49,
+        "note": "Receipt time is not the exact sensor exposure time."
+      }
+    },
+    {
+      "run_id": "20261015T024659_c67fbdc6",
+      "observation": {
+        "schema_version": "pi-vision-v1",
+        "received_at_utc": "2026-10-15T02:47:03.990239+00:00",
+        "processed_at_utc": "2026-10-15T02:47:04.758901+00:00",
+        "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T024659_c67fbdc6/scene.jpg",
+        "model": "yoloe-26n-seg.pt",
+        "targets": [
+          "cup",
+          "glasses",
+          "fingers",
+          "hand",
+          "bottle"
+        ],
+        "image_size": [
+          640,
+          480
+        ],
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "confidence_threshold": 0.2,
+        "counts": {
+          "cup": 0,
+          "glasses": 1,
+          "fingers": 0,
+          "hand": 1,
+          "bottle": 1
+        },
+        "detections": [
+          {
+            "label": "glasses",
+            "confidence": 0.8605344891548157,
+            "bbox_xyxy": [
+              146.32122802734375,
+              62.619598388671875,
+              329.0472106933594,
+              133.73587036132812
+            ]
+          },
+          {
+            "label": "bottle",
+            "confidence": 0.5410140752792358,
+            "bbox_xyxy": [
+              0.0,
+              88.37310791015625,
+              33.740806579589844,
+              454.84619140625
+            ]
+          },
+          {
+            "label": "hand",
+            "confidence": 0.23451964557170868,
+            "bbox_xyxy": [
+              493.1499328613281,
+              229.11288452148438,
+              622.0185546875,
+              400.9272766113281
+            ]
+          }
+        ],
+        "metrics": {
+          "model_construct_ms": 119.099,
+          "targets_changed": false,
+          "prompt_setup_ms": 0.001,
+          "prediction_index_in_process": 2,
+          "prediction_ms": 617.68,
+          "warm_runs": 0,
+          "input_size_requested": 640,
+          "predictor_image_size": [
+            640,
+            640
+          ],
+          "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+          "pre_capture_prompt_setup_ms": 0.001,
+          "pre_capture_targets_changed": false,
+          "capture_process_ms": 4309.606,
+          "observe_scene_total_ms": 4934.519,
+          "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+        },
+        "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+      },
+      "camera_metadata": {
+        "received_at_utc": "2026-10-15T02:47:03.990239+00:00",
+        "sensor_timestamp_ns": 4382570049000,
+        "frame_shape": [
+          480,
+          640,
+          3
+        ],
+        "capture_wait_ms": 66.45,
+        "note": "Receipt time is not the exact sensor exposure time."
+      }
+    },
+    {
+      "run_id": "20261015T024714_5545ff5e",
+      "observation": {
+        "schema_version": "pi-vision-v1",
+        "received_at_utc": "2026-10-15T02:47:18.947319+00:00",
+        "processed_at_utc": "2026-10-15T02:47:19.719748+00:00",
+        "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T024714_5545ff5e/scene.jpg",
+        "model": "yoloe-26n-seg.pt",
+        "targets": [
+          "cup",
+          "glasses",
+          "fingers",
+          "hand",
+          "bottle"
+        ],
+        "image_size": [
+          640,
+          480
+        ],
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "confidence_threshold": 0.2,
+        "counts": {
+          "cup": 0,
+          "glasses": 1,
+          "fingers": 0,
+          "hand": 0,
+          "bottle": 0
+        },
+        "detections": [
+          {
+            "label": "glasses",
+            "confidence": 0.8354552388191223,
+            "bbox_xyxy": [
+              102.3481674194336,
+              28.1524658203125,
+              278.1704406738281,
+              92.0377197265625
+            ]
+          }
+        ],
+        "metrics": {
+          "model_construct_ms": 119.099,
+          "targets_changed": false,
+          "prompt_setup_ms": 0.001,
+          "prediction_index_in_process": 3,
+          "prediction_ms": 621.07,
+          "warm_runs": 0,
+          "input_size_requested": 640,
+          "predictor_image_size": [
+            640,
+            640
+          ],
+          "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+          "pre_capture_prompt_setup_ms": 0.001,
+          "pre_capture_targets_changed": false,
+          "capture_process_ms": 4323.625,
+          "observe_scene_total_ms": 4951.318,
+          "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+        },
+        "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+      },
+      "camera_metadata": {
+        "received_at_utc": "2026-10-15T02:47:18.947319+00:00",
+        "sensor_timestamp_ns": 4397526173000,
+        "frame_shape": [
+          480,
+          640,
+          3
+        ],
+        "capture_wait_ms": 67.49,
+        "note": "Receipt time is not the exact sensor exposure time."
+      }
+    },
+    {
+      "run_id": "20261015T024729_2168f12a",
+      "observation": {
+        "schema_version": "pi-vision-v1",
+        "received_at_utc": "2026-10-15T02:47:33.902329+00:00",
+        "processed_at_utc": "2026-10-15T02:47:34.668870+00:00",
+        "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T024729_2168f12a/scene.jpg",
+        "model": "yoloe-26n-seg.pt",
+        "targets": [
+          "cup",
+          "glasses",
+          "fingers",
+          "hand",
+          "bottle"
+        ],
+        "image_size": [
+          640,
+          480
+        ],
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "confidence_threshold": 0.2,
+        "counts": {
+          "cup": 0,
+          "glasses": 1,
+          "fingers": 1,
+          "hand": 1,
+          "bottle": 0
+        },
+        "detections": [
+          {
+            "label": "glasses",
+            "confidence": 0.8670672178268433,
+            "bbox_xyxy": [
+              92.48522186279297,
+              27.464195251464844,
+              266.05706787109375,
+              93.55331420898438
+            ]
+          },
+          {
+            "label": "fingers",
+            "confidence": 0.24794259667396545,
+            "bbox_xyxy": [
+              428.6042785644531,
+              15.266700744628906,
+              476.6351623535156,
+              111.28134155273438
+            ]
+          },
+          {
+            "label": "hand",
+            "confidence": 0.21299134194850922,
+            "bbox_xyxy": [
+              369.1031494140625,
+              18.704620361328125,
+              554.2547607421875,
+              276.2134094238281
+            ]
+          }
+        ],
+        "metrics": {
+          "model_construct_ms": 119.099,
+          "targets_changed": false,
+          "prompt_setup_ms": 0.001,
+          "prediction_index_in_process": 4,
+          "prediction_ms": 615.998,
+          "warm_runs": 0,
+          "input_size_requested": 640,
+          "predictor_image_size": [
+            640,
+            640
+          ],
+          "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+          "pre_capture_prompt_setup_ms": 0.001,
+          "pre_capture_targets_changed": false,
+          "capture_process_ms": 4325.019,
+          "observe_scene_total_ms": 4948.253,
+          "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+        },
+        "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+      },
+      "camera_metadata": {
+        "received_at_utc": "2026-10-15T02:47:33.902329+00:00",
+        "sensor_timestamp_ns": 4412482178000,
+        "frame_shape": [
+          480,
+          640,
+          3
+        ],
+        "capture_wait_ms": 66.53,
+        "note": "Receipt time is not the exact sensor exposure time."
+      }
+    },
+    {
+      "run_id": "20261015T024744_1856c588",
+      "observation": {
+        "schema_version": "pi-vision-v1",
+        "received_at_utc": "2026-10-15T02:47:48.777010+00:00",
+        "processed_at_utc": "2026-10-15T02:47:49.541433+00:00",
+        "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T024744_1856c588/scene.jpg",
+        "model": "yoloe-26n-seg.pt",
+        "targets": [
+          "cup",
+          "glasses",
+          "fingers",
+          "hand",
+          "bottle"
+        ],
+        "image_size": [
+          640,
+          480
+        ],
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "confidence_threshold": 0.2,
+        "counts": {
+          "cup": 0,
+          "glasses": 1,
+          "fingers": 0,
+          "hand": 0,
+          "bottle": 1
+        },
+        "detections": [
+          {
+            "label": "glasses",
+            "confidence": 0.8966278433799744,
+            "bbox_xyxy": [
+              91.74624633789062,
+              20.980308532714844,
+              263.79290771484375,
+              90.05197143554688
+            ]
+          },
+          {
+            "label": "bottle",
+            "confidence": 0.3277311325073242,
+            "bbox_xyxy": [
+              435.0109558105469,
+              121.23703002929688,
+              599.468017578125,
+              359.0362243652344
+            ]
+          }
+        ],
+        "metrics": {
+          "model_construct_ms": 119.099,
+          "targets_changed": false,
+          "prompt_setup_ms": 0.001,
+          "prediction_index_in_process": 5,
+          "prediction_ms": 613.663,
+          "warm_runs": 0,
+          "input_size_requested": 640,
+          "predictor_image_size": [
+            640,
+            640
+          ],
+          "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+          "pre_capture_prompt_setup_ms": 0.001,
+          "pre_capture_targets_changed": false,
+          "capture_process_ms": 4244.76,
+          "observe_scene_total_ms": 4865.457,
+          "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+        },
+        "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+      },
+      "camera_metadata": {
+        "received_at_utc": "2026-10-15T02:47:48.777010+00:00",
+        "sensor_timestamp_ns": 4427355516000,
+        "frame_shape": [
+          480,
+          640,
+          3
+        ],
+        "capture_wait_ms": 1.2,
+        "note": "Receipt time is not the exact sensor exposure time."
+      }
+    },
+    {
+      "run_id": "20261015T024759_afff7675",
+      "observation": {
+        "schema_version": "pi-vision-v1",
+        "received_at_utc": "2026-10-15T02:48:03.762376+00:00",
+        "processed_at_utc": "2026-10-15T02:48:04.535271+00:00",
+        "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T024759_afff7675/scene.jpg",
+        "model": "yoloe-26n-seg.pt",
+        "targets": [
+          "cup",
+          "glasses",
+          "fingers",
+          "hand",
+          "bottle"
+        ],
+        "image_size": [
+          640,
+          480
+        ],
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "confidence_threshold": 0.2,
+        "counts": {
+          "cup": 0,
+          "glasses": 1,
+          "fingers": 0,
+          "hand": 0,
+          "bottle": 1
+        },
+        "detections": [
+          {
+            "label": "glasses",
+            "confidence": 0.8973958492279053,
+            "bbox_xyxy": [
+              94.2120361328125,
+              16.309165954589844,
+              260.2579650878906,
+              85.73098754882812
+            ]
+          },
+          {
+            "label": "bottle",
+            "confidence": 0.22696061432361603,
+            "bbox_xyxy": [
+              440.5862121582031,
+              120.78330993652344,
+              603.244140625,
+              360.9967041015625
+            ]
+          }
+        ],
+        "metrics": {
+          "model_construct_ms": 119.099,
+          "targets_changed": false,
+          "prompt_setup_ms": 0.001,
+          "prediction_index_in_process": 6,
+          "prediction_ms": 621.331,
+          "warm_runs": 0,
+          "input_size_requested": 640,
+          "predictor_image_size": [
+            640,
+            640
+          ],
+          "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+          "pre_capture_prompt_setup_ms": 0.001,
+          "pre_capture_targets_changed": false,
+          "capture_process_ms": 4358.852,
+          "observe_scene_total_ms": 4987.159,
+          "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+        },
+        "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+      },
+      "camera_metadata": {
+        "received_at_utc": "2026-10-15T02:48:03.762376+00:00",
+        "sensor_timestamp_ns": 4442342199000,
+        "frame_shape": [
+          480,
+          640,
+          3
+        ],
+        "capture_wait_ms": 66.58,
+        "note": "Receipt time is not the exact sensor exposure time."
+      }
+    },
+    {
+      "run_id": "20261015T024814_75fb2e1d",
+      "observation": {
+        "schema_version": "pi-vision-v1",
+        "received_at_utc": "2026-10-15T02:48:18.645576+00:00",
+        "processed_at_utc": "2026-10-15T02:48:19.411722+00:00",
+        "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T024814_75fb2e1d/scene.jpg",
+        "model": "yoloe-26n-seg.pt",
+        "targets": [
+          "cup",
+          "glasses",
+          "fingers",
+          "hand",
+          "bottle"
+        ],
+        "image_size": [
+          640,
+          480
+        ],
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "confidence_threshold": 0.2,
+        "counts": {
+          "cup": 0,
+          "glasses": 1,
+          "fingers": 0,
+          "hand": 0,
+          "bottle": 1
+        },
+        "detections": [
+          {
+            "label": "glasses",
+            "confidence": 0.8451011180877686,
+            "bbox_xyxy": [
+              24.839935302734375,
+              0.65081787109375,
+              224.89324951171875,
+              61.328125
+            ]
+          },
+          {
+            "label": "bottle",
+            "confidence": 0.31111055612564087,
+            "bbox_xyxy": [
+              404.24981689453125,
+              39.4822998046875,
+              594.5233154296875,
+              444.32275390625
+            ]
+          }
+        ],
+        "metrics": {
+          "model_construct_ms": 119.099,
+          "targets_changed": false,
+          "prompt_setup_ms": 0.001,
+          "prediction_index_in_process": 7,
+          "prediction_ms": 614.4,
+          "warm_runs": 0,
+          "input_size_requested": 640,
+          "predictor_image_size": [
+            640,
+            640
+          ],
+          "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+          "pre_capture_prompt_setup_ms": 0.001,
+          "pre_capture_targets_changed": false,
+          "capture_process_ms": 4248.385,
+          "observe_scene_total_ms": 4869.652,
+          "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+        },
+        "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+      },
+      "camera_metadata": {
+        "received_at_utc": "2026-10-15T02:48:18.645576+00:00",
+        "sensor_timestamp_ns": 4457225481000,
+        "frame_shape": [
+          480,
+          640,
+          3
+        ],
+        "capture_wait_ms": 1.7,
+        "note": "Receipt time is not the exact sensor exposure time."
+      }
+    },
+    {
+      "run_id": "20261015T024829_0b1319cc",
+      "observation": {
+        "schema_version": "pi-vision-v1",
+        "received_at_utc": "2026-10-15T02:48:33.543422+00:00",
+        "processed_at_utc": "2026-10-15T02:48:34.310556+00:00",
+        "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T024829_0b1319cc/scene.jpg",
+        "model": "yoloe-26n-seg.pt",
+        "targets": [
+          "cup",
+          "glasses",
+          "fingers",
+          "hand",
+          "bottle"
+        ],
+        "image_size": [
+          640,
+          480
+        ],
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "confidence_threshold": 0.2,
+        "counts": {
+          "cup": 0,
+          "glasses": 1,
+          "fingers": 0,
+          "hand": 0,
+          "bottle": 0
+        },
+        "detections": [
+          {
+            "label": "glasses",
+            "confidence": 0.5891578793525696,
+            "bbox_xyxy": [
+              91.558349609375,
+              120.20391845703125,
+              271.38177490234375,
+              213.585205078125
+            ]
+          }
+        ],
+        "metrics": {
+          "model_construct_ms": 119.099,
+          "targets_changed": false,
+          "prompt_setup_ms": 0.001,
+          "prediction_index_in_process": 8,
+          "prediction_ms": 618.12,
+          "warm_runs": 0,
+          "input_size_requested": 640,
+          "predictor_image_size": [
+            640,
+            640
+          ],
+          "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+          "pre_capture_prompt_setup_ms": 0.001,
+          "pre_capture_targets_changed": false,
+          "capture_process_ms": 4266.073,
+          "observe_scene_total_ms": 4890.96,
+          "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+        },
+        "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+      },
+      "camera_metadata": {
+        "received_at_utc": "2026-10-15T02:48:33.543422+00:00",
+        "sensor_timestamp_ns": 4472121419000,
+        "frame_shape": [
+          480,
+          640,
+          3
+        ],
+        "capture_wait_ms": 3.62,
+        "note": "Receipt time is not the exact sensor exposure time."
+      }
+    },
+    {
+      "run_id": "20261015T024844_4f8d5d3a",
+      "observation": {
+        "schema_version": "pi-vision-v1",
+        "received_at_utc": "2026-10-15T02:48:48.503190+00:00",
+        "processed_at_utc": "2026-10-15T02:48:49.267313+00:00",
+        "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T024844_4f8d5d3a/scene.jpg",
+        "model": "yoloe-26n-seg.pt",
+        "targets": [
+          "cup",
+          "glasses",
+          "fingers",
+          "hand",
+          "bottle"
+        ],
+        "image_size": [
+          640,
+          480
+        ],
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "confidence_threshold": 0.2,
+        "counts": {
+          "cup": 0,
+          "glasses": 1,
+          "fingers": 0,
+          "hand": 0,
+          "bottle": 0
+        },
+        "detections": [
+          {
+            "label": "glasses",
+            "confidence": 0.2666400969028473,
+            "bbox_xyxy": [
+              125.56759643554688,
+              199.009521484375,
+              291.66217041015625,
+              271.2510986328125
+            ]
+          }
+        ],
+        "metrics": {
+          "model_construct_ms": 119.099,
+          "targets_changed": false,
+          "prompt_setup_ms": 0.001,
+          "prediction_index_in_process": 9,
+          "prediction_ms": 614.166,
+          "warm_runs": 0,
+          "input_size_requested": 640,
+          "predictor_image_size": [
+            640,
+            640
+          ],
+          "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+          "pre_capture_prompt_setup_ms": 0.001,
+          "pre_capture_targets_changed": false,
+          "capture_process_ms": 4325.924,
+          "observe_scene_total_ms": 4946.888,
+          "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+        },
+        "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+      },
+      "camera_metadata": {
+        "received_at_utc": "2026-10-15T02:48:48.503190+00:00",
+        "sensor_timestamp_ns": 4487082053000,
+        "frame_shape": [
+          480,
+          640,
+          3
+        ],
+        "capture_wait_ms": 67.4,
+        "note": "Receipt time is not the exact sensor exposure time."
+      }
+    },
+    {
+      "run_id": "20261015T024859_27911b6c",
+      "observation": {
+        "schema_version": "pi-vision-v1",
+        "received_at_utc": "2026-10-15T02:49:03.460072+00:00",
+        "processed_at_utc": "2026-10-15T02:49:04.224938+00:00",
+        "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T024859_27911b6c/scene.jpg",
+        "model": "yoloe-26n-seg.pt",
+        "targets": [
+          "cup",
+          "glasses",
+          "fingers",
+          "hand",
+          "bottle"
+        ],
+        "image_size": [
+          640,
+          480
+        ],
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "confidence_threshold": 0.2,
+        "counts": {
+          "cup": 1,
+          "glasses": 0,
+          "fingers": 0,
+          "hand": 2,
+          "bottle": 0
+        },
+        "detections": [
+          {
+            "label": "hand",
+            "confidence": 0.3141530454158783,
+            "bbox_xyxy": [
+              321.028564453125,
+              188.8416748046875,
+              501.67095947265625,
+              392.2503662109375
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.28891047835350037,
+            "bbox_xyxy": [
+              335.0419921875,
+              312.1642761230469,
+              442.06512451171875,
+              404.9913024902344
+            ]
+          },
+          {
+            "label": "hand",
+            "confidence": 0.2533160448074341,
+            "bbox_xyxy": [
+              0.0,
+              288.56158447265625,
+              127.96940612792969,
+              425.39752197265625
+            ]
+          }
+        ],
+        "metrics": {
+          "model_construct_ms": 119.099,
+          "targets_changed": false,
+          "prompt_setup_ms": 0.001,
+          "prediction_index_in_process": 10,
+          "prediction_ms": 616.145,
+          "warm_runs": 0,
+          "input_size_requested": 640,
+          "predictor_image_size": [
+            640,
+            640
+          ],
+          "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+          "pre_capture_prompt_setup_ms": 0.001,
+          "pre_capture_targets_changed": false,
+          "capture_process_ms": 4325.109,
+          "observe_scene_total_ms": 4948.401,
+          "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+        },
+        "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+      },
+      "camera_metadata": {
+        "received_at_utc": "2026-10-15T02:49:03.460072+00:00",
+        "sensor_timestamp_ns": 4502038047000,
+        "frame_shape": [
+          480,
+          640,
+          3
+        ],
+        "capture_wait_ms": 68.27,
+        "note": "Receipt time is not the exact sensor exposure time."
+      }
+    },
+    {
+      "run_id": "20261015T024914_0394df35",
+      "observation": {
+        "schema_version": "pi-vision-v1",
+        "received_at_utc": "2026-10-15T02:49:18.414437+00:00",
+        "processed_at_utc": "2026-10-15T02:49:19.182207+00:00",
+        "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T024914_0394df35/scene.jpg",
+        "model": "yoloe-26n-seg.pt",
+        "targets": [
+          "cup",
+          "glasses",
+          "fingers",
+          "hand",
+          "bottle"
+        ],
+        "image_size": [
+          640,
+          480
+        ],
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "confidence_threshold": 0.2,
+        "counts": {
+          "cup": 2,
+          "glasses": 0,
+          "fingers": 0,
+          "hand": 0,
+          "bottle": 1
+        },
+        "detections": [
+          {
+            "label": "bottle",
+            "confidence": 0.6484728455543518,
+            "bbox_xyxy": [
+              183.17364501953125,
+              168.66014099121094,
+              269.40948486328125,
+              292.2021484375
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.3027843236923218,
+            "bbox_xyxy": [
+              177.35443115234375,
+              369.9305419921875,
+              274.17236328125,
+              479.1195068359375
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.24985848367214203,
+            "bbox_xyxy": [
+              177.53414916992188,
+              369.75164794921875,
+              260.4220275878906,
+              451.3734130859375
+            ]
+          }
+        ],
+        "metrics": {
+          "model_construct_ms": 119.099,
+          "targets_changed": false,
+          "prompt_setup_ms": 0.001,
+          "prediction_index_in_process": 11,
+          "prediction_ms": 616.479,
+          "warm_runs": 0,
+          "input_size_requested": 640,
+          "predictor_image_size": [
+            640,
+            640
+          ],
+          "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+          "pre_capture_prompt_setup_ms": 0.001,
+          "pre_capture_targets_changed": false,
+          "capture_process_ms": 4324.399,
+          "observe_scene_total_ms": 4948.259,
+          "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+        },
+        "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+      },
+      "camera_metadata": {
+        "received_at_utc": "2026-10-15T02:49:18.414437+00:00",
+        "sensor_timestamp_ns": 4516994232000,
+        "frame_shape": [
+          480,
+          640,
+          3
+        ],
+        "capture_wait_ms": 66.64,
+        "note": "Receipt time is not the exact sensor exposure time."
+      }
+    },
+    {
+      "run_id": "20261015T024929_e362083f",
+      "observation": {
+        "schema_version": "pi-vision-v1",
+        "received_at_utc": "2026-10-15T02:49:33.366364+00:00",
+        "processed_at_utc": "2026-10-15T02:49:34.133703+00:00",
+        "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T024929_e362083f/scene.jpg",
+        "model": "yoloe-26n-seg.pt",
+        "targets": [
+          "cup",
+          "glasses",
+          "fingers",
+          "hand",
+          "bottle"
+        ],
+        "image_size": [
+          640,
+          480
+        ],
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "confidence_threshold": 0.2,
+        "counts": {
+          "cup": 1,
+          "glasses": 0,
+          "fingers": 0,
+          "hand": 0,
+          "bottle": 0
+        },
+        "detections": [
+          {
+            "label": "cup",
+            "confidence": 0.2234591394662857,
+            "bbox_xyxy": [
+              573.8189697265625,
+              333.39483642578125,
+              640.0,
+              408.8341064453125
+            ]
+          }
+        ],
+        "metrics": {
+          "model_construct_ms": 119.099,
+          "targets_changed": false,
+          "prompt_setup_ms": 0.001,
+          "prediction_index_in_process": 12,
+          "prediction_ms": 615.11,
+          "warm_runs": 0,
+          "input_size_requested": 640,
+          "predictor_image_size": [
+            640,
+            640
+          ],
+          "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+          "pre_capture_prompt_setup_ms": 0.001,
+          "pre_capture_targets_changed": false,
+          "capture_process_ms": 4322.314,
+          "observe_scene_total_ms": 4944.516,
+          "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+        },
+        "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+      },
+      "camera_metadata": {
+        "received_at_utc": "2026-10-15T02:49:33.366364+00:00",
+        "sensor_timestamp_ns": 4531946175000,
+        "frame_shape": [
+          480,
+          640,
+          3
+        ],
+        "capture_wait_ms": 66.57,
+        "note": "Receipt time is not the exact sensor exposure time."
+      }
+    },
+    {
+      "run_id": "20261015T024944_48444e4e",
+      "observation": {
+        "schema_version": "pi-vision-v1",
+        "received_at_utc": "2026-10-15T02:49:48.319705+00:00",
+        "processed_at_utc": "2026-10-15T02:49:49.082564+00:00",
+        "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T024944_48444e4e/scene.jpg",
+        "model": "yoloe-26n-seg.pt",
+        "targets": [
+          "cup",
+          "glasses",
+          "fingers",
+          "hand",
+          "bottle"
+        ],
+        "image_size": [
+          640,
+          480
+        ],
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "confidence_threshold": 0.2,
+        "counts": {
+          "cup": 0,
+          "glasses": 0,
+          "fingers": 0,
+          "hand": 0,
+          "bottle": 0
+        },
+        "detections": [],
+        "metrics": {
+          "model_construct_ms": 119.099,
+          "targets_changed": false,
+          "prompt_setup_ms": 0.001,
+          "prediction_index_in_process": 13,
+          "prediction_ms": 613.439,
+          "warm_runs": 0,
+          "input_size_requested": 640,
+          "predictor_image_size": [
+            640,
+            640
+          ],
+          "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+          "pre_capture_prompt_setup_ms": 0.001,
+          "pre_capture_targets_changed": false,
+          "capture_process_ms": 4321.29,
+          "observe_scene_total_ms": 4941.594,
+          "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+        },
+        "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+      },
+      "camera_metadata": {
+        "received_at_utc": "2026-10-15T02:49:48.319705+00:00",
+        "sensor_timestamp_ns": 4546898184000,
+        "frame_shape": [
+          480,
+          640,
+          3
+        ],
+        "capture_wait_ms": 67.9,
+        "note": "Receipt time is not the exact sensor exposure time."
+      }
+    },
+    {
+      "run_id": "20261015T024959_03da2666",
+      "observation": {
+        "schema_version": "pi-vision-v1",
+        "received_at_utc": "2026-10-15T02:50:03.258712+00:00",
+        "processed_at_utc": "2026-10-15T02:50:04.028493+00:00",
+        "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T024959_03da2666/scene.jpg",
+        "model": "yoloe-26n-seg.pt",
+        "targets": [
+          "cup",
+          "glasses",
+          "fingers",
+          "hand",
+          "bottle"
+        ],
+        "image_size": [
+          640,
+          480
+        ],
+        "input_size_requested": 640,
+        "predictor_image_size": [
+          640,
+          640
+        ],
+        "confidence_threshold": 0.2,
+        "counts": {
+          "cup": 1,
+          "glasses": 1,
+          "fingers": 0,
+          "hand": 0,
+          "bottle": 2
+        },
+        "detections": [
+          {
+            "label": "bottle",
+            "confidence": 0.8515964150428772,
+            "bbox_xyxy": [
+              43.85224914550781,
+              331.44830322265625,
+              158.68692016601562,
+              479.0679931640625
+            ]
+          },
+          {
+            "label": "glasses",
+            "confidence": 0.7427451014518738,
+            "bbox_xyxy": [
+              0.0,
+              121.90219116210938,
+              153.68968200683594,
+              192.13345336914062
+            ]
+          },
+          {
+            "label": "bottle",
+            "confidence": 0.3018268644809723,
+            "bbox_xyxy": [
+              393.9926452636719,
+              307.64007568359375,
+              453.2880554199219,
+              392.10540771484375
+            ]
+          },
+          {
+            "label": "cup",
+            "confidence": 0.22520621120929718,
+            "bbox_xyxy": [
+              432.3966979980469,
+              341.6720886230469,
+              501.9974670410156,
+              418.1822204589844
+            ]
+          }
+        ],
+        "metrics": {
+          "model_construct_ms": 119.099,
+          "targets_changed": false,
+          "prompt_setup_ms": 0.001,
+          "prediction_index_in_process": 14,
+          "prediction_ms": 618.856,
+          "warm_runs": 0,
+          "input_size_requested": 640,
+          "predictor_image_size": [
+            640,
+            640
+          ],
+          "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+          "pre_capture_prompt_setup_ms": 0.001,
+          "pre_capture_targets_changed": false,
+          "capture_process_ms": 4313.538,
+          "observe_scene_total_ms": 4939.894,
+          "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+        },
+        "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+      },
+      "camera_metadata": {
+        "received_at_utc": "2026-10-15T02:50:03.258712+00:00",
+        "sensor_timestamp_ns": 4561838179000,
+        "frame_shape": [
+          480,
+          640,
+          3
+        ],
+        "capture_wait_ms": 66.9,
+        "note": "Receipt time is not the exact sensor exposure time."
+      }
+    }
+  ]
+}

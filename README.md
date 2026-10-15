@@ -1,6 +1,7 @@
 # Ollama Python
 
-A collection of notebooks for exploring local language models with the Ollama Python SDK.
+A collection of notebooks and Raspberry Pi projects for exploring local language
+models, validated tools, sensors and camera perception with Ollama.
 
 The [Week 1 notebook](src/week_01.ipynb) covers:
 
@@ -60,9 +61,34 @@ It covers Pi wiring, hardware and agent checks, timestamped observations,
 bounded tool calling, JSONL tracing, and the limits of inferring occupancy
 from motion signals.
 
+The [Weeks 7–8 vision guide](src/week_07_08/README.md) adds Camera Module 3
+capture, OpenCV frame differencing, YOLO26/NCNN benchmarks and text-prompted
+YOLOE detection. A reusable `observe_scene(targets, conf)` method captures a
+fresh image and produces timestamped JSON; a separate Ollama call summarizes
+positive detections. The guide includes the complete runnable Python command,
+camera/vision environment setup, annotated examples and their original metadata.
+
+![YOLO26n NCNN at verified 640 input detecting two cups, a chair and a plant](src/week_07_08/assets/yolo26-ncnn640.png)
+
+Recorded Pi 5 results: YOLO26n NCNN 640 took **70.18 ms** per warmed prediction
+on the table image. In a separate 38-frame YOLOE experiment, the 36 non-initial
+calls had median **620.98 ms** prediction time and **4.94 s** total observation
+time, including camera process startup and settling, before Ollama. These are
+different models and measurement protocols, not a controlled speed comparison.
+
+The examples also document misses, false detections, context-sensitive glasses
+recognition and LLM summary errors. A successful request does not establish that
+its detector counts or generated explanation are correct. Agent-selected
+observations, memory and GPIO actions are later integration work.
+
 ## Getting started
 
 Use Python 3.14 or newer with the `ollama` package installed and a Jupyter-compatible editor, such as VS Code. The extended and Week 3 notebooks also require Pydantic 2. Start Ollama locally and download the models used in the notebooks (`qwen3.5:2b` and `gemma4:e2b`), or update the model names to ones installed.
+
+For Raspberry Pi scripts, follow each week's interpreter and package instructions
+instead of upgrading the Pi's system Python to match the notebook setup. The
+camera project uses Raspberry Pi OS's Python and apt-installed Picamera2/libcamera
+bindings, with a separate environment for vision dependencies.
 
 Start with `src/week_01.ipynb`, then explore tool calling in `src/week_02.ipynb` and input validation in `src/week_02_extended.ipynb`. Run each notebook's cells in order. Enter `exit` or `quit` to end a conversation loop.
 

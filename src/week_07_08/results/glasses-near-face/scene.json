@@ -1,0 +1,11 @@
+{
+  "received_at_utc": "2026-10-15T02:50:03.258712+00:00",
+  "sensor_timestamp_ns": 4561838179000,
+  "frame_shape": [
+    480,
+    640,
+    3
+  ],
+  "capture_wait_ms": 66.9,
+  "note": "Receipt time is not the exact sensor exposure time."
+}

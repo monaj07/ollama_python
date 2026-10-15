@@ -1,0 +1,19 @@
+{
+  "model_construct_ms": 2378.61,
+  "targets_changed": false,
+  "prompt_setup_ms": 0.001,
+  "prediction_index_in_process": 11,
+  "prediction_ms": 620.374,
+  "warm_runs": 0,
+  "input_size_requested": 640,
+  "predictor_image_size": [
+    640,
+    640
+  ],
+  "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+  "pre_capture_prompt_setup_ms": 0.001,
+  "pre_capture_targets_changed": false,
+  "capture_process_ms": 4240.408,
+  "observe_scene_total_ms": 4868.077,
+  "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+}

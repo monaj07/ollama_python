@@ -1,0 +1,63 @@
+{
+  "schema_version": "pi-vision-v1",
+  "received_at_utc": "2026-10-15T02:48:48.503190+00:00",
+  "processed_at_utc": "2026-10-15T02:48:49.267313+00:00",
+  "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T024844_4f8d5d3a/scene.jpg",
+  "model": "yoloe-26n-seg.pt",
+  "targets": [
+    "cup",
+    "glasses",
+    "fingers",
+    "hand",
+    "bottle"
+  ],
+  "image_size": [
+    640,
+    480
+  ],
+  "input_size_requested": 640,
+  "predictor_image_size": [
+    640,
+    640
+  ],
+  "confidence_threshold": 0.2,
+  "counts": {
+    "cup": 0,
+    "glasses": 1,
+    "fingers": 0,
+    "hand": 0,
+    "bottle": 0
+  },
+  "detections": [
+    {
+      "label": "glasses",
+      "confidence": 0.2666400969028473,
+      "bbox_xyxy": [
+        125.56759643554688,
+        199.009521484375,
+        291.66217041015625,
+        271.2510986328125
+      ]
+    }
+  ],
+  "metrics": {
+    "model_construct_ms": 119.099,
+    "targets_changed": false,
+    "prompt_setup_ms": 0.001,
+    "prediction_index_in_process": 9,
+    "prediction_ms": 614.166,
+    "warm_runs": 0,
+    "input_size_requested": 640,
+    "predictor_image_size": [
+      640,
+      640
+    ],
+    "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+    "pre_capture_prompt_setup_ms": 0.001,
+    "pre_capture_targets_changed": false,
+    "capture_process_ms": 4325.924,
+    "observe_scene_total_ms": 4946.888,
+    "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+  },
+  "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+}

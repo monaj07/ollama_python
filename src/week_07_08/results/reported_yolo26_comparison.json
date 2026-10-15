@@ -1,0 +1,41 @@
+{
+  "provenance": "User-reported terminal measurements on the same saved table image, confidence 0.4, ten warm runs. Original raw benchmark files were not supplied. The initial PyTorch 640 timing predates confirmation of matching rect=False padding; its speed ratio against NCNN is indicative.",
+  "runs": [
+    {
+      "backend": "PyTorch",
+      "model": "yolo26n.pt",
+      "actual_input": "640 requested; original run padding not reconfirmed",
+      "warm_median_ms": 266.11,
+      "warm_p95_ms": 267.55,
+      "first_predict_ms": 1651.4,
+      "fps_equivalent": 3.76,
+      "cups": 2
+    },
+    {
+      "backend": "NCNN",
+      "model": "yolo26n_ncnn_model",
+      "actual_input": [
+        320,
+        320
+      ],
+      "warm_median_ms": 17.32,
+      "warm_p95_ms": 24.59,
+      "first_predict_ms": 1297.29,
+      "fps_equivalent": 57.73,
+      "cups": 0
+    },
+    {
+      "backend": "NCNN",
+      "model": "ncnn640/yolo26n_ncnn_model",
+      "actual_input": [
+        640,
+        640
+      ],
+      "warm_median_ms": 70.18,
+      "warm_p95_ms": 76.69,
+      "first_predict_ms": 1363.37,
+      "fps_equivalent": 14.25,
+      "cups": 2
+    }
+  ]
+}

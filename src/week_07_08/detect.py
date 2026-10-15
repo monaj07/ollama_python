@@ -66,16 +66,18 @@ def main():
                    "processed_at_utc": datetime.now(timezone.utc).isoformat(),
                    "source": str(source), "model": args.model,
                    "image_size": [image.shape[1], image.shape[0]],
-                   "input_size": args.imgsz, "confidence_threshold": args.conf,
+                   "input_size_requested": args.imgsz,
+                   "predictor_image_size": [int(value) for value in model.predictor.imgsz],
+                   "confidence_threshold": args.conf,
                    "counts": watched, "detections": detections,
                    "limitations": "Counts describe detections in one frame. Zero means not detected; objects can be missed. Confidence is not a calibrated probability."}
     (outdir / "observation.json").write_text(json.dumps(observation, indent=2) + "\n")
     if not cv2.imwrite(str(outdir / "annotated.jpg"), result.plot()):
         raise OSError("Could not save annotated image")
     median = float(np.median(durations))
-    metrics = {"model": args.model, 
+    metrics = {"model": args.model,
                "input_size_requested": args.imgsz,
-                "predictor_image_size": list(model.predictor.imgsz), 
+               "predictor_image_size": [int(value) for value in model.predictor.imgsz],
                "warm_runs": args.runs,
                "model_construct_ms": round(load_ms, 2),
                "first_predict_ms": round(first_ms, 2),

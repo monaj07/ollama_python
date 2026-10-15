@@ -5,6 +5,7 @@ import io
 import json
 from pathlib import Path
 import subprocess
+import statistics
 import sys
 import tempfile
 from types import SimpleNamespace
@@ -17,6 +18,7 @@ from vision_observation import validate_observation
 from yoloe_detector import YOLOEDetector
 from observe_scene import SceneObserver
 from reason_yoloe import summarize_observation
+import detect as fixed_detector
 
 NOW = datetime(2026, 10, 14, 10, 0, tzinfo=timezone.utc)
 
@@ -230,6 +232,29 @@ class DetectorTests(unittest.TestCase):
         self.assertIn("Camera started", str(raised.exception))
         self.assertIn("Waiting for frame", str(raised.exception))
         self.assertEqual(observer.detector.model.predict_calls, [])
+
+    def test_legacy_detector_records_requested_and_actual_input_sizes(self):
+        class FixedSizeYOLO(FakeYOLOE):
+            def __init__(self, model, task=None):
+                super().__init__(model)
+                self.classes = ["cup"]
+                self.predictor.imgsz = [320, 320]
+
+        outdir = Path(self.temp.name) / "fixed-size"
+        modules = {
+            "ultralytics": SimpleNamespace(YOLO=FixedSizeYOLO),
+            "numpy": SimpleNamespace(median=statistics.median,
+                                     percentile=lambda values, q: values[0]),
+        }
+        args = ["detect.py", "--source", str(self.source), "--imgsz", "640",
+                "--runs", "1", "--outdir", str(outdir)]
+        with patch.dict(sys.modules, modules), patch.object(sys, "argv", args), patch("sys.stdout", new_callable=io.StringIO):
+            fixed_detector.main()
+        for filename in ["observation.json", "metrics.json"]:
+            record = json.loads((outdir / filename).read_text())
+            self.assertEqual(record["input_size_requested"], 640)
+            self.assertEqual(record["predictor_image_size"], [320, 320])
+            self.assertNotIn("input_size", record)
 
 
 class ReasonTests(unittest.TestCase):

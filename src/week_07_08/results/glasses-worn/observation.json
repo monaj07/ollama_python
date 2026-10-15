@@ -1,0 +1,73 @@
+{
+  "schema_version": "pi-vision-v1",
+  "received_at_utc": "2026-10-15T02:47:48.777010+00:00",
+  "processed_at_utc": "2026-10-15T02:47:49.541433+00:00",
+  "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T024744_1856c588/scene.jpg",
+  "model": "yoloe-26n-seg.pt",
+  "targets": [
+    "cup",
+    "glasses",
+    "fingers",
+    "hand",
+    "bottle"
+  ],
+  "image_size": [
+    640,
+    480
+  ],
+  "input_size_requested": 640,
+  "predictor_image_size": [
+    640,
+    640
+  ],
+  "confidence_threshold": 0.2,
+  "counts": {
+    "cup": 0,
+    "glasses": 1,
+    "fingers": 0,
+    "hand": 0,
+    "bottle": 1
+  },
+  "detections": [
+    {
+      "label": "glasses",
+      "confidence": 0.8966278433799744,
+      "bbox_xyxy": [
+        91.74624633789062,
+        20.980308532714844,
+        263.79290771484375,
+        90.05197143554688
+      ]
+    },
+    {
+      "label": "bottle",
+      "confidence": 0.3277311325073242,
+      "bbox_xyxy": [
+        435.0109558105469,
+        121.23703002929688,
+        599.468017578125,
+        359.0362243652344
+      ]
+    }
+  ],
+  "metrics": {
+    "model_construct_ms": 119.099,
+    "targets_changed": false,
+    "prompt_setup_ms": 0.001,
+    "prediction_index_in_process": 5,
+    "prediction_ms": 613.663,
+    "warm_runs": 0,
+    "input_size_requested": 640,
+    "predictor_image_size": [
+      640,
+      640
+    ],
+    "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+    "pre_capture_prompt_setup_ms": 0.001,
+    "pre_capture_targets_changed": false,
+    "capture_process_ms": 4244.76,
+    "observe_scene_total_ms": 4865.457,
+    "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+  },
+  "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+}

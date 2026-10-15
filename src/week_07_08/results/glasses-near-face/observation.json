@@ -1,0 +1,93 @@
+{
+  "schema_version": "pi-vision-v1",
+  "received_at_utc": "2026-10-15T02:50:03.258712+00:00",
+  "processed_at_utc": "2026-10-15T02:50:04.028493+00:00",
+  "source": "/home/monaj/ollama_python/src/week_07_08/outputs/observations/20261015T024959_03da2666/scene.jpg",
+  "model": "yoloe-26n-seg.pt",
+  "targets": [
+    "cup",
+    "glasses",
+    "fingers",
+    "hand",
+    "bottle"
+  ],
+  "image_size": [
+    640,
+    480
+  ],
+  "input_size_requested": 640,
+  "predictor_image_size": [
+    640,
+    640
+  ],
+  "confidence_threshold": 0.2,
+  "counts": {
+    "cup": 1,
+    "glasses": 1,
+    "fingers": 0,
+    "hand": 0,
+    "bottle": 2
+  },
+  "detections": [
+    {
+      "label": "bottle",
+      "confidence": 0.8515964150428772,
+      "bbox_xyxy": [
+        43.85224914550781,
+        331.44830322265625,
+        158.68692016601562,
+        479.0679931640625
+      ]
+    },
+    {
+      "label": "glasses",
+      "confidence": 0.7427451014518738,
+      "bbox_xyxy": [
+        0.0,
+        121.90219116210938,
+        153.68968200683594,
+        192.13345336914062
+      ]
+    },
+    {
+      "label": "bottle",
+      "confidence": 0.3018268644809723,
+      "bbox_xyxy": [
+        393.9926452636719,
+        307.64007568359375,
+        453.2880554199219,
+        392.10540771484375
+      ]
+    },
+    {
+      "label": "cup",
+      "confidence": 0.22520621120929718,
+      "bbox_xyxy": [
+        432.3966979980469,
+        341.6720886230469,
+        501.9974670410156,
+        418.1822204589844
+      ]
+    }
+  ],
+  "metrics": {
+    "model_construct_ms": 119.099,
+    "targets_changed": false,
+    "prompt_setup_ms": 0.001,
+    "prediction_index_in_process": 14,
+    "prediction_ms": 618.856,
+    "warm_runs": 0,
+    "input_size_requested": 640,
+    "predictor_image_size": [
+      640,
+      640
+    ],
+    "note": "Prediction timings exclude capture, image loading, text setup, output files and LLM. The first prediction in a process may include initialization. Benchmark repeats one loaded image.",
+    "pre_capture_prompt_setup_ms": 0.001,
+    "pre_capture_targets_changed": false,
+    "capture_process_ms": 4313.538,
+    "observe_scene_total_ms": 4939.894,
+    "tool_timing_note": "Total excludes constructing SceneObserver; includes prompt setup, camera process startup/settling, capture, detection and initial output saves. It is not pure sensor latency."
+  },
+  "limitations": "These are unverified detections from one frame. Counts may include false positives and duplicates; objects may be missed. Zero means not detected, not absent. Confidence scores are not calibrated probabilities. No identity, distance, intent or activity is measured."
+}
