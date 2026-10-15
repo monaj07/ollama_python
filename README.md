@@ -49,6 +49,10 @@ and results for Qwen3.5 2B/4B, Gemma4 E2B/E4B and GPT-6 Luna. This experiment
 keeps the original v2 prompts and the corrected scorer; no reruns of previous
 models are required to add another model under the same conditions.
 
+| Raspberry Pi hardware | Assembled Raspberry Pi 5 |
+|---|---|
+| ![Raspberry Pi 5, active cooler, case, microSD card and power supply before assembly](src/week_04/assets/raspberry-pi-hardware.jpg) | ![Assembled Raspberry Pi 5 with active cooling inside its case](src/week_04/assets/raspberry-pi-assembled.png) |
+
 The [Week 5 AI button](src/week_05/README.md) connects a physical
 button to a local model and a validated LED tool on Raspberry Pi 5. It includes
 wiring instructions, the original hardware photo, staged tests, failure handling,
