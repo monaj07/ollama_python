@@ -179,6 +179,76 @@ def play_audio(audio_path: Path) -> None:
     checked_run(["paplay", str(audio_path)], timeout=120)
 
 
+def process_turn(args):
+    # Generate unique files for this turn
+    run_id = (
+        datetime.now().strftime("%Y%m%d_%H%M%S")
+        + "_"
+        + uuid4().hex[:6]
+    )
+
+    audio_file = args.output_dir / f"{run_id}_question.wav"
+    output_file = args.output_dir / f"{run_id}_reply.wav"
+    transcript_prefix = args.output_dir / f"{run_id}_transcript"
+
+    # Fresh metrics for each turn
+    timings = {}
+    start = time.perf_counter()
+
+    # Keep your existing input selection logic
+    if args.text is not None:
+        question = valid_question(args.text)
+        print("[input] Text supplied; skipping capture and transcription.")
+
+    else:
+        if args.audio is not None:
+            audio_file = args.audio.expanduser().resolve()
+            validate_wav(audio_file)
+            print(f"[input] Pre-recorded audio: {audio_file}")
+        else:
+            with timed("record_s", timings):
+                record_audio(audio_file, args.mic_device, args.duration)
+
+        with timed("stt_s", timings):
+            question = transcribe(
+                audio_file,
+                args.whisper_bin.expanduser(),
+                args.whisper_model.expanduser(),
+                transcript_prefix,
+            )
+
+    print(f"[user] {question}")
+
+    with timed("llm_s", timings):
+        answer = ask_agent(question, args.model)
+
+    print(f"[assistant] {answer}")
+
+    with timed("tts_s", timings):
+        synthesize(
+            answer,
+            output_file,
+            args.voice_dir.expanduser().resolve(),
+            args.voice,
+        )
+
+    print(f"[audio] {output_file}")
+
+    if not args.no_play:
+        with timed("play_s", timings):
+            play_audio(output_file)
+
+    timings["total_s"] = round(time.perf_counter() - start, 3)
+    print("[timings] " + json.dumps(timings, indent=2))
+
+    with (args.output_dir / "runs.jsonl").open("a", encoding="utf-8") as log:
+        log.write(json.dumps({
+            "run_id": run_id,
+            "model": args.model,
+            "timings": timings,
+        }) + "\n")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     source = parser.add_mutually_exclusive_group()
@@ -198,56 +268,41 @@ def main() -> None:
     if args.duration < 1:
         parser.error("--duration must be at least 1 second")
 
-    # Preload Ollama before accepting the user's request
+    args.output_dir.mkdir(parents=True, exist_ok=True)
+
+    # Load the model once at startup.
     warm_up_model(args.model)
 
-    args.output_dir.mkdir(parents=True, exist_ok=True)
-    run_id = datetime.now().strftime("%Y%m%d_%H%M%S") + "_" + uuid4().hex[:6]
-    audio_file = args.output_dir / f"{run_id}_question.wav"
-    output_file = args.output_dir / f"{run_id}_reply.wav"
-    transcript_prefix = args.output_dir / f"{run_id}_transcript"
-    timings: dict[str, float] = {}
-    start = time.perf_counter()
+    # Preserve one-shot test modes.
+    one_shot = args.text is not None or args.audio is not None
 
-    try:
-        if args.text is not None:
-            question = valid_question(args.text)
-            print("[input] Text supplied; skipping capture and transcription.")
-        else:
-            if args.audio is not None:
-                audio_file = args.audio.expanduser().resolve()
-                validate_wav(audio_file)
-                print(f"[input] Pre-recorded audio: {audio_file}")
-            else:
-                input("Press Enter to start recording...")
-                with timed("record_s", timings):
-                    record_audio(audio_file, args.mic_device, args.duration)
-            with timed("stt_s", timings):
-                question = transcribe(
-                    audio_file, args.whisper_bin.expanduser(),
-                    args.whisper_model.expanduser(), transcript_prefix,
-                )
-        print(f"[user] {question}")
+    while True:
+        try:
+            if not one_shot:
+                command = input(
+                    "\nPress Enter to speak, or 'q' to quit: "
+                ).strip().lower()
 
-        with timed("llm_s", timings):
-            answer = ask_agent(question, args.model)
-        print(f"[assistant] {answer}")
+                if command in {"q", "quit", "exit"}:
+                    break
 
-        with timed("tts_s", timings):
-            synthesize(answer, output_file, args.voice_dir.expanduser().resolve(), args.voice)
-        print(f"[audio] {output_file}")
+            process_turn(args)
 
-        if not args.no_play:
-            with timed("play_s", timings):
-                play_audio(output_file)
+        except (KeyboardInterrupt, EOFError):
+            print("\n[assistant] Goodbye!")
+            break
 
-        timings["total_s"] = round(time.perf_counter() - start, 3)
-        print("[timings] " + json.dumps(timings, indent=2))
-        with (args.output_dir / "runs.jsonl").open("a", encoding="utf-8") as log:
-            log.write(json.dumps({"run_id": run_id, "model": args.model, "timings": timings}) + "\n")
-    except (RuntimeError, ValueError, FileNotFoundError, OSError) as exc:
-        print(f"[error] {exc}", file=sys.stderr)
-        sys.exit(1)
+        except (RuntimeError, ValueError, FileNotFoundError, OSError) as exc:
+            print(f"[error] {exc}", file=sys.stderr)
+
+            if one_shot:
+                sys.exit(1)
+
+            # Continue accepting requests after a failed turn.
+            continue
+
+        if one_shot:
+            break
 
 
 if __name__ == "__main__":
