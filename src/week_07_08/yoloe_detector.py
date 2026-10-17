@@ -72,7 +72,7 @@ class YOLOEDetector:
             start = time.perf_counter()
             result = self.model.predict(
                 image, imgsz=self.imgsz, conf=conf, rect=False,
-                device="cpu", verbose=False,
+                iou=0.55, device="cpu", verbose=False,
             )[0]
             self.predictions += 1
             return result, (time.perf_counter() - start) * 1000

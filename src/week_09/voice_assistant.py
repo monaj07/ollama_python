@@ -18,6 +18,8 @@ from uuid import uuid4
 
 from ollama import Client
 
+from agent import VoiceAgent
+
 
 HERE = Path(__file__).resolve().parent
 DEFAULT_WHISPER_DIR = Path.home() / "opt" / "whisper.cpp"
@@ -133,30 +135,16 @@ def warm_up_model(model: str) -> None:
     )
 
 
+_agent: VoiceAgent | None = None
+
+
 def ask_agent(question: str, model: str) -> str:
-    client = Client(host="http://127.0.0.1:11434", timeout=180)
-    response = client.chat(
-        model=model,
-        messages=[
-            {
-                "role": "system",
-                "content": (
-                    "You are a helpful offline voice assistant on a Raspberry Pi. "
-                    "Respond accurately and conversationally in one or two short sentences. "
-                    "No Markdown, bullet points or unsupported sensor observations."
-                ),
-            },
-            {"role": "user", "content": question},
-        ],
-        stream=False,
-        think=False,
-        options={"temperature": 0, "num_ctx": 2048, "num_predict": 100},
-        keep_alive="15m",
-    )
-    answer = (response.message.content or "").strip()
-    if not answer:
-        raise ValueError("Ollama returned an empty answer")
-    return answer
+    global _agent
+
+    if _agent is None or _agent.model != model:
+        _agent = VoiceAgent(model=model)
+
+    return _agent.ask(question)
 
 
 def synthesize(text: str, wav_path: Path, voice_dir: Path, voice: str) -> Path:
