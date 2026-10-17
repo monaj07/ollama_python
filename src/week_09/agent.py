@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import re
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -36,6 +37,45 @@ Reply in one or two natural spoken sentences.
 """
 
 
+def requires_occupancy_evidence(question: str) -> bool:
+    """Narrow application policy: physical room occupancy requires two sensors.
+
+    An explicitly visual question ('can you see anyone?') requires only vision.
+    A request about a moving person needs both sources, although a single
+    camera frame and PIR cannot establish which person moved.
+    """
+    q = question.casefold()
+    mentions_people = bool(re.search(r"\b(anyone|anybody|someone|somebody|people|persons?)\b", q))
+    mentions_place = bool(re.search(r"\b(room|here|inside)\b", q))
+    visual_only = bool(re.search(r"\b(see|visible|camera|looking?)\b", q)) and not bool(
+        re.search(r"\b(motion|moving|moved)\b", q)
+    )
+    return mentions_people and mentions_place and not visual_only
+
+
+def guard_occupancy_answer(answer: str, observations: dict) -> str:
+    """Do not convert negative detector evidence into a claim of an empty room."""
+    pir = observations.get("detect_motion")
+    camera = observations.get("observe_scene")
+    if not isinstance(pir, dict) or not isinstance(camera, dict):
+        return answer
+    if not pir.get("ok") or not camera.get("ok"):
+        missing = []
+        if not pir.get("ok"):
+            missing.append("motion sensor")
+        if not camera.get("ok"):
+            missing.append("camera")
+        return "I couldn't get reliable data from the " + " and ".join(missing) + ". I can't confirm whether anyone is in the room."
+
+    count = camera.get("counts", {}).get("person")
+    if count == 0:
+        if pir.get("motion_signal_active") is True:
+            return "The motion sensor detected movement, but the camera did not detect anyone. I can't tell who or what moved."
+        if pir.get("motion_signal_active") is False:
+            return "The camera didn't detect anyone and the motion sensor detected no movement, but I can't confirm the room is empty."
+    return answer
+
+
 class VoiceAgent:
     def __init__(self, model="gemma4:e2b", client=None, tools=None, trace_path=None):
         self.model = model
@@ -60,6 +100,46 @@ class VoiceAgent:
         ]
         count = 0
         seen = set()
+        observations = {}
+        require_both = requires_occupancy_evidence(question)
+        required = {
+            "detect_motion": {},
+            "observe_scene": {"targets": ["person"], "conf": 0.2},
+        } if require_both else {}
+
+        def fill_evidence_gaps(round_number: int) -> bool:
+            """Host-enforced tool calls, added with correct assistant/tool roles."""
+            nonlocal count
+            ran = False
+            for name, args in required.items():
+                if name in observations:
+                    continue
+                if count >= MAX_TOTAL_CALLS:
+                    raise RuntimeError("Insufficient tool-call budget for required evidence")
+                args = validate_call(name, args)
+                key = (name, json.dumps(args, sort_keys=True))
+                seen.add(key)
+                count += 1
+                ran = True
+                messages.append({
+                    "role": "assistant", "content": "",
+                    "tool_calls": [{"function": {"name": name, "arguments": args}}],
+                })
+                print(f"[policy-tool] {name}({args})", flush=True)
+                started = time.perf_counter()
+                try:
+                    result = self.tools.execute(name, args)
+                except Exception as exc:
+                    result = {"ok": False, "error": f"Tool failure: {type(exc).__name__}: {str(exc)[:300]}"}
+                observations[name] = result
+                elapsed = round(time.perf_counter() - started, 3)
+                print(f"[result] {name}: {json.dumps(result, ensure_ascii=False)[:1200]}", flush=True)
+                self.trace(request_id, "policy_tool", round=round_number + 1, name=name,
+                           arguments=args, result=result, elapsed_s=elapsed)
+                messages.append({"role": "tool", "tool_name": name,
+                                 "content": json.dumps(result, ensure_ascii=False)})
+            return ran
+
         self.trace(request_id, "question", text=question)
         for round_number in range(MAX_TOOL_ROUNDS + 1):
             response = self.client.chat(
@@ -70,9 +150,15 @@ class VoiceAgent:
             message = response.message
             calls = list(message.tool_calls or [])
             if not calls:
+                # A small model may stop after PIR alone; do not accept
+                # a final occupancy answer until both tools were attempted.
+                if fill_evidence_gaps(round_number):
+                    continue
                 answer = (message.content or "").strip()
                 if not answer:
                     raise RuntimeError("Agent did not produce a final answer")
+                if require_both:
+                    answer = guard_occupancy_answer(answer, observations)
                 self.trace(request_id, "final", text=answer)
                 return answer
             if round_number == MAX_TOOL_ROUNDS:
@@ -101,8 +187,13 @@ class VoiceAgent:
                     result = {"ok": False, "error": f"Tool failure: {type(exc).__name__}: {str(exc)[:300]}"}
                 elapsed = round(time.perf_counter() - started, 3)
                 print(f"[result] {name}: {json.dumps(result, ensure_ascii=False)[:1200]}", flush=True)
+                if name == "detect_motion" or (
+                    name == "observe_scene" and "person" in args.get("targets", [])
+                ):
+                    observations[name] = result
                 self.trace(request_id, "tool", round=round_number + 1, name=name,
                            arguments=raw, result=result, elapsed_s=elapsed)
                 messages.append({"role": "tool", "tool_name": name,
                                  "content": json.dumps(result, ensure_ascii=False)})
+            fill_evidence_gaps(round_number)
         raise RuntimeError("Unreachable: agent did not terminate")
