@@ -82,8 +82,22 @@ different models and measurement protocols, not a controlled speed comparison.
 
 The examples also document misses, false detections, context-sensitive glasses
 recognition and LLM summary errors. A successful request does not establish that
-its detector counts or generated explanation are correct. Agent-selected
-observations, memory and GPIO actions are later integration work.
+its detector counts or generated explanation are correct. Camera and PIR observations are integrated in Week 09; persistent memory and GPIO actuation are outside the scope of that voice assistant.
+
+## Week 09 — Offline voice assistant
+
+The [Week 09 offline voice assistant](src/week_09/README.md) connects a USB
+microphone, whisper.cpp, Ollama `gemma4:e2b`, the Week 06 PIR sensor, the
+Weeks 07–08 YOLOE camera pipeline, Piper and a Bluetooth speaker. The guide
+includes runnable commands, grounded tool-use policies, annotated camera
+experiments, real Pi 5 benchmarks and a memory/latency optimisation recipe.
+The persistent vision worker recorded **2.83–2.84 s** warm observations in
+our local measurements with a **1-second camera settling delay** (the
+published `camera_lab.py` may still have a 3-second delay).
+
+| Overlapping person detections | Person on screen and false-positive hand |
+|---|---|
+| ![Overlapping YOLOE detections](src/week_09/assets/person-overlap-arm.jpg) | ![Screen and hand detections](src/week_09/assets/person-on-screen-and-hand.jpg) |
 
 ## Getting started
 
