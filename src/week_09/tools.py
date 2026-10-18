@@ -1,9 +1,11 @@
 """Strict tool dispatcher for Week 09. Executes earlier weeks in their own venvs."""
 from __future__ import annotations
 
+import atexit
 import json
 import math
 import os
+import select
 import subprocess
 import time
 from pathlib import Path
@@ -108,7 +110,106 @@ def _run_bridge(python: Path, bridge: Path, payload: dict, timeout: int, extra_e
         return {"ok": False, "error": "Tool returned invalid JSON"}
 
 
+
+
+class PersistentVisionWorker:
+    """Single long-running Week 07–08 process; one request at a time.
+
+    Binary, newline-delimited I/O avoids TextIOWrapper buffering interfering
+    with select() timeouts. A broken worker is restarted on the next request.
+    """
+
+    MAX_REPLY_BYTES = 1_048_576
+
+    def __init__(self, python: Path, bridge: Path, timeout: int = 180):
+        self.python = python
+        self.bridge = bridge
+        self.timeout = timeout
+        self.process: subprocess.Popen | None = None
+        self._buffer = b""
+
+    def _start(self) -> None:
+        if not self.python.is_file():
+            raise RuntimeError(f"Python environment is missing: {self.python}")
+        self.process = subprocess.Popen(
+            [str(self.python), str(self.bridge), "--persistent"],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            # Do not pipe stderr without draining it; warnings could deadlock.
+            stderr=None,
+            cwd=str(REPO),
+        )
+        self._buffer = b""
+
+    def close(self) -> None:
+        proc = self.process
+        self.process = None
+        self._buffer = b""
+        if proc is None:
+            return
+        if proc.stdin:
+            try:
+                proc.stdin.close()
+            except OSError:
+                pass
+        if proc.poll() is None:
+            proc.terminate()
+            try:
+                proc.wait(timeout=2)
+            except subprocess.TimeoutExpired:
+                proc.kill()
+                proc.wait(timeout=2)
+        if proc.stdout:
+            proc.stdout.close()
+
+    def request(self, payload: dict) -> dict:
+        if self.process is None or self.process.poll() is not None:
+            self.close()
+            try:
+                self._start()
+            except (OSError, RuntimeError) as exc:
+                return {"ok": False, "error": f"Could not launch vision worker: {exc}"}
+
+        assert self.process is not None
+        assert self.process.stdin is not None
+        assert self.process.stdout is not None
+        try:
+            self.process.stdin.write((json.dumps(payload) + "\n").encode("utf-8"))
+            self.process.stdin.flush()
+            deadline = time.monotonic() + self.timeout
+            while b"\n" not in self._buffer:
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
+                    raise TimeoutError(f"Vision worker timed out after {self.timeout}s")
+                ready, _, _ = select.select([self.process.stdout], [], [], remaining)
+                if not ready:
+                    raise TimeoutError(f"Vision worker timed out after {self.timeout}s")
+                chunk = os.read(self.process.stdout.fileno(), 65536)
+                if not chunk:
+                    raise RuntimeError("Vision worker exited without a response")
+                self._buffer += chunk
+                if len(self._buffer) > self.MAX_REPLY_BYTES:
+                    raise RuntimeError("Vision worker response exceeded size limit")
+            line, self._buffer = self._buffer.split(b"\n", 1)
+            result = json.loads(line)
+            if not isinstance(result, dict) or type(result.get("ok")) is not bool:
+                raise ValueError("Vision worker response missing ok status")
+            return result
+        except (OSError, ValueError, RuntimeError, TimeoutError) as exc:
+            self.close()
+            return {"ok": False, "error": f"Vision worker failure: {exc}"}
+
+
 class PhysicalTools:
+    def __init__(self):
+        self._vision_worker: PersistentVisionWorker | None = None
+        atexit.register(self.close)
+
+    def close(self) -> None:
+        if self._vision_worker is not None:
+            self._vision_worker.close()
+            self._vision_worker = None
+
     def execute(self, name: str, args: dict) -> dict:
         """Never run LLM-produced shell commands. Only two allowed adapters."""
         # Validate again at execution boundary (defense-in-depth).
@@ -121,10 +222,12 @@ class PhysicalTools:
                 extra_env={"GPIOZERO_PIN_FACTORY": "lgpio"},
             )
         elif name == "observe_scene":
-            result = _run_bridge(
-                REPO / "src/week_07_08/.venv-vision/bin/python",
-                HERE / "vision_bridge.py", args, timeout=180,
-            )
+            if self._vision_worker is None:
+                self._vision_worker = PersistentVisionWorker(
+                    REPO / "src/week_07_08/.venv-vision/bin/python",
+                    HERE / "vision_bridge.py", timeout=180,
+                )
+            result = self._vision_worker.request(args)
         else:
             raise ValueError(f"Unknown tool: {name}")
         result["tool_elapsed_s"] = round(time.perf_counter() - start, 3)

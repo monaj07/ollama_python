@@ -50,7 +50,7 @@ def main():
             "ExposureValue": 1.0,
         })
         cam.start()
-        time.sleep(3)  # Allow exposure, white balance and focus to settle.
+        time.sleep(1)  # Allow exposure, white balance and focus to settle.
 
         def capture():
             t0 = time.perf_counter()
