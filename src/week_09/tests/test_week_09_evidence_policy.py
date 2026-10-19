@@ -66,7 +66,7 @@ class EvidencePolicyTests(unittest.TestCase):
 
     def test_visual_only_not_force_pir(self):
         a,c,t = self.agent([msg(calls=[call('observe_scene', {'targets':['person']})]),msg('None')])
-        self.assertEqual(a.ask('Do you see anyone in the room?'), 'None')
+        self.assertEqual(a.ask('Can you see anyone?'), 'None')
         self.assertEqual([x.args[0] for x in t.execute.call_args_list], ['observe_scene'])
 
     def test_camera_failure_not_misrepresented(self):

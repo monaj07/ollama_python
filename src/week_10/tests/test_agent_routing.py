@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
@@ -14,6 +15,7 @@ for path in (ROOT, ROOT / "src/week_09", ROOT / "src/week_10"):
 
 from src.week_10 import agent as a
 from src.week_10 import recent_memory as rm
+from src.week_10.conversation_store import ConversationStore
 
 
 class FakeClient:
@@ -46,6 +48,11 @@ class RouteTests(unittest.TestCase):
         self.assertEqual(a.route_question("At what time was the first person detected?"), "memory_session")
         self.assertEqual(a.route_question("How many times did the camera detect a person?"), "memory_session")
 
+    def test_conversation_history_route(self):
+        self.assertEqual(a.route_question("What did we talk about last time?"), "chat_history")
+        self.assertEqual(a.route_question("What was our previous conversation?"), "chat_history")
+        self.assertEqual(a.route_question("What is 2 + 17?", "chat_history"), "general")
+
     def test_live(self):
         for q in ["Is anyone in the room right now?", "What can you see?", "Who is here currently?"]:
             # 'Who is here currently?' has explicit currently, so LIVE.
@@ -55,11 +62,15 @@ class RouteTests(unittest.TestCase):
 
 class AgentTests(unittest.TestCase):
     def setUp(self):
+        self.tempdir = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tempdir.cleanup)
+        store = ConversationStore(Path(self.tempdir.name) / "test.sqlite3")
         self.client = FakeClient()
-        self.agent = a.MemoryVoiceAgent(client=self.client, tools=FakeTools())
+        self.agent = a.MemoryVoiceAgent(client=self.client, tools=FakeTools(),
+                                        conversation_store=store)
 
     def test_general_cannot_read_db_or_call_tools(self):
-        with patch.object(a, "get_latest_away_report", side_effect=AssertionError("SQL should not be read")), \
+        with patch.object(a, "get_observation_history_report", side_effect=AssertionError("SQL should not be read")), \
              patch.object(a, "get_recent_observations_report", side_effect=AssertionError("SQL should not be read")):
             answer = self.agent.ask("What is 2+17?")
         self.assertEqual(answer, "Test answer")
@@ -76,17 +87,24 @@ class AgentTests(unittest.TestCase):
     def test_followup_uses_away_session(self):
         with patch.object(a, "get_recent_observations_report", return_value={"ok": True, "observations": []}):
             self.agent.ask("What did you see most recently?")
-        with patch.object(a, "get_latest_away_report", return_value={"ok": True, "session_id": 2, "person_positive_events": 4}):
+        with patch.object(a, "get_observation_history_report", return_value={"ok": True, "session_id": 2, "person_positive_events": 4}):
             self.agent.ask("Was there anyone in the room?")
         self.assertIn('"person_positive_events":4', self.client.calls[-1]["messages"][-1]["content"])
         self.assertEqual(len(self.agent.history), 4)
 
-    def test_live_delegates_to_week09(self):
-        with patch.object(a.VoiceAgent, "ask", return_value="Camera saw one person") as live, \
-             patch.object(a, "get_latest_away_report", side_effect=AssertionError("SQL invoked")):
-            got = self.agent.ask("Is anyone in the room right now?")
-        self.assertEqual(got, "Camera saw one person")
-        live.assert_called_once_with("Is anyone in the room right now?")
+    def test_chat_history_routes_to_sqlite_not_camera(self):
+        with patch.object(a.VoiceAgent, "ask", side_effect=AssertionError("Camera invoked")):
+            self.agent.ask("What did we discuss last time?")
+        # No previous session: a truthful fallback, with no Ollama call.
+        self.assertEqual(self.client.calls, [])
+        self.assertEqual(self.agent.last_topic, "chat_history")
+
+    def test_non_person_live_request_delegates_to_week09(self):
+        with patch.object(a.VoiceAgent, "ask", return_value="Camera checked the scene") as live, \
+             patch.object(a, "get_observation_history_report", side_effect=AssertionError("SQL invoked")):
+            got = self.agent.ask("What can you see?")
+        self.assertEqual(got, "Camera checked the scene")
+        live.assert_called_once_with("What can you see?")
 
 
 class RecentReportTests(unittest.TestCase):
@@ -108,14 +126,28 @@ class RecentReportTests(unittest.TestCase):
 
 
 class VoiceAdapterTests(unittest.TestCase):
+    def test_cli_resume_flag_preserves_week09_audio_flags(self):
+        from src.week_10 import voice_assistant as adapter
+        with patch.object(adapter.voice09, "main") as run_voice, \
+             patch.object(sys, "argv", ["voice_assistant.py", "--resume-last",
+                                        "--mic-device", "plughw:0,0", "--duration", "5"]):
+            adapter._agent = None
+            adapter.main()
+            run_voice.assert_called_once()
+            self.assertEqual(sys.argv[1:], ["--mic-device", "plughw:0,0", "--duration", "5"])
+            self.assertTrue(adapter._resume_last)
+        adapter._resume_last = False
+        adapter._agent = None
+
     def test_push_to_talk_callback_reuses_agent_between_questions(self):
         from src.week_10 import voice_assistant as adapter
 
         instances = []
 
         class FakeMemoryAgent:
-            def __init__(self, model):
+            def __init__(self, model, **kwargs):
                 self.model = model
+                self.session_id = "stub-session"
                 self.questions = []
                 self.tools = FakeTools()
                 instances.append(self)

@@ -1,4 +1,4 @@
-"""Compact, read-only retrieval for the most recent Away Mode session."""
+"""Retrieve recorded observations and manage Away Mode session data."""
 from __future__ import annotations
 
 from contextlib import closing
@@ -154,5 +154,54 @@ def get_latest_away_report() -> dict:
             "Detections are unverified model outputs; a single person may produce "
             "several events. No detection does not prove absence. Observations "
             "do not establish identity or proximity to the desk."
+        ),
+    }
+
+
+def get_observation_history_report() -> dict:
+    """Summarise all saved observations, with Away Mode history explicitly scoped."""
+    away = get_latest_away_report()
+    with closing(connect()) as db:
+        db.execute("BEGIN")  # Counts and examples use the same read snapshot.
+        counts = db.execute("""
+            SELECT COUNT(*) AS total,
+                   COALESCE(SUM(CASE WHEN trigger='pir_motion' THEN 1 ELSE 0 END), 0) AS motion,
+                   COALESCE(SUM(CASE WHEN person_detected=1 THEN 1 ELSE 0 END), 0) AS positive,
+                   COALESCE(SUM(CASE WHEN person_detected=0 THEN 1 ELSE 0 END), 0) AS negative,
+                   COALESCE(SUM(CASE WHEN person_detected IS NULL THEN 1 ELSE 0 END), 0) AS unknown,
+                   MAX(CASE WHEN person_detected=1 THEN detection_score END) AS max_score,
+                   MIN(CASE WHEN person_detected=1 THEN observed_at_utc END) AS first_positive,
+                   MAX(CASE WHEN person_detected=1 THEN observed_at_utc END) AS last_positive
+            FROM observations
+        """).fetchone()
+        rows = db.execute("""
+            SELECT id, away_session_id, observed_at_utc, trigger, detection_score
+            FROM observations WHERE person_detected=1
+            ORDER BY observed_at_utc DESC, id DESC LIMIT ?
+        """, (MAX_POSITIVE_EVENTS,)).fetchall()
+    return {
+        "ok": counts["total"] > 0 or away["ok"],
+        "scope": "all_saved_observations",
+        "total_events": counts["total"],
+        "pir_motion_events": counts["motion"],
+        "person_positive_events": counts["positive"],
+        "person_negative_events": counts["negative"],
+        "events_without_person_result": counts["unknown"],
+        "max_person_confidence": counts["max_score"],
+        "first_person_detection_local": local_time(counts["first_positive"]),
+        "last_person_detection_local": local_time(counts["last_positive"]),
+        "positive_events_truncated": counts["positive"] > len(rows),
+        "positive_events": [
+            {"event_id": row["id"], "session_id": row["away_session_id"],
+             "trigger": row["trigger"], "time_local": local_time(row["observed_at_utc"]),
+             "score": row["detection_score"]}
+            for row in rows
+        ],
+        "latest_away_session": away,
+        "limitations": (
+            "Top-level counts and times cover all saved observations, including live checks. "
+            "Use latest_away_session only for questions specifically about that Away Mode session. "
+            "Positive examples are newest first. Detections are unverified predictions, not "
+            "identity or proof of occupancy. A negative snapshot does not prove absence."
         ),
     }
