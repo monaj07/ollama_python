@@ -1,94 +1,136 @@
-"""Regression tests: no memory access or extra model call for unrelated queries."""
-import unittest
-import sys
-from types import SimpleNamespace, ModuleType
+"""No sensor or Ollama server required; run in Week 09 venv on the Pi."""
+from __future__ import annotations
 
-# Permit routing tests without Ollama or Pi-specific dependencies.
-try:
-    import ollama
-except ImportError:
-    fake_ollama = ModuleType("ollama")
-    fake_ollama.Client = object
-    sys.modules["ollama"] = fake_ollama
-try:
-    import memory_store
-except ImportError:
-    fake_store = ModuleType("memory_store")
-    fake_store.connect = lambda: None
-    sys.modules["memory_store"] = fake_store
+import sys
+import unittest
+from pathlib import Path
+from types import SimpleNamespace
 from unittest.mock import patch
 
-from agent import ConversationState, ask, needs_memory
+ROOT = Path(__file__).resolve().parents[3]
+for path in (ROOT, ROOT / "src/week_09", ROOT / "src/week_10"):
+    if str(path) not in sys.path:
+        sys.path.insert(0, str(path))
 
-
-REPORT = {
-    "ok": True,
-    "session_id": 2,
-    "total_events": 11,
-    "person_positive_events": 4,
-    "person_negative_events": 7,
-    "positive_events": [
-        {"event_id": i, "score": score}
-        for i, score in [(4, 0.667), (6, 0.862), (7, 0.889), (10, 0.466)]
-    ],
-}
+from src.week_10 import agent as a
+from src.week_10 import recent_memory as rm
 
 
 class FakeClient:
-    def __init__(self, reply="Test reply"):
-        self.reply = reply
+    def __init__(self):
         self.calls = []
-
     def chat(self, **kwargs):
         self.calls.append(kwargs)
-        return SimpleNamespace(message=SimpleNamespace(content=self.reply))
+        return SimpleNamespace(message=SimpleNamespace(content="Test answer", tool_calls=[]))
 
 
-class AgentRoutingTests(unittest.TestCase):
-    def test_relevant_questions(self):
-        state = ConversationState()
-        for question in (
-            "Was anyone near my desk while I was away?",
-            "How many times did the camera detect a person?",
-            "At what time was the first person detected?",
-            "How confident were those detections?",
-        ):
-            self.assertTrue(needs_memory(question, state), question)
+class FakeTools:
+    def close(self):
+        pass
 
-    def test_unrelated_questions(self):
-        state = ConversationState(last_topic="memory")
-        for question in ("Who are you?", "How old are you?", "What is 2+17?"):
-            self.assertFalse(needs_memory(question, state), question)
 
-    @patch("agent.get_latest_away_report")
-    def test_arithmetic_never_calls_memory(self, get_report):
-        client = FakeClient("19")
-        answer = ask("What is 2+17?", client)
-        self.assertEqual(answer, "19")
-        get_report.assert_not_called()
-        self.assertEqual(len(client.calls), 1)
-        self.assertEqual(client.calls[0]["tools"], [])
+class RouteTests(unittest.TestCase):
+    def test_general_never_requests_memory(self):
+        for q in ["What is 2+17?", "Who are you?", "How old are you?"]:
+            with self.subTest(q=q):
+                self.assertEqual(a.route_question(q, "memory_session"), "general")
 
-    @patch("agent.get_latest_away_report", return_value=REPORT)
-    def test_memory_then_followup_then_general(self, get_report):
-        client = FakeClient()
-        state = ConversationState()
-        ask("Was anyone near my desk while I was away?", client, state)
-        ask("Were they the same person?", client, state)
-        ask("What is 2+17?", client, state)
-        self.assertEqual(get_report.call_count, 2)
-        self.assertEqual(len(client.calls), 3)
-        self.assertIn('"person_positive_events":4', client.calls[0]["messages"][-1]["content"])
-        self.assertEqual(client.calls[2]["messages"][-1]["content"], "What is 2+17?")
-        self.assertEqual(len(state.history), 6)
-        self.assertFalse(any("READ-ONLY SQLITE EVIDENCE" in m["content"] for m in state.history))
+    def test_recency(self):
+        self.assertEqual(a.route_question("What did you see most recently?"), "memory_recent")
+        self.assertEqual(a.route_question("What was your last observation?"), "memory_recent")
 
-    @patch("agent.get_latest_away_report", return_value={"ok": False})
-    def test_no_sessions_does_not_hallucinate(self, get_report):
-        client = FakeClient()
-        answer = ask("Was anyone near my desk while I was away?", client)
-        self.assertIn("no recorded Away Mode session", answer)
-        self.assertEqual(len(client.calls), 0)
+    def test_historical_and_followup(self):
+        self.assertEqual(a.route_question("Was there anyone in the room?"), "memory_session")
+        self.assertEqual(a.route_question("How confident were those detections?", "memory_session"), "memory_session")
+        self.assertEqual(a.route_question("Was there anyone in the room?", "memory_recent"), "memory_session")
+        self.assertEqual(a.route_question("At what time was the first person detected?"), "memory_session")
+        self.assertEqual(a.route_question("How many times did the camera detect a person?"), "memory_session")
+
+    def test_live(self):
+        for q in ["Is anyone in the room right now?", "What can you see?", "Who is here currently?"]:
+            # 'Who is here currently?' has explicit currently, so LIVE.
+            with self.subTest(q=q):
+                self.assertEqual(a.route_question(q, "memory_session"), "live")
+
+
+class AgentTests(unittest.TestCase):
+    def setUp(self):
+        self.client = FakeClient()
+        self.agent = a.MemoryVoiceAgent(client=self.client, tools=FakeTools())
+
+    def test_general_cannot_read_db_or_call_tools(self):
+        with patch.object(a, "get_latest_away_report", side_effect=AssertionError("SQL should not be read")), \
+             patch.object(a, "get_recent_observations_report", side_effect=AssertionError("SQL should not be read")):
+            answer = self.agent.ask("What is 2+17?")
+        self.assertEqual(answer, "Test answer")
+        self.assertEqual(self.client.calls[-1]["tools"], [])
+
+    def test_recent_is_stored_not_live(self):
+        data = {"ok": True, "observations": [{"event_id": 13, "person_detected": False}]}
+        with patch.object(a, "get_recent_observations_report", return_value=data), \
+             patch.object(a.VoiceAgent, "ask", side_effect=AssertionError("Live sensor invoked")):
+            self.agent.ask("What did you see most recently?")
+        self.assertIn('"event_id":13', self.client.calls[-1]["messages"][-1]["content"])
+        self.assertEqual(self.client.calls[-1]["tools"], [])
+
+    def test_followup_uses_away_session(self):
+        with patch.object(a, "get_recent_observations_report", return_value={"ok": True, "observations": []}):
+            self.agent.ask("What did you see most recently?")
+        with patch.object(a, "get_latest_away_report", return_value={"ok": True, "session_id": 2, "person_positive_events": 4}):
+            self.agent.ask("Was there anyone in the room?")
+        self.assertIn('"person_positive_events":4', self.client.calls[-1]["messages"][-1]["content"])
+        self.assertEqual(len(self.agent.history), 4)
+
+    def test_live_delegates_to_week09(self):
+        with patch.object(a.VoiceAgent, "ask", return_value="Camera saw one person") as live, \
+             patch.object(a, "get_latest_away_report", side_effect=AssertionError("SQL invoked")):
+            got = self.agent.ask("Is anyone in the room right now?")
+        self.assertEqual(got, "Camera saw one person")
+        live.assert_called_once_with("Is anyone in the room right now?")
+
+
+class RecentReportTests(unittest.TestCase):
+    def test_negative_latest_observation_remains_negative(self):
+        rows = [
+            {"id": 13, "away_session_id": 2, "observed_at_utc": "2026-10-19T01:53:53+00:00",
+             "trigger": "pir_motion", "person_detected": 0, "detection_score": None,
+             "details_json": '{"person_count": 0, "camera_ok": true}'},
+            {"id": 10, "away_session_id": 2, "observed_at_utc": "2026-10-19T01:53:19+00:00",
+             "trigger": "pir_motion", "person_detected": 1, "detection_score": 0.466,
+             "details_json": '{"person_count": 1, "camera_ok": true}'},
+        ]
+        with patch.object(rm, "recent_observations", return_value=rows):
+            report = rm.get_recent_observations_report(5)
+        self.assertFalse(report["observations"][0]["person_detected"])
+        self.assertEqual(report["observations"][0]["event_id"], 13)
+        self.assertEqual(report["observations"][1]["person_score"], 0.466)
+        self.assertEqual(report["observations"][0]["time_local"], "2026-10-19T12:53:53+11:00")
+
+
+class VoiceAdapterTests(unittest.TestCase):
+    def test_push_to_talk_callback_reuses_agent_between_questions(self):
+        from src.week_10 import voice_assistant as adapter
+
+        instances = []
+
+        class FakeMemoryAgent:
+            def __init__(self, model):
+                self.model = model
+                self.questions = []
+                self.tools = FakeTools()
+                instances.append(self)
+
+            def ask(self, question):
+                self.questions.append(question)
+                return "spoken answer"
+
+        with patch.object(adapter, "MemoryVoiceAgent", FakeMemoryAgent):
+            adapter._agent = None
+            self.assertEqual(adapter.ask_agent("What did you see?", "gemma4:e2b"), "spoken answer")
+            self.assertEqual(adapter.ask_agent("Was anyone detected?", "gemma4:e2b"), "spoken answer")
+            self.assertEqual(len(instances), 1)
+            self.assertEqual(instances[0].questions, ["What did you see?", "Was anyone detected?"])
+        adapter._agent = None
 
 
 if __name__ == "__main__":
