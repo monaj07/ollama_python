@@ -203,7 +203,7 @@ class LiveSensorTests(unittest.TestCase):
         answer = self.agent.ask('What is 2 plus 3?')
         self.assertEqual(answer, 'Mock explanation.')
         self.assertEqual(len(self.tools.calls), 2)
-        self.assertEqual(len(self.client.calls), 2)
+        self.assertEqual(len(self.client.calls), 1)
         self.assertEqual(self.agent.last_topic, 'general')
         self.assertIn('No sensors were checked', self.client.calls[-1]['messages'][-1]['content'])
         self.agent.ask('How about now?')

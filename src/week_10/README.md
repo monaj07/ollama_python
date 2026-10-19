@@ -1,10 +1,10 @@
-# Week 10 / Episode 7 — Give the Pi memory
+# Week 10 — Give the Pi memory
 
 > Raspberry Pi 5 · PIR motion · Camera Module 3 · YOLOE · SQLite · Ollama · Whisper / Piper
 
 **Goal:** One offline, voice-operated assistant that can answer general questions, check the physical scene on request, and recall previously recorded **environmental observations** and **conversations** after a restart.
 
-This episode extends the Week 09 assistant. It does not build a second audio stack or require embeddings, a vector database, fine-tuning, or multiple autonomous LLM agents.
+This week extends the Week 09 assistant. It does not build a second audio stack or require embeddings, a vector database, fine-tuning, or multiple autonomous LLM agents.
 
 ## Architecture
 
@@ -189,8 +189,6 @@ The model's initial load has sometimes taken around 55 seconds; it is not includ
 
 The public `main` snapshot inspected for this documentation still had an older `_discuss_live_observation()` method referring to `assistant_text`. If you applied the Stage 1 repair locally, verify it appears in your current `git diff`/next push. **Do not mark the structured-evidence test complete until that implementation and its tests pass on the Pi.** The documentation package does not overwrite existing production modules.
 
-For decisions about optional code removal, see [`../../docs/CLEANUP_REVIEW.md`](../../docs/CLEANUP_REVIEW.md).
-
 ## Remaining limitations / deliberate non-goals
 
 - Structured SQLite is appropriate for timestamped events; embeddings/semantic search are deferred.
@@ -202,6 +200,6 @@ For decisions about optional code removal, see [`../../docs/CLEANUP_REVIEW.md`](
 - `memory_store.connect()` still checks/creates its tables for each connection; a dedicated startup migration would be cleaner, but is not necessary for the observed workload.
 - The assistant is not intended to identify or track people across frames.
 
-## Episode takeaway
+## Week takeaway
 
 A short LLM context is not the same thing as persistent memory. Here the Pi stores **observations** and **dialogue** independently, retrieves the relevant evidence on demand, uses constrained workflows for physical checks, and leaves general chat free of unnecessary sensor actions.

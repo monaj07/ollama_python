@@ -101,7 +101,7 @@ published `camera_lab.py` may still have a 3-second delay).
 
 ## Week 10 — Persistent memory
 
-The [Week 10 / Episode 7 memory guide](src/week_10/README.md) brings
+The [Week 10 memory guide](src/week_10/README.md) brings
 conversation persistence and environmental memory together: SQLite Away Mode
 sessions, PIR-triggered observations, voice-triggered camera evidence,
 context-aware follow-ups, and a unified push-to-talk interface inherited from

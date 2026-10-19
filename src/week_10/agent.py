@@ -192,6 +192,47 @@ def render_live_person_answer(*, person_count: int | None,
             + " This does not establish anyone's identity.")
 
 
+# Skip LLM follow-up classification for clearly independent new topics.
+_CALCULATION = re.compile(
+    r"^(?:what(?: is|'s)|calculate|compute|evaluate|solve)\s+[\d\s()+\-*/%^=.]+[?!]?$",
+    re.I,
+)
+_NEW_SUBJECT = re.compile(r"^(?:tell me about|explain|describe)\s+(.+?)[.!?]?$", re.I)
+_REFERENCES_LIVE = re.compile(
+    r"\b(?:it|this|that|these|those|them|they|their|earlier|previous|"
+    r"camera|sensor|pir|motion|room|scene|observation|reading|"
+    r"detection|detector|person|people|someone|anyone)\b", re.I,
+)
+
+
+def is_clear_new_topic(question: str) -> bool:
+    """Recognise clearly independent questions without another LLM call."""
+    q = " ".join(question.strip().split())
+
+    # Normalise spoken arithmetic operators.
+    operators = {
+        "plus": "+",
+        "minus": "-",
+        "times": "*",
+        "multiplied by": "*",
+        "divided by": "/",
+    }
+    math_q = re.sub(
+        r"\b(?:multiplied by|divided by|plus|minus|times)\b",
+        lambda m: operators[m.group(0).lower()],
+        q,
+        flags=re.I,
+    )
+
+    if _CALCULATION.fullmatch(math_q):
+        return True
+
+    match = _NEW_SUBJECT.fullmatch(q)
+    return bool(
+        match and not _REFERENCES_LIVE.search(match.group(1))
+    )
+
+
 def route_question(question: str, last_topic: str = "general",
                    last_question: str = "") -> str:
     """Route explicit requests; defer unresolved live-context turns to the model.
@@ -213,6 +254,8 @@ def route_question(question: str, last_topic: str = "general",
     if last_topic.startswith("memory_") and FOLLOWUP.search(q):
         return "memory_session"
     if inherited_live_intent(last_topic, last_question):
+        if is_clear_new_topic(question):
+            return "general"
         return "live_followup"
     return "general"
 
@@ -377,7 +420,11 @@ class MemoryVoiceAgent(VoiceAgent):
         route = route_question(question, self.last_topic, last_question)
         try:
             inherited_intent = None
-            reset_context = False
+            reset_context = (
+                route == "general"
+                and bool(inherited_live_intent(self.last_topic, last_question))
+                and is_clear_new_topic(question)
+            )
             if route == "live_followup":
                 inherited_intent = inherited_live_intent(self.last_topic, last_question)
                 decision = resolve_live_followup(
