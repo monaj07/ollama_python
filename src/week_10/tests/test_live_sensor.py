@@ -289,7 +289,10 @@ class LiveSensorTests(unittest.TestCase):
         self.agent.ask('Okay, how about now?')
         self.client.intent = 'discuss_observation'
         reply = self.agent.ask('Really? No one?')
-        self.assertIn("haven't taken a fresh reading", reply)
+        self.assertRegex(
+            reply.lower(),
+            r"haven't taken a (?:fresh|new|recent) reading",
+        )
         self.assertIn('earlier observation', reply)
         self.assertEqual(len(self.tools.calls), 4)
         # No free-form answer call can invent a new reading for this discussion.

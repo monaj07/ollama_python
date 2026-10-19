@@ -205,3 +205,40 @@ def get_observation_history_report() -> dict:
             "identity or proof of occupancy. A negative snapshot does not prove absence."
         ),
     }
+
+def get_latest_live_observation(conversation_session_id: str) -> dict | None:
+    """Retrieve the latest stored live camera observation for one conversation."""
+    if not isinstance(conversation_session_id, str) or not conversation_session_id:
+        raise ValueError("A conversation session ID is required")
+
+    with closing(connect()) as db:
+        row = db.execute("""
+            SELECT id, observed_at_utc, detection_score, evidence_path,
+                   json_extract(details_json, '$.camera_ok') AS camera_ok,
+                   json_extract(details_json, '$.person_count') AS person_count,
+                   json_extract(details_json, '$.pir_signal_active') AS pir_signal_active
+            FROM observations
+            WHERE trigger = 'live_observation'
+              AND json_valid(details_json) = 1
+              AND json_extract(details_json, '$.conversation_session_id') = ?
+            ORDER BY observed_at_utc DESC, id DESC
+            LIMIT 1
+        """, (conversation_session_id,)).fetchone()
+
+    if row is None:
+        return None
+    camera_ok = row["camera_ok"] == 1
+    count = row["person_count"]
+    if not camera_ok or type(count) is not int or count < 0:
+        count = None
+    pir = row["pir_signal_active"]
+    motion = bool(pir) if type(pir) is int and pir in (0, 1) else None
+    return {
+        "event_id": row["id"],
+        "time_local": local_time(row["observed_at_utc"]),
+        "camera_ok": camera_ok,
+        "person_count": count,
+        "detection_score": row["detection_score"] if count and count > 0 else None,
+        "pir_signal_active": motion,
+        "evidence_path": row["evidence_path"],
+    }

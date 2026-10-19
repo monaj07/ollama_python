@@ -24,10 +24,12 @@ for directory in (str(REPO), str(WEEK09)):
 from ollama import Client
 from src.week_09.agent import VoiceAgent
 from memory_tools import get_observation_history_report, local_time
+from memory_tools import get_latest_live_observation
 from recent_memory import get_recent_observations_report
 from conversation_store import ConversationStore
 from followup_router import resolve_live_followup
 from live_memory import RecordingTools
+from live_memory import render_recorded_observation
 
 MODEL = os.environ.get("OLLAMA_MODEL", "gemma4:e2b")
 OPTIONS = {"temperature": 0, "num_ctx": 2048, "num_predict": 180}
@@ -299,16 +301,9 @@ class MemoryVoiceAgent(VoiceAgent):
         return answer
 
     def _discuss_live_observation(self) -> str:
-        """Reference a recorded measurement without inventing a current reading."""
-        observation = self.conversation_store.latest_live_observation(self.session_id)
-        if observation is None:
-            return ("I haven't taken a fresh reading on this turn. "
-                    "The earlier sensor result isn't available for review; would you like a new check?")
-        return ("I haven't taken a fresh reading on this turn. "
-                f"The earlier observation at {local_time(observation['created_at_utc'])} was: "
-                f"\"{observation['assistant_text']}\" "
-                "That describes the earlier measurement, not the room now.")
-
+        """Read stored sensor evidence rather than assistant-generated prose."""
+        observation = get_latest_live_observation(self.session_id)
+        return render_recorded_observation(observation)
     def _answer_live_person_question(self) -> str:
         """Host-enforced fresh PIR and camera evidence, regardless of LLM tool choice.
 
