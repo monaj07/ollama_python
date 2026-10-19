@@ -1,4 +1,4 @@
-"""Retrieve Away Mode reports and remove active session data."""
+"""Compact, read-only retrieval for the most recent Away Mode session."""
 from __future__ import annotations
 
 from contextlib import closing
@@ -10,24 +10,8 @@ from zoneinfo import ZoneInfo
 from memory_store import connect
 
 LOCAL_TZ = ZoneInfo("Australia/Melbourne")
+MAX_POSITIVE_EVENTS = 12
 OBSERVATIONS_DIR = Path(__file__).resolve().parents[2] / "outputs/observations"
-
-SCHEMAS = [{
-    "type": "function",
-    "function": {
-        "name": "get_latest_away_report",
-        "description": (
-            "Retrieve stored evidence from the most recent Away Mode session, "
-            "including motion events, person detections, times and confidence. "
-            "Use for questions about what happened while the monitor was armed. "
-            "Does not read live sensors or capture a new image."
-        ),
-        "parameters": {
-            "type": "object", "properties": {}, "required": [],
-            "additionalProperties": False,
-        },
-    },
-}]
 
 
 def local_time(utc_timestamp: str | None) -> str | None:
@@ -114,7 +98,7 @@ def delete_latest_away_report() -> dict:
 
 
 def get_latest_away_report() -> dict:
-    """Summarise all events; bound the individual examples sent to the LLM."""
+    """Return complete counts and a bounded list of positive detections."""
     with closing(connect()) as db:
         session = db.execute("""
             SELECT * FROM away_sessions
@@ -136,12 +120,12 @@ def get_latest_away_report() -> dict:
             FROM observations WHERE away_session_id=?
         """, (session_id,)).fetchone()
 
-        # Return recent event detail only; aggregate counts cover the entire session.
-        rows = db.execute("""
-            SELECT id, observed_at_utc, trigger, person_detected, detection_score
-            FROM observations WHERE away_session_id=?
-            ORDER BY observed_at_utc DESC, id DESC LIMIT 15
-        """, (session_id,)).fetchall()
+        positive_rows = db.execute("""
+            SELECT id, observed_at_utc, detection_score
+            FROM observations
+            WHERE away_session_id=? AND person_detected=1
+            ORDER BY observed_at_utc ASC, id ASC LIMIT ?
+        """, (session_id, MAX_POSITIVE_EVENTS)).fetchall()
 
     return {
         "ok": True,
@@ -157,22 +141,18 @@ def get_latest_away_report() -> dict:
         "max_person_confidence": counts["max_score"],
         "first_person_detection_local": local_time(counts["first_positive"]),
         "last_person_detection_local": local_time(counts["last_positive"]),
-        "events_truncated": counts["total"] > len(rows),
-        "events": [
+        "positive_events_truncated": counts["positive"] > len(positive_rows),
+        "positive_events": [
             {
                 "event_id": row["id"],
                 "time_local": local_time(row["observed_at_utc"]),
-                "trigger": row["trigger"],
-                "person_detected": None if row["person_detected"] is None
-                                   else bool(row["person_detected"]),
                 "score": row["detection_score"],
             }
-            for row in reversed(rows)
+            for row in positive_rows
         ],
         "limitations": (
-            "A person detection is an unverified model prediction, not an identity "
-            "or proof of physical presence or proximity to a desk. A negative detection is not proof "
-            "of absence. Motion events may refer to the same person. "
-            "Away Mode indicates monitoring was armed, not verified user absence."
+            "Detections are unverified model outputs; a single person may produce "
+            "several events. No detection does not prove absence. Observations "
+            "do not establish identity or proximity to the desk."
         ),
     }
