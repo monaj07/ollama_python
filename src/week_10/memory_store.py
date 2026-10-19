@@ -53,6 +53,7 @@ def add_observation(
     evidence_path: str | None = None,
     away_session_id: int | None = None,
     details: dict | None = None,
+    observed_at_utc: str | None = None,
 ) -> int:
     if not trigger.strip():
         raise ValueError("trigger cannot be empty")
@@ -71,9 +72,17 @@ def add_observation(
                 """).fetchone()
                 away_session_id = active["id"] if active else None
 
-            timestamp = datetime.now(timezone.utc).isoformat(
-                timespec="microseconds"
-            )
+            if observed_at_utc is None:
+                timestamp = datetime.now(timezone.utc).isoformat(
+                    timespec="microseconds"
+                )
+            else:
+                parsed = datetime.fromisoformat(observed_at_utc)
+                if parsed.tzinfo is None or parsed.utcoffset() is None:
+                    raise ValueError("observed_at_utc must include a timezone")
+                timestamp = parsed.astimezone(timezone.utc).isoformat(
+                    timespec="microseconds"
+                )
 
             cursor = db.execute("""
                 INSERT INTO observations
