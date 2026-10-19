@@ -99,6 +99,16 @@ published `camera_lab.py` may still have a 3-second delay).
 |---|---|
 | ![Overlapping YOLOE detections](src/week_09/assets/person-overlap-arm.jpg) | ![Screen and hand detections](src/week_09/assets/person-on-screen-and-hand.jpg) |
 
+## Week 10 — Persistent memory
+
+The [Week 10 / Episode 7 memory guide](src/week_10/README.md) brings
+conversation persistence and environmental memory together: SQLite Away Mode
+sessions, PIR-triggered observations, voice-triggered camera evidence,
+context-aware follow-ups, and a unified push-to-talk interface inherited from
+Week 09. It includes reproducible commands, real Pi observations, regression
+checks, and a 28-case deterministic routing benchmark. Sensor detections are
+unverified predictions, not proof of identity or room occupancy.
+
 ## Getting started
 
 Use Python 3.14 or newer with the `ollama` package installed and a Jupyter-compatible editor, such as VS Code. The extended and Week 3 notebooks also require Pydantic 2. Start Ollama locally and download the models used in the notebooks (`qwen3.5:2b` and `gemma4:e2b`), or update the model names to ones installed.
