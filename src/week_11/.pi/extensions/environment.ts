@@ -134,7 +134,46 @@ class PhysicalBridge {
 
 export default function (pi: ExtensionAPI) {
   const bridge = new PhysicalBridge();
+  let sessionId = "";
+  let needsTurn = true;
+  let beginPromise: Promise<void> | undefined;
+  pi.on("session_start", (_event, ctx) => {
+    sessionId = ctx.sessionManager.getSessionId();
+    needsTurn = true;
+    beginPromise = undefined;
+  });
+  pi.on("agent_start", () => {
+    needsTurn = true;
+    beginPromise = undefined;
+  });
   pi.on("session_shutdown", () => bridge.close());
+
+  // Lazy: general chat never starts the Python worker. A shared promise keeps
+  // simultaneous tool calls from resetting the previous PIR reading mid-turn.
+  async function ensureTurn(): Promise<void> {
+    if (!needsTurn) {
+      if (beginPromise) await beginPromise;
+      return;
+    }
+    needsTurn = false;
+    beginPromise = (async () => {
+      const reply = await bridge.request("begin_turn", { session_id: sessionId }, 5000);
+      if (!reply.ok) throw new Error(reply.error || "Cannot start sensor turn");
+    })();
+    try {
+      await beginPromise;
+    } catch (err) {
+      needsTurn = true;
+      throw err;
+    }
+  }
+  async function sensorRequest(tool: string, args: unknown, timeoutMs: number, signal?: AbortSignal) {
+    await ensureTurn();
+    return bridge.request(tool, args, timeoutMs, signal);
+  }
+  function result(reply: Reply) {
+    return { content: [{ type: "text" as const, text: JSON.stringify(reply) }], details: reply };
+  }
 
   pi.registerCommand("sensor-health", {
     description: "Check the Python sensor bridge without using an LLM",
@@ -154,9 +193,9 @@ export default function (pi: ExtensionAPI) {
     description: "Read the current PIR motion sensor state. Motion is not proof of a person or occupancy.",
     parameters: Type.Object({}, { additionalProperties: false }),
     async execute(_id, params, signal) {
-      const reply = await bridge.request("detect_motion", params, 25_000, signal);
+      const reply = await sensorRequest("detect_motion", params, 25_000, signal);
       if (!reply.ok) throw new Error(reply.error || "PIR tool failed");
-      return { content: [{ type: "text", text: JSON.stringify(reply) }], details: reply };
+      return result(reply);
     },
   });
 
@@ -169,9 +208,103 @@ export default function (pi: ExtensionAPI) {
       conf: Type.Optional(Type.Number({ minimum: 0.1, maximum: 0.8, description: "Default 0.2" })),
     }, { additionalProperties: false }),
     async execute(_id, params, signal) {
-      const reply = await bridge.request("observe_scene", params, 190_000, signal);
+      const reply = await sensorRequest("observe_scene", params, 190_000, signal);
       if (!reply.ok) throw new Error(reply.error || "Camera tool failed");
-      return { content: [{ type: "text", text: JSON.stringify(reply) }], details: reply };
+      return result(reply);
     },
   });
+
+  // Pi performs deterministic nested orchestration. Each child tool goes through
+  // Pi's normal validation, hooks and tracing, but requires only one LLM decision.
+  pi.registerTool({
+    name: "check_presence",
+    label: "Check room presence",
+    description: "For questions about anyone or people currently in the room, ALWAYS check both PIR and a fresh camera frame. Calls both sensors even when PIR sees no motion. Report unverified camera detections, never confirmed physical occupancy.",
+    parameters: Type.Object({}, { additionalProperties: false }),
+    async execute(_id, _params, signal, _onUpdate, ctx) {
+      const started = performance.now();
+      async function runNested(name: string, args: object): Promise<Reply> {
+        try {
+          const outcome = await ctx.executeTool(name, args, { signal });
+          const reply = outcome.result.details as Reply | undefined;
+          if (outcome.isError || !reply || typeof reply.ok !== "boolean") {
+            return { ok: false, error: `Nested ${name} failed` };
+          }
+          return reply;
+        } catch (err) {
+          return { ok: false, error: `${name}: ${String(err)}`.slice(0, 400) };
+        }
+      }
+      const pir = await runNested("detect_motion", {});
+      // Deliberately do not skip the camera if the PIR is negative or unavailable.
+      const camera = signal?.aborted
+        ? { ok: false, error: "Cancelled before camera capture" }
+        : await runNested("observe_scene", { targets: ["person"], conf: 0.2 });
+      const rawCount = camera.ok && camera.counts && typeof camera.counts === "object"
+        ? (camera.counts as Record<string, unknown>).person : null;
+      const count = typeof rawCount === "number" && Number.isInteger(rawCount) && rawCount >= 0
+        ? rawCount : null;
+      const motion = pir.ok && typeof pir.motion_signal_active === "boolean"
+        ? pir.motion_signal_active : null;
+      const observations = Array.isArray(camera.detections) ? camera.detections : [];
+      const scores = observations.filter((d) => d && typeof d === "object"
+        && d.label === "person" && typeof d.confidence === "number"
+        && Number.isFinite(d.confidence) && d.confidence >= 0 && d.confidence <= 1)
+        .map((d) => d.confidence as number);
+      const combined = {
+        ok: pir.ok === true && camera.ok === true,
+        partial: !(pir.ok === true && camera.ok === true),
+        motion_signal_active: motion,
+        camera_person_count: count,
+        max_person_score: count !== null && count > 0 && scores.length ? Math.max(...scores) : null,
+        pir_observed_at: pir.observed_at ?? null,
+        camera_observed_at: camera.observed_at ?? null,
+        evidence_path: camera.source ?? null,
+        recording: camera.recording ?? null,
+        elapsed_s: Math.round((performance.now() - started) / 10) / 100,
+        errors: {
+          pir: pir.ok ? null : pir.error ?? "No valid PIR reading",
+          camera: camera.ok ? null : camera.error ?? "No valid camera reading",
+        },
+        limitations: "PIR indicates movement, not occupancy. Camera counts are tentative single-frame detections, not verified people; zero does not prove absence. Detector scores are not calibrated probabilities.",
+      };
+      return result(combined);
+    },
+  });
+
+  pi.registerTool({
+    name: "memory_recent",
+    label: "Recent saved observations",
+    description: "READ-ONLY: retrieve the latest 1-10 stored environmental observations across sessions. Historical only, NEVER triggers a fresh sensor reading. Use for 'what did you see most recently?'",
+    parameters: Type.Object({
+      limit: Type.Optional(Type.Integer({ minimum: 1, maximum: 10, description: "Default 5" })),
+    }, { additionalProperties: false }),
+    async execute(_id, params, signal) {
+      const reply = await bridge.request("memory_recent", params, 10_000, signal);
+      return result(reply);
+    },
+  });
+
+  pi.registerTool({
+    name: "memory_history",
+    label: "Historical observations report",
+    description: "READ-ONLY: aggregate saved observations across all sessions including live checks; includes a separately labelled latest Away Mode session. Never capture a new image.",
+    parameters: Type.Object({}, { additionalProperties: false }),
+    async execute(_id, params, signal) {
+      const reply = await bridge.request("memory_history", params, 10_000, signal);
+      return result(reply);
+    },
+  });
+
+  pi.registerTool({
+    name: "memory_away",
+    label: "Latest Away Mode history",
+    description: "READ-ONLY: report the most recent Away Mode session; use only for questions specifically about Away Mode or while-away monitoring.",
+    parameters: Type.Object({}, { additionalProperties: false }),
+    async execute(_id, params, signal) {
+      const reply = await bridge.request("memory_away", params, 10_000, signal);
+      return result(reply);
+    },
+  });
+
 }
