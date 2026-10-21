@@ -25,12 +25,19 @@ def main() -> None:
     parser.add_argument("--pi-model", default="ollama/gemma4:e2b-8k")
     parser.add_argument("--pi-continue", action="store_true", help="Resume last Pi session in this project")
     parser.add_argument("--pi-timeout", type=float, default=180.0)
+    parser.add_argument("--pi-system-prompt", type=Path,
+                        default=HERE / "voice_system.md",
+                        help="Pi system prompt file (default: Week 11 compact voice prompt)")
+    parser.add_argument("--pi-no-context-files", action="store_true",
+                        help="Ignore AGENTS.md for a lean comparison run")
     options, audio_args = parser.parse_known_args()
 
     # Keep the Week 09 loop unchanged: process_turn() calls these two helpers.
     # The Pi process and all its tools are initialized once, not per utterance.
     with PiRPCClient(model=options.pi_model, continue_session=options.pi_continue,
-                     timeout_s=options.pi_timeout) as client:
+                     timeout_s=options.pi_timeout,
+                     system_prompt=options.pi_system_prompt,
+                     no_context_files=options.pi_no_context_files) as client:
         print("[startup] Persistent Pi RPC agent ready", flush=True)
 
         def ask_agent(question: str, _model: str) -> str:

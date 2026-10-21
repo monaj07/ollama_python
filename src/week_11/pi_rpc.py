@@ -53,16 +53,26 @@ class PiRPCClient:
         no_session: bool = False,
         timeout_s: float = 180.0,
         startup_timeout_s: float = 45.0,
+        system_prompt: Path | None = None,
+        no_context_files: bool = False,
         command: Sequence[str] | None = None,
     ) -> None:
         if no_session and continue_session:
             raise ValueError("Cannot continue an in-memory session")
+        if command is not None and (system_prompt is not None or no_context_files):
+            raise ValueError("Custom command cannot be combined with system_prompt/no_context_files")
         self.cwd = Path(cwd)
+        if system_prompt is not None:
+            system_prompt = Path(system_prompt).expanduser().resolve()
+            if not system_prompt.is_file():
+                raise ValueError(f"System prompt file not found: {system_prompt}")
         self.timeout_s = timeout_s
         self.startup_timeout_s = startup_timeout_s
         self.argv = list(command) if command is not None else [
             "pi", "--mode", "rpc", "--model", model,
             "--tools", TOOLS, "--no-mcp",
+            *(["--system-prompt", str(system_prompt)] if system_prompt else []),
+            *(["--no-context-files"] if no_context_files else []),
             *(["--continue"] if continue_session else []),
             *(["--no-session"] if no_session else []),
         ]
@@ -250,10 +260,16 @@ def main() -> None:
     parser.add_argument("--continue-session", action="store_true")
     parser.add_argument("--no-session", action="store_true")
     parser.add_argument("--timeout", type=float, default=180)
+    parser.add_argument("--system-prompt", type=Path,
+                        help="Replace Pi's built-in system prompt with this Markdown file")
+    parser.add_argument("--no-context-files", action="store_true",
+                        help="Disable AGENTS.md discovery (diagnostic only)")
     parser.add_argument("--prompt", help="Run one question and exit; omit for repeated text chat")
     args = parser.parse_args()
     with PiRPCClient(model=args.model, continue_session=args.continue_session,
-                     no_session=args.no_session, timeout_s=args.timeout) as client:
+                     no_session=args.no_session, timeout_s=args.timeout,
+                     system_prompt=args.system_prompt,
+                     no_context_files=args.no_context_files) as client:
         print("[pi_rpc] ready", flush=True)
         while True:
             if args.prompt is not None:

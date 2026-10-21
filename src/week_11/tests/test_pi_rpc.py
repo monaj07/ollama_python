@@ -53,6 +53,22 @@ class TestPiRPC(unittest.TestCase):
         finally:
             pi.close()
 
+    def test_compact_system_prompt_is_included_in_default_rpc_command(self):
+        prompt = BASE / "voice_system.md"
+        pi = PiRPCClient(cwd=BASE, system_prompt=prompt)
+        self.assertIn("--system-prompt", pi.argv)
+        pos = pi.argv.index("--system-prompt")
+        self.assertEqual(pi.argv[pos + 1], str(prompt.resolve()))
+        self.assertNotIn("--no-context-files", pi.argv)
+
+    def test_context_files_can_be_disabled_for_ablation(self):
+        pi = PiRPCClient(cwd=BASE, system_prompt=BASE / "voice_system.md", no_context_files=True)
+        self.assertIn("--no-context-files", pi.argv)
+
+    def test_missing_prompt_is_rejected_before_process_start(self):
+        with self.assertRaisesRegex(ValueError, "System prompt file not found"):
+            PiRPCClient(cwd=BASE, system_prompt=BASE / "missing.md")
+
     def test_conflicting_session_options(self):
         with self.assertRaises(ValueError):
             self.client(no_session=True, continue_session=True)
