@@ -122,6 +122,7 @@ def query_memory(args: dict) -> dict:
         "person_detected": None if seen is None else bool(seen),
         "person_score": row["detection_score"],
         "evidence_path": row["evidence_path"],
+        "image_available": bool(row["evidence_path"] and Path(row["evidence_path"]).exists()),
         "person_count": details.get("person_count"),
         "camera_ok": details.get("camera_ok"),
         "pir_motion_signal_active": details.get("pir_signal_active"),

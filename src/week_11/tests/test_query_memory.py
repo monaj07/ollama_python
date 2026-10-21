@@ -85,24 +85,37 @@ class QueryMemoryTests(unittest.TestCase):
     def test_exact_event_uses_read_only_parameterized_query(self):
         with tempfile.TemporaryDirectory() as td:
             dbpath = Path(td) / "events.sqlite3"
+            image_path = Path(td) / "scene.jpg"
+            image_path.write_bytes(b"test image")
             with sqlite3.connect(dbpath) as db:
                 db.execute("CREATE TABLE observations (id INTEGER PRIMARY KEY, "
                            "away_session_id INTEGER, observed_at_utc TEXT, trigger TEXT, "
                            "person_detected INTEGER, detection_score REAL, evidence_path TEXT, details_json TEXT)")
                 db.execute("INSERT INTO observations VALUES (10,2,?,?,?,?,?,?)", (
                     "2026-10-19T01:53:19+00:00", "pir_motion", 1, 0.466,
-                    "/tmp/scene.jpg", json.dumps({"person_count": 1, "camera_ok": True,
+                    str(image_path), json.dumps({"person_count": 1, "camera_ok": True,
                                                       "conversation_session_id": "week11-pi:test"})))
             with patch.object(worker, "DB_PATH", dbpath):
                 got = self.query(operation="event", event_id=10)
                 missing = self.query(operation="event", event_id=999)
+                self.assertIs(got["image_available"], True)
+                image_path.unlink()
+                deleted = self.query(operation="event", event_id=10)
+                self.assertIs(deleted["image_available"], False)
+                for empty_path in (None, ""):
+                    with self.subTest(evidence_path=empty_path):
+                        with sqlite3.connect(dbpath) as db:
+                            db.execute("UPDATE observations SET evidence_path = ? WHERE id = 10",
+                                       (empty_path,))
+                        no_image = self.query(operation="event", event_id=10)
+                        self.assertIs(no_image["image_available"], False)
             self.assertTrue(got["ok"])
             self.assertEqual(got["event_id"], 10)
             self.assertEqual(got["away_session_id"], 2)
             self.assertEqual(got["person_score"], 0.466)
             self.assertEqual(got["time_local"], "2026-10-19T12:53:19+11:00")
             self.assertEqual(got["conversation_session_id"], "week11-pi:test")
-            self.assertEqual(got["evidence_path"], "/tmp/scene.jpg")
+            self.assertEqual(got["evidence_path"], str(image_path))
             self.assertFalse(missing["ok"])
             self.assertFalse(self.hardware.calls)
 
