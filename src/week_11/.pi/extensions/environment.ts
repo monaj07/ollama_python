@@ -171,8 +171,9 @@ export default function (pi: ExtensionAPI) {
     await ensureTurn();
     return bridge.request(tool, args, timeoutMs, signal);
   }
-  function result(reply: Reply) {
-    return { content: [{ type: "text" as const, text: JSON.stringify(reply) }], details: reply };
+  // Keep full structured results for inspection while sending a compact model view.
+  function result(reply: Reply, modelView?: Reply) {
+    return { content: [{ type: "text" as const, text: JSON.stringify(modelView ?? reply) }], details: reply };
   }
 
   pi.registerCommand("sensor-health", {
@@ -219,7 +220,7 @@ export default function (pi: ExtensionAPI) {
   pi.registerTool({
     name: "check_presence",
     label: "Check room presence",
-    description: "For questions about anyone or people currently in the room, ALWAYS check both PIR and a fresh camera frame. Calls both sensors even when PIR sees no motion. Report unverified camera detections, never confirmed physical occupancy.",
+    description: "For live room-presence questions, ALWAYS check PIR and camera, even if PIR reports no motion. The result contains an evidence_summary composed deterministically from both sensor readings: use it faithfully. Camera detections do not establish verified occupancy.",
     parameters: Type.Object({}, { additionalProperties: false }),
     async execute(_id, _params, signal, _onUpdate, ctx) {
       const started = performance.now();
@@ -251,11 +252,20 @@ export default function (pi: ExtensionAPI) {
         && d.label === "person" && typeof d.confidence === "number"
         && Number.isFinite(d.confidence) && d.confidence >= 0 && d.confidence <= 1)
         .map((d) => d.confidence as number);
+      // A deterministic sentence helps the small model avoid reversing a boolean
+      // sensor signal (e.g. claiming movement when PIR reported false).
+      const pirEvidence = motion === true ? "PIR: movement detected."
+        : motion === false ? "PIR: no movement detected."
+        : "PIR: reading unavailable.";
+      const cameraEvidence = count === null ? "Camera: reading unavailable."
+        : count === 0 ? "Camera: no person detected."
+        : `Camera: ${count} tentative person detection${count === 1 ? "" : "s"}.`;
       const combined = {
         ok: pir.ok === true && camera.ok === true,
         partial: !(pir.ok === true && camera.ok === true),
         motion_signal_active: motion,
         camera_person_count: count,
+        evidence_summary: `${pirEvidence} ${cameraEvidence} These readings do not establish verified occupancy.`,
         max_person_score: count !== null && count > 0 && scores.length ? Math.max(...scores) : null,
         pir_observed_at: pir.observed_at ?? null,
         camera_observed_at: camera.observed_at ?? null,
@@ -288,11 +298,26 @@ export default function (pi: ExtensionAPI) {
   pi.registerTool({
     name: "memory_history",
     label: "Historical observations report",
-    description: "READ-ONLY: aggregate saved observations across all sessions including live checks; includes a separately labelled latest Away Mode session. Never capture a new image.",
-    parameters: Type.Object({}, { additionalProperties: false }),
+    description: "READ-ONLY: report historical totals across all saved observations. Returns compact counts by default; request include_details=true for complete event history and latest Away Mode breakdown. Never capture a new image.",
+    parameters: Type.Object({
+      include_details: Type.Optional(Type.Boolean({ description: "Return expanded historical events and latest Away Mode breakdown (default false)" })),
+    }, { additionalProperties: false }),
     async execute(_id, params, signal) {
-      const reply = await bridge.request("memory_history", params, 10_000, signal);
-      return result(reply);
+      // The Week 10 Python tool takes no arguments; verbosity is only a Pi view concern.
+      const reply = await bridge.request("memory_history", {}, 10_000, signal);
+      if (!reply.ok || params.include_details === true) return result(reply);
+      return result(reply, {
+        ok: true,
+        scope: reply.scope,
+        total_events: reply.total_events,
+        person_positive_events: reply.person_positive_events,
+        person_negative_events: reply.person_negative_events,
+        events_without_person_result: reply.events_without_person_result,
+        pir_motion_events: reply.pir_motion_events,
+        first_person_detection_local: reply.first_person_detection_local,
+        last_person_detection_local: reply.last_person_detection_local,
+        limitations: "Counts refer to detection events, not distinct people. Saved detections are unverified and do not establish occupancy.",
+      });
     },
   });
 
