@@ -287,7 +287,7 @@ export default function (pi: ExtensionAPI) {
   pi.registerTool({
     name: "query_memory",
     label: "Query saved environmental memory",
-    description: "READ-ONLY SQLite memory; never activates sensors. Choose operation: recent (latest 1-10 observations), summary (counts across all saved observations), away (latest Away Mode report), events (list up to 12 person-positive detections with timestamps and scores), event (one specific event ID with evidence metadata). For follow-ups preserve the current scope; an Away Mode follow-up stays about Away Mode. This tool has no SQL, delete or capture operations.",
+    description: "READ-ONLY SQLite memory; never activates sensors. Choose operation: recent (latest 1-10 observations), summary (counts across all saved observations), away (latest Away Mode report), events (list person-positive detections, optionally filter by min_score or event_ids, with exact saved image paths and image_available), event (one specific event ID with evidence metadata). For follow-ups preserve the current scope; an Away Mode follow-up stays about Away Mode. This tool has no SQL, delete or capture operations.",
     parameters: Type.Object({
       operation: Type.Union([
         Type.Literal("recent"), Type.Literal("summary"), Type.Literal("away"),
@@ -297,6 +297,11 @@ export default function (pi: ExtensionAPI) {
         description: "recent: 1-10 (default 1); events: 1-12 (default 12). Not used otherwise." })),
       event_id: Type.Optional(Type.Integer({ minimum: 1, maximum: 2147483647,
         description: "Required only for operation=event. Exact saved observation ID." })),
+      min_score: Type.Optional(Type.Number({ minimum: 0, maximum: 1,
+        description: "events only: minimum confidence score, inclusive; 0.7 means >=70%." })),
+      event_ids: Type.Optional(Type.Array(Type.Integer({ minimum: 1, maximum: 2147483647 }), {
+        minItems: 1, maxItems: 12,
+        description: "events only: optional specific person-positive event IDs (max 12)." })),
     }, { additionalProperties: false }),
     async execute(_id, params, signal) {
       const reply = await bridge.request("query_memory", params, 10_000, signal);

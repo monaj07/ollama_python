@@ -61,26 +61,21 @@ class QueryMemoryTests(unittest.TestCase):
         self.assertEqual(got["person_positive_events"], 4)
         self.assertFalse(self.hardware.calls)
 
-    def test_events_return_scores_and_are_explicitly_truncated(self):
-        report = {"ok": True, "person_positive_events": 12,
-                  "positive_events": [
-                      {"event_id": i, "score": i / 100, "time_local": "2026-10-20T20:00:00+11:00"}
-                      for i in range(12, 0, -1)
-                  ]}
-        with patch.object(worker, "get_observation_history_report", return_value=report):
-            got = self.query(operation="events", limit=3)
-        self.assertEqual([r["event_id"] for r in got["events"]], [12, 11, 10])
-        self.assertEqual(got["total_positive_events"], 12)
-        self.assertTrue(got["events_truncated"])
+    def test_events_return_filtered_exact_paths_from_index(self):
+        response = {"ok": True, "operation": "events", "returned_events": 1,
+                    "events": [{"event_id": 23, "score": 0.819,
+                                "evidence_path": "/tmp/scene.jpg", "image_available": True}]}
+        with patch.object(worker, "search_person_events", return_value=response) as search:
+            got = self.query(operation="events", min_score=0.7, limit=1)
+        search.assert_called_once_with(worker.DB_PATH, limit=1, min_score=0.7, event_ids=None)
+        self.assertEqual(got["events"][0]["event_id"], 23)
         self.assertFalse(self.hardware.calls)
 
-    def test_events_default_returns_all_twelve(self):
-        report = {"ok": True, "person_positive_events": 12,
-                  "positive_events": [{"event_id": i} for i in range(12)]}
-        with patch.object(worker, "get_observation_history_report", return_value=report):
-            got = self.query(operation="events")
-        self.assertEqual(got["returned_events"], 12)
-        self.assertFalse(got["events_truncated"])
+    def test_events_can_select_multiple_ids(self):
+        with patch.object(worker, "search_person_events", return_value={"ok": True}) as search:
+            self.query(operation="events", event_ids=[23, 22, 19, 16, 7])
+        search.assert_called_once_with(worker.DB_PATH, limit=12, min_score=None,
+                                       event_ids=[23, 22, 19, 16, 7])
 
     def test_exact_event_uses_read_only_parameterized_query(self):
         with tempfile.TemporaryDirectory() as td:
@@ -126,6 +121,9 @@ class QueryMemoryTests(unittest.TestCase):
             {"operation": "recent", "limit": "5"},
             {"operation": "events", "limit": 13},
             {"operation": "events", "event_id": 10},
+            {"operation": "events", "min_score": -0.1},
+            {"operation": "events", "min_score": 1.1},
+            {"operation": "events", "event_ids": []},
             {"operation": "summary", "limit": 1},
             {"operation": "away", "event_id": 10},
             {"operation": "event"},

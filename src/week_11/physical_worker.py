@@ -28,6 +28,7 @@ from src.week_10.memory_tools import (  # noqa: E402
 )
 from src.week_10.recent_memory import get_recent_observations_report  # noqa: E402
 from memory_store import DB_PATH  # noqa: E402
+from src.week_11.memory_event_index import search_person_events  # noqa: E402
 
 
 MEMORY_LIMITATION = (
@@ -43,7 +44,7 @@ def query_memory(args: dict) -> dict:
         "recent": {"operation", "limit"},
         "summary": {"operation"},
         "away": {"operation"},
-        "events": {"operation", "limit"},
+        "events": {"operation", "limit", "min_score", "event_ids"},
         "event": {"operation", "event_id"},
     }
     if not isinstance(operation, str) or operation not in allowed:
@@ -58,16 +59,10 @@ def query_memory(args: dict) -> dict:
             raise ValueError(f"{operation} limit must be an integer from 1 to {maximum}")
         if operation == "recent":
             return get_recent_observations_report(limit=limit)
-        report = get_observation_history_report()
-        events = report.get("positive_events", [])[:limit]
-        return {
-            "ok": report.get("ok", False),
-            "operation": "events", "scope": "all_saved_observations",
-            "total_positive_events": report.get("person_positive_events", 0),
-            "returned_events": len(events),
-            "events_truncated": report.get("person_positive_events", 0) > len(events),
-            "events": events, "limitations": MEMORY_LIMITATION,
-        }
+        return search_person_events(
+            DB_PATH, limit=limit,
+            min_score=args.get("min_score"), event_ids=args.get("event_ids"),
+        )
 
     if operation == "summary":
         report = get_observation_history_report()
@@ -91,7 +86,8 @@ def query_memory(args: dict) -> dict:
     event_id = args.get("event_id")
     if type(event_id) is not int or not 1 <= event_id <= 2147483647:
         raise ValueError("event_id must be a positive integer")
-    # This fixed SELECT and bound integer are the only new SQL in Week 11.
+    # Exact-event lookup uses a fixed parameterized SELECT; filtered event
+    # searches use separate read-only parameterized SQL in memory_event_index.
     # Open SQLite in read-only mode, without schema initialization or writes.
     if not DB_PATH.is_file():
         return {"ok": False, "operation": "event", "error": "No memory database exists"}

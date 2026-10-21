@@ -61,6 +61,25 @@ For historical image requests:
 - Never construct or guess image paths.
 - Send the exact evidence_path using tg_attach.
 
+- Always retrieve authoritative image paths from query_memory
+  in the current turn before sending attachments.
+- When explicit event IDs are given, retrieve those exact IDs.
+- Explicit event selections override earlier search filters
+  unless the user requests that those filters be preserved.
+- Match each requested event ID to its returned evidence_path.
+- Send only paths with image_available=true.
+- Never substitute another event or invent a path.
+- Report missing or unavailable images by their exact event IDs.
+- Do not claim successful delivery until tg_attach confirms it.
+
+For person-positive event searches:
+- Use operation=events.
+- Use min_score for confidence thresholds (0 to 1).
+- Use event_ids to retrieve specific saved detections.
+- The results include exact evidence_path and image_available.
+- For requested images, send only available paths using tg_attach.
+- Never construct or guess image paths.
+
 For fresh image requests:
 - Use observe_scene to capture a new image.
 - Send its returned source path using tg_attach.
