@@ -282,52 +282,24 @@ export default function (pi: ExtensionAPI) {
     },
   });
 
+  // One Pi-facing memory tool. Internal operations remain validated and read-only.
+  // Small local models choose a single operation instead of searching many tools.
   pi.registerTool({
-    name: "memory_recent",
-    label: "Recent saved observations",
-    description: "READ-ONLY: retrieve the latest 1-10 stored environmental observations across sessions. Historical only, NEVER triggers a fresh sensor reading. Use for 'what did you see most recently?'",
+    name: "query_memory",
+    label: "Query saved environmental memory",
+    description: "READ-ONLY SQLite memory; never activates sensors. Choose operation: recent (latest 1-10 observations), summary (counts across all saved observations), away (latest Away Mode report), events (list up to 12 person-positive detections with timestamps and scores), event (one specific event ID with evidence metadata). For follow-ups preserve the current scope; an Away Mode follow-up stays about Away Mode. This tool has no SQL, delete or capture operations.",
     parameters: Type.Object({
-      limit: Type.Optional(Type.Integer({ minimum: 1, maximum: 10, description: "Default 5" })),
+      operation: Type.Union([
+        Type.Literal("recent"), Type.Literal("summary"), Type.Literal("away"),
+        Type.Literal("events"), Type.Literal("event"),
+      ]),
+      limit: Type.Optional(Type.Integer({ minimum: 1, maximum: 12,
+        description: "recent: 1-10 (default 1); events: 1-12 (default 12). Not used otherwise." })),
+      event_id: Type.Optional(Type.Integer({ minimum: 1, maximum: 2147483647,
+        description: "Required only for operation=event. Exact saved observation ID." })),
     }, { additionalProperties: false }),
     async execute(_id, params, signal) {
-      const reply = await bridge.request("memory_recent", params, 10_000, signal);
-      return result(reply);
-    },
-  });
-
-  pi.registerTool({
-    name: "memory_history",
-    label: "Historical observations report",
-    description: "READ-ONLY: report historical totals across all saved observations. Returns compact counts by default; request include_details=true for complete event history and latest Away Mode breakdown. Never capture a new image.",
-    parameters: Type.Object({
-      include_details: Type.Optional(Type.Boolean({ description: "Return expanded historical events and latest Away Mode breakdown (default false)" })),
-    }, { additionalProperties: false }),
-    async execute(_id, params, signal) {
-      // The Week 10 Python tool takes no arguments; verbosity is only a Pi view concern.
-      const reply = await bridge.request("memory_history", {}, 10_000, signal);
-      if (!reply.ok || params.include_details === true) return result(reply);
-      return result(reply, {
-        ok: true,
-        scope: reply.scope,
-        total_events: reply.total_events,
-        person_positive_events: reply.person_positive_events,
-        person_negative_events: reply.person_negative_events,
-        events_without_person_result: reply.events_without_person_result,
-        pir_motion_events: reply.pir_motion_events,
-        first_person_detection_local: reply.first_person_detection_local,
-        last_person_detection_local: reply.last_person_detection_local,
-        limitations: "Counts refer to detection events, not distinct people. Saved detections are unverified and do not establish occupancy.",
-      });
-    },
-  });
-
-  pi.registerTool({
-    name: "memory_away",
-    label: "Latest Away Mode history",
-    description: "READ-ONLY: report the most recent Away Mode session; use only for questions specifically about Away Mode or while-away monitoring.",
-    parameters: Type.Object({}, { additionalProperties: false }),
-    async execute(_id, params, signal) {
-      const reply = await bridge.request("memory_away", params, 10_000, signal);
+      const reply = await bridge.request("query_memory", params, 10_000, signal);
       return result(reply);
     },
   });

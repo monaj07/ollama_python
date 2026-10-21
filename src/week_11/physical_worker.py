@@ -7,6 +7,9 @@ A Python worker remains alive throughout the Pi session, preserving warm YOLOE.
 from __future__ import annotations
 
 import contextlib
+import sqlite3
+from datetime import datetime
+from zoneinfo import ZoneInfo
 import json
 import signal
 import sys
@@ -24,6 +27,107 @@ from src.week_10.memory_tools import (  # noqa: E402
     get_observation_history_report,
 )
 from src.week_10.recent_memory import get_recent_observations_report  # noqa: E402
+from memory_store import DB_PATH  # noqa: E402
+
+
+MEMORY_LIMITATION = (
+    "Detections are unverified model outputs, not distinct people or proof of occupancy. "
+    "A negative snapshot does not prove absence."
+)
+
+
+def query_memory(args: dict) -> dict:
+    """One read-only, bounded interface to the existing Week 10 memory."""
+    operation = args.get("operation")
+    allowed = {
+        "recent": {"operation", "limit"},
+        "summary": {"operation"},
+        "away": {"operation"},
+        "events": {"operation", "limit"},
+        "event": {"operation", "event_id"},
+    }
+    if not isinstance(operation, str) or operation not in allowed:
+        raise ValueError("operation must be recent, summary, away, events or event")
+    if set(args) - allowed[operation]:
+        raise ValueError(f"Unexpected arguments for memory operation {operation}")
+
+    if operation in ("recent", "events"):
+        maximum = 10 if operation == "recent" else 12
+        limit = args.get("limit", 1 if operation == "recent" else 12)
+        if type(limit) is not int or not 1 <= limit <= maximum:
+            raise ValueError(f"{operation} limit must be an integer from 1 to {maximum}")
+        if operation == "recent":
+            return get_recent_observations_report(limit=limit)
+        report = get_observation_history_report()
+        events = report.get("positive_events", [])[:limit]
+        return {
+            "ok": report.get("ok", False),
+            "operation": "events", "scope": "all_saved_observations",
+            "total_positive_events": report.get("person_positive_events", 0),
+            "returned_events": len(events),
+            "events_truncated": report.get("person_positive_events", 0) > len(events),
+            "events": events, "limitations": MEMORY_LIMITATION,
+        }
+
+    if operation == "summary":
+        report = get_observation_history_report()
+        return {
+            "ok": report.get("ok", False), "operation": "summary",
+            "scope": "all_saved_observations",
+            "total_events": report.get("total_events", 0),
+            "person_positive_events": report.get("person_positive_events", 0),
+            "person_negative_events": report.get("person_negative_events", 0),
+            "events_without_person_result": report.get("events_without_person_result", 0),
+            "pir_motion_events": report.get("pir_motion_events", 0),
+            "first_person_detection_local": report.get("first_person_detection_local"),
+            "last_person_detection_local": report.get("last_person_detection_local"),
+            "limitations": MEMORY_LIMITATION,
+        }
+
+    if operation == "away":
+        # Reuse the Week 10 implementation; its event listing is already bounded.
+        return get_latest_away_report()
+
+    event_id = args.get("event_id")
+    if type(event_id) is not int or not 1 <= event_id <= 2147483647:
+        raise ValueError("event_id must be a positive integer")
+    # This fixed SELECT and bound integer are the only new SQL in Week 11.
+    # Open SQLite in read-only mode, without schema initialization or writes.
+    if not DB_PATH.is_file():
+        return {"ok": False, "operation": "event", "error": "No memory database exists"}
+    uri = f"{DB_PATH.resolve().as_uri()}?mode=ro"
+    with contextlib.closing(sqlite3.connect(uri, uri=True)) as db:
+        db.row_factory = sqlite3.Row
+        row = db.execute(
+            "SELECT id, away_session_id, observed_at_utc, trigger, "
+            "person_detected, detection_score, evidence_path, details_json "
+            "FROM observations WHERE id = ? LIMIT 1", (event_id,)
+        ).fetchone()
+    if row is None:
+        return {"ok": False, "operation": "event", "event_id": event_id,
+                "error": "No observation exists with that event ID"}
+    try:
+        details = json.loads(row["details_json"] or "{}")
+    except (ValueError, TypeError):
+        details = {}
+    if not isinstance(details, dict):
+        details = {}
+    seen = row["person_detected"]
+    timestamp = datetime.fromisoformat(row["observed_at_utc"])
+    return {
+        "ok": True, "operation": "event", "event_id": row["id"],
+        "away_session_id": row["away_session_id"],
+        "time_local": timestamp.astimezone(ZoneInfo("Australia/Melbourne")).isoformat(timespec="seconds"),
+        "trigger": row["trigger"],
+        "person_detected": None if seen is None else bool(seen),
+        "person_score": row["detection_score"],
+        "evidence_path": row["evidence_path"],
+        "person_count": details.get("person_count"),
+        "camera_ok": details.get("camera_ok"),
+        "pir_motion_signal_active": details.get("pir_signal_active"),
+        "conversation_session_id": details.get("conversation_session_id"),
+        "limitations": MEMORY_LIMITATION,
+    }
 
 
 def dispatch(recording: RecordingTools, tool: str, args: object) -> dict:
@@ -55,6 +159,8 @@ def dispatch(recording: RecordingTools, tool: str, args: object) -> dict:
             }
             recording.begin_turn()  # Never reuse an old PIR reading next time.
         return result
+    if tool == "query_memory":
+        return query_memory(args)
     if tool == "memory_recent":
         if set(args) - {"limit"}:
             raise ValueError("Unknown memory_recent arguments")
