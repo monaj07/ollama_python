@@ -157,39 +157,3 @@ Start with `src/week_01.ipynb`, then explore tool calling in `src/week_02.ipynb`
 ## Troubleshooting
 
 `ValueError: No content returned from the model.` is raised by the notebook when an Ollama response contains neither text nor tool calls. It can occur on the follow-up response after a tool has already completed, including saving a file. Inspect the raw `output` and the `messages` inside `OllamaBackend.generate()` before the exception to investigate; this error alone does not identify why the response was empty.
-
-<!-- BEGIN WEEK11_CONSOLIDATED_ROOT -->
-## Week 11 — Pi agent: tools, memory, Telegram and local voice
-
-**Status:** functionally complete (22 October 2026). Week 11 delegates the agent loop, model-facing tool selection, and conversation handling to [Pi](https://pi.dev/), while retaining the earlier Python implementations of PIR/camera sensing, YOLO vision, SQLite observations and Whisper/Piper audio. The goal is *less hand-maintained agent orchestration*, not necessarily faster inference on a Raspberry Pi 5.
-
-```text
-Local TUI / USB mic / Telegram -> Pi + Ollama (local Gemma 4 E2B 8K)
-    -> TypeScript Pi extensions -> Python physical worker
-    -> PIR / Pi Camera + YOLO / Week 10 SQLite observation history
-    -> text + saved observation images; local audio via Piper + PipeWire
-```
-
-| Capability | Final result |
-| --- | --- |
-| Native Pi tool calling | `detect_motion`, `observe_scene`, `check_presence`, `query_memory` |
-| Evidence-backed history | `outputs/week_10/events.sqlite3`; historical event IDs, scores and saved photo paths |
-| Telegram | Text, incoming `.oga` voice transcribed offline, stored observation photo attachments |
-| Local speech | Whisper.cpp input and Piper output; Tribit Bluetooth speaker when default PipeWire sink |
-| File safety | `tg_attach` guard allows only approved photographs under `outputs/observations/` |
-| Week 10 comparison | Pi correctly handled history questions that our Week 10 router sent to `general`; cold/tool-heavy Pi requests are often much slower |
-
-**Start here:** [Week 11 README](src/week_11/README.md#week-11-consolidated-runbook) (complete commands, reproducibility, Telegram/security tests, performance measurements and troubleshooting). Also see the specialized Week 11 notes `VOICE_RPC.md`, `LOCAL_SPEAKER.md`, and `TELEGRAM_ATTACHMENT_SAFETY.md` where present.
-
-**Working local TUI command** (on the Pi, from `src/week_11`):
-
-```bash
-cd ~/ollama_python/src/week_11
-pi --model ollama/gemma4:e2b-8k \
-  --system-prompt "$PWD/voice_system.md" --no-context-files \
-  --tools detect_motion,observe_scene,check_presence,query_memory,tg_attach \
-  --no-mcp --tui-mode regular
-```
-
-**Why these flags?** The embedded assistant uses a compact runtime prompt and narrow tool allowlist; use normal project `AGENTS.md` in separate Pi development sessions. Tool allowlists and the upload guard serve different purposes; neither is an operating-system sandbox.
-<!-- END WEEK11_CONSOLIDATED_ROOT -->
