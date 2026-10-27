@@ -1,0 +1,38 @@
+{
+  "title": "Week 12 observed edge-agent model selection results",
+  "observation_date": "2026-10-27",
+  "hardware": "Raspberry Pi 5, 8 GB RAM, CPU-only Ollama",
+  "source": "Recorded user-provided Pi terminal output; not re-run by artifact creator",
+  "note": "Stages were collected at different points; do not combine their latencies as a single controlled distribution.",
+  "routing_single": [
+    {"model": "LFM2.5-1.2B Q4_K_M", "passed": true, "prompt_tokens": 176, "total_s": 3.76},
+    {"model": "gemma4:e2b", "passed": true, "prompt_tokens": 116, "total_s": 5.98},
+    {"model": "qwen3.5:2b", "passed": true, "prompt_tokens": 362, "total_s": 10.79},
+    {"model": "qwen3.5:4b", "passed": true, "prompt_tokens": 362, "total_s": 30.07}
+  ],
+  "routing_five_case": [
+    {"model": "LFM2.5-1.2B Q4_K_M", "score": "5/5", "call_case_latencies_s": [3.70, 3.72, 3.63, 3.81], "no_tool_latency_s": 10.86},
+    {"model": "gemma4:e2b", "score": "5/5", "call_case_latencies_s": [5.85, 5.80, 5.73, 5.94], "no_tool_latency_s": 21.60},
+    {"model": "qwen3.5:2b", "score": "5/5", "call_case_latencies_s": [11.23, 11.17, 11.39, 11.26], "no_tool_latency_s": 30.45},
+    {"model": "qwen3.5:4b", "score": "5/5", "call_case_latencies_s": [30.39, 30.28, 30.25, 30.50], "no_tool_latency_s": 64.20}
+  ],
+  "healthy_two_tool": [
+    {"model": "LFM2.5-1.2B Q4_K_M", "tool_names": ["check_presence", "memory_recent"], "api_total_s": 17.58, "grounding": "reported no current detection; found earlier detection"},
+    {"model": "gemma4:e2b", "tool_names": ["check_presence", "memory_recent"], "api_total_s": 70.85, "grounding": "claimed no one here; found earlier detection"}
+  ],
+  "sensor_failure_first": [
+    {"model": "LFM2.5-1.2B Q4_K_M", "tool_names": ["check_presence"], "api_total_s": 17.56, "load_s": 9.09, "grounding_pass": false},
+    {"model": "gemma4:e2b", "tool_names": ["check_presence", "memory_recent"], "api_total_s": 75.81, "load_s": 56.76, "grounding_pass": false}
+  ],
+  "sensor_failure_warm": [
+    {"model": "LFM2.5-1.2B Q4_K_M", "tool_names": ["check_presence"], "preload_load_s_reported": 0, "load_s": 0, "prefill_s": 4.45, "decode_s": 3.95, "api_total_s": 8.42, "round_2_cached_prompt_tokens": 185, "grounding_pass": false},
+    {"model": "gemma4:e2b", "tool_names": ["check_presence", "memory_recent"], "preload_load_s_reported": 0, "load_s": 0, "prefill_s": 10.45, "decode_s": 8.56, "api_total_s": 19.02, "round_2_cached_prompt_tokens": 125, "grounding_pass": true}
+  ],
+  "qwen35_long_context": {
+    "model": "qwen3.5:4b", "num_ctx": 16384,
+    "prompt_eval_count": 13776, "prompt_eval_cached_count": 0,
+    "expected": "VEX-7319-LUMA", "answer": "VEX-7319-LUMA",
+    "exact_match": true, "prefill_s": 827.73, "wall_total_s": 835.02,
+    "available_memory_gib_after": 2.7, "swap_used_bytes_after": 0
+  }
+}

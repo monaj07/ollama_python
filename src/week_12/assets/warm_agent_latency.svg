@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 740 258" role="img" aria-label="Warm agent latency: LFM 4.45 seconds prefill and 3.95 decoding, Gemma 10.45 seconds prefill and 8.56 decoding">
+  <rect width="740" height="258" rx="16" fill="#101925"/>
+  <text x="24" y="36" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#f8fafc">Warm agent latency on Raspberry Pi 5</text>
+  <text x="24" y="58" font-family="Arial,sans-serif" font-size="12" fill="#cbd5e1">Sensor-failure test · two model rounds · no model-loading time</text>
+  <rect x="24" y="84" width="12" height="12" rx="3" fill="#14b8a6"/><text x="43" y="94" fill="#cbd5e1" font-family="Arial,sans-serif" font-size="12">Prefill</text>
+  <rect x="118" y="84" width="12" height="12" rx="3" fill="#8b5cf6"/><text x="137" y="94" fill="#cbd5e1" font-family="Arial,sans-serif" font-size="12">Decoding</text>
+  <text x="24" y="136" font-family="Arial,sans-serif" font-size="14" fill="#e2e8f0">LFM2.5-1.2B</text>
+  <rect x="182" y="114" width="100.6" height="32" rx="2" fill="#14b8a6"/>
+  <rect x="282.6" y="114" width="89.3" height="32" rx="2" fill="#8b5cf6"/>
+  <text x="388" y="135" font-family="Arial,sans-serif" font-size="14" fill="#f8fafc">8.42 s</text>
+  <text x="24" y="193" font-family="Arial,sans-serif" font-size="14" fill="#e2e8f0">Gemma4 E2B</text>
+  <rect x="182" y="171" width="236.3" height="32" rx="2" fill="#14b8a6"/>
+  <rect x="418.3" y="171" width="193.5" height="32" rx="2" fill="#8b5cf6"/>
+  <text x="683" y="192" font-family="Arial,sans-serif" font-size="14" text-anchor="end" fill="#f8fafc">19.02 s</text>
+  <text x="24" y="239" font-family="Arial,sans-serif" font-size="11" fill="#94a3b8">Measured 27 Oct 2026; displayed totals include small additional API overhead.</text>
+</svg>

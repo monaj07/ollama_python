@@ -143,6 +143,20 @@ pi --model ollama/gemma4:e2b-8k \
 
 **Why these flags?** The embedded assistant uses a compact runtime prompt and narrow tool allowlist; use normal project `AGENTS.md` in separate Pi development sessions. Tool allowlists and the upload guard serve different purposes; neither is an operating-system sandbox.
 
+## Week 12 — Local edge-agent model selection
+
+The [Week 12 capstone](src/week_12/README.md) evaluates small Ollama models on
+Raspberry Pi 5 using five tool-routing cases, mocked multi-tool agent calls,
+sensor-failure grounding checks, and cold-versus-warm inference timing. All four
+models passed basic routing, but harder cases exposed missing memory-tool calls
+and unsupported claims about sensor state. LFM2.5-1.2B achieved **8.42 s** warm
+latency versus **19.02 s** for Gemma4 E2B in the measured failure scenario;
+Gemma4 passed grounding in the latest warm run, while LFM2.5 did not. The
+capstone includes a runnable standard-library benchmark, offline unit tests,
+raw observation summary, and a documented Qwen3.5 long-context experiment.
+The tools are mocked; **no physical sensors are accessed**. These exploratory
+results are not a production reliability ranking.
+
 ## Getting started
 
 Use Python 3.14 or newer with the `ollama` package installed and a Jupyter-compatible editor, such as VS Code. The extended and Week 3 notebooks also require Pydantic 2. Start Ollama locally and download the models used in the notebooks (`qwen3.5:2b` and `gemma4:e2b`), or update the model names to ones installed.
