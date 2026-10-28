@@ -322,26 +322,5 @@ copied unchanged to an 8 GB Pi with a 2K context.
 | [`results/observed_2026-10-28.json`](results/observed_2026-10-28.json) | Exact measurements transcribed from the learning sessions |
 | [`tests/test_context_repro.py`](tests/test_context_repro.py) | Offline unit tests for scenario construction and metrics |
 
-Your **existing** `src/week_13/prompt_caching.py`,
-`src/week_13/context_compaction.py`, and `src/week_13/kv_probe.py` are
-left untouched. The new scripts are named differently to avoid overwriting
-local experiments.
 
-**Next work:** Run a multi-turn agent scenario that gradually grows toward a
-2K token budget, measure when compaction pays off *over several subsequent
-turns*, and add a retrieval-backed summary/memory policy with correctness
-checks. Separately, Module 3's remaining quantisation-quality capstone should
-compare the verified FP16 and Q4_K_M models on the same held-out agent tasks.
 
-**Top-level README link (optional):**
-
-```markdown
-## Week 13 — Prompt caching and context management
-
-[Week 13 experiments and findings](src/week_13/README.md): reproducible
-prefix-cache tests, full/recent/summary context policies, measured prefill
-latencies, cache-behaviour gotchas, and a practical Pi-agent memory policy.
-```
-
-This patch intentionally does **not** edit the root `README.md`, to avoid
-conflicts with independently edited repository documentation.
