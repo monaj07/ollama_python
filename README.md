@@ -157,6 +157,12 @@ raw observation summary, and a documented Qwen3.5 long-context experiment.
 The tools are mocked; **no physical sensors are accessed**. These exploratory
 results are not a production reliability ranking.
 
+## Week 13 — Prompt caching and context management
+
+[Week 13 experiments and findings](src/week_13/README.md): reproducible
+prefix-cache tests, full/recent/summary context policies, measured prefill
+latencies, cache-behaviour gotchas, and a practical Pi-agent memory policy.
+
 ## Getting started
 
 Use Python 3.14 or newer with the `ollama` package installed and a Jupyter-compatible editor, such as VS Code. The extended and Week 3 notebooks also require Pydantic 2. Start Ollama locally and download the models used in the notebooks (`qwen3.5:2b` and `gemma4:e2b`), or update the model names to ones installed.
