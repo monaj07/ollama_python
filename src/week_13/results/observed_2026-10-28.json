@@ -1,0 +1,47 @@
+{
+  "title": "Week 13: prompt cache and context management observed runs",
+  "provenance": "User-supplied terminal output from October 2026; manually transcribed",
+  "hardware": "Raspberry Pi 5, 8GB RAM, CPU inference",
+  "ollama_version_observed": "0.40.6",
+  "model": "hf.co/LiquidAI/LFM2.5-1.2B-Instruct-GGUF:Q4_K_M",
+  "experimental_settings": {
+    "num_ctx": 2048,
+    "num_thread": 2,
+    "temperature": 0,
+    "seed": 42,
+    "think": false,
+    "stream": false,
+    "keep_alive": "10m"
+  },
+  "prefix_caching": {
+    "changed_user_short_common_system_prefix": [
+      {"case": "A", "prompt_tokens": 283, "cached_tokens": 0, "prefill_s": 5.231, "decode_s": 0.613, "load_s": 0.001},
+      {"case": "B", "prompt_tokens": 283, "cached_tokens": 0, "prefill_s": 5.231, "decode_s": 0.735, "load_s": 0.001},
+      {"case": "C_changed_system_prefix", "prompt_tokens": 281, "cached_tokens": 0, "prefill_s": 5.165, "decode_s": 0.367, "load_s": 0.002}
+    ],
+    "identical_request_repeated": [
+      {"case": "first", "prompt_tokens": 274, "cached_tokens": 0, "prefill_s": 5.063, "load_s": 0.002},
+      {"case": "second", "prompt_tokens": 274, "cached_tokens": 270, "prefill_s": 0.094, "load_s": 0.001}
+    ],
+    "conversation_extended": [
+      {"case": "turn_1", "prompt_tokens": 263, "cached_tokens": 0, "prefill_s": 4.866},
+      {"case": "turn_2", "prompt_tokens": 330, "cached_tokens": 310, "prefill_s": 0.410}
+    ],
+    "changed_user_long_common_system_prefix": [
+      {"case": "A", "prompt_tokens": 1116, "cached_tokens": 0, "prefill_s": 21.272, "decode_s": 0.620, "load_s": 0.001},
+      {"case": "B", "prompt_tokens": 1116, "cached_tokens": 604, "prefill_s": 10.060, "decode_s": 0.622, "load_s": 0.001}
+    ]
+  },
+  "context_management": {
+    "full": {"answer": "VEX-7319-LUMA", "correct": true, "prompt_tokens": 556, "cached_tokens": 528, "prefill_s": 0.605, "decode_s": 0.512},
+    "recent": {"answer": "UNKNOWN", "correct": false, "prompt_tokens": 170, "cached_tokens": 13, "prefill_s": 2.891, "decode_s": 0.176},
+    "summary": {"answer": "VEX-7319-LUMA", "correct": true, "prompt_tokens": 200, "cached_tokens": 13, "prefill_s": 3.463, "decode_s": 0.471}
+  },
+  "caveats": [
+    "One run per reported case; results do not establish variance or general reliability.",
+    "Cache usage depends on backend, runner state, prompt format, model, and version.",
+    "The 512-token uncached suffix in the long-prefix case hints at checkpoint/chunk behaviour; exact cause not traced in this Ollama binary.",
+    "Summary was human-authored and guaranteed to contain the synthetic code; summary generation cost and error were not tested.",
+    "Correct=false for recent-only means the target fact was unavailable, not that the model hallucinated: UNKNOWN was an appropriate response given the supplied context."
+  ]
+}
