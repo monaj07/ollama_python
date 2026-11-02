@@ -1,0 +1,106 @@
+{
+  "data/README.md": {
+    "sha256": "49b5341310981687b3466e91c4b30ee37340c8e6254283ef6ff959e81847309e",
+    "size_bytes": 1852
+  },
+  "data/change_detection/otsu_full_640/mask.png": {
+    "sha256": "e31d897521134fdb066c6c87030013aec9ba301484686a6930b411ea70c2dad3",
+    "size_bytes": 5046
+  },
+  "data/change_detection/otsu_full_640/metrics.json": {
+    "sha256": "3946b9d5f370d1aaf4c12628a4e3325c6a40d0467a50984b212cf22c8529d2fd",
+    "size_bytes": 607
+  },
+  "data/change_detection/otsu_full_640/regions.png": {
+    "sha256": "b10bb7182e5dcd93f442b7520d67524cd44c66f3571fbac73eb5ee21b628be87",
+    "size_bytes": 491487
+  },
+  "data/change_detection/otsu_full_640/summary.png": {
+    "sha256": "ee0f7b98f263dbb1169f48d9643085390d002c69a4e563c9e512e940a3a31f17",
+    "size_bytes": 1252964
+  },
+  "data/change_detection/otsu_user_320/change_mask_auto.png": {
+    "sha256": "a39c0219979fde680b5a4109f426025cfadecf0cc8e32e642099df3b140e2cdc",
+    "size_bytes": 1232
+  },
+  "data/change_detection/otsu_user_320/change_regions_auto.png": {
+    "sha256": "910b1df1be85fc63192772516b749362ee04222733b1c80b12eeb3e67cc9857f",
+    "size_bytes": 143036
+  },
+  "data/change_detection/pixel_diff_320/diff.png": {
+    "sha256": "aeb20d3ee8d267c385cf81e77e81befe36fb945b8a3d3f158dfd398f66e39cd5",
+    "size_bytes": 116781
+  },
+  "data/change_detection/pixel_diff_320/mask.png": {
+    "sha256": "0c1c81d9a0c77ff277a1b4af92289c0921659a78b3d72b8df069a65f4f3b34b9",
+    "size_bytes": 3137
+  },
+  "data/photos/after.jpg": {
+    "sha256": "ad1a6003938c083af373e9272dfd01389cea93c4884129def239cfc429880c3a",
+    "size_bytes": 119403
+  },
+  "data/photos/after_320.jpg": {
+    "sha256": "ca05bbd79dd275c065b531cb84a4e46853ef8042f4ab54fea290d49279933997",
+    "size_bytes": 46486
+  },
+  "data/photos/after_480.jpg": {
+    "sha256": "9596e8797ff1b23a4a1530e5baed3293439eb438f85f9709bf8cbc4ea2443b7d",
+    "size_bytes": 88016
+  },
+  "data/photos/before.jpg": {
+    "sha256": "49f367e77a548ce71926d44e50e225c533b82f5c2db291f7c0d4091ffd1ac240",
+    "size_bytes": 118267
+  },
+  "data/photos/before_320.jpg": {
+    "sha256": "1faf727f5b243675db64a7ec3e2a2984f0860882e27278c4c03fc794c657bbd8",
+    "size_bytes": 45956
+  },
+  "data/photos/before_480.jpg": {
+    "sha256": "2e2d575bf711608c98fa00eb82df15c74dd503a3902e2f0ca85803c74b01d7c3",
+    "size_bytes": 87132
+  },
+  "data/vlm_benchmarks.csv": {
+    "sha256": "774506cf28286b374ffa18ca727d177fdc8696192bd54543c4956634766a7b70",
+    "size_bytes": 1040
+  },
+  "data/vlm_response_notes.md": {
+    "sha256": "814a45481c72a3263ba1fd3fed04363089f3d13d48ede0a9e649caa8e7024d87",
+    "size_bytes": 1556
+  },
+  "data/yolo_ncnn/320/after/annotated.jpg": {
+    "sha256": "703323234aad63a21ffeba109aa210e3ce47b0a40f657d1730975263e762cc82",
+    "size_bytes": 42080
+  },
+  "data/yolo_ncnn/320/after/metrics.json": {
+    "sha256": "9ba5f55e1a1a9d688ca20d2b94d2efaf086e777a7ce9aa42254e1801253e2bbd",
+    "size_bytes": 465
+  },
+  "data/yolo_ncnn/320/after/observation.json": {
+    "sha256": "bfd03a0ca79f2f485c37c1234e205841fdb5db1eec6e165f16d60adf013106f3",
+    "size_bytes": 1253
+  },
+  "data/yolo_ncnn/320/before/annotated.jpg": {
+    "sha256": "c1f2d68f6209b7859df2ce483a456fa5ac0c5b6eceaf7c82bdf2bbd0aa7a2d60",
+    "size_bytes": 37893
+  },
+  "data/yolo_ncnn/320/before/metrics.json": {
+    "sha256": "d19a2d13106b1089050c4fd047f66b4683d2f7c5167473806bf99455e86e49f2",
+    "size_bytes": 465
+  },
+  "data/yolo_ncnn/320/before/observation.json": {
+    "sha256": "ea37e51bd86aadf79be6142fa5c84605be8f7041c800b77b200319c32e85a74b",
+    "size_bytes": 1072
+  },
+  "data/yolo_ncnn/640/before/annotated.jpg": {
+    "sha256": "666c4d3cbdfc6d121c62b9768ca1ae8200843d0352a4d3862f436efec4290557",
+    "size_bytes": 128675
+  },
+  "data/yolo_ncnn/640/before/metrics.json": {
+    "sha256": "d187c49633ea72477a99cc09bb846a986040ca79143c42188ee4058300b49314",
+    "size_bytes": 465
+  },
+  "data/yolo_ncnn/640/before/observation.json": {
+    "sha256": "aab17425ecf3a2a66d99bfaa00d5f5a849dad790671e4f2dde030e00894e655b",
+    "size_bytes": 1548
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "schema_version": "pi-vision-v1",
+  "received_at_utc": null,
+  "processed_at_utc": "2026-11-02T04:33:25.196896+00:00",
+  "source": "../images/before.jpg",
+  "model": "models/ncnn640/yolo26n_ncnn_model",
+  "image_size": [
+    640,
+    480
+  ],
+  "input_size_requested": 640,
+  "predictor_image_size": [
+    640,
+    640
+  ],
+  "confidence_threshold": 0.4,
+  "counts": {
+    "person": 0,
+    "cup": 0,
+    "laptop": 2,
+    "chair": 2,
+    "vase": 2
+  },
+  "detections": [
+    {
+      "label": "chair",
+      "confidence": 0.9053,
+      "bbox_xyxy": [
+        0.2,
+        188.0,
+        111.2,
+        437.5
+      ]
+    },
+    {
+      "label": "chair",
+      "confidence": 0.7651,
+      "bbox_xyxy": [
+        136.7,
+        194.1,
+        213.8,
+        429.9
+      ]
+    },
+    {
+      "label": "laptop",
+      "confidence": 0.5576,
+      "bbox_xyxy": [
+        356.6,
+        183.8,
+        473.4,
+        327.8
+      ]
+    },
+    {
+      "label": "vase",
+      "confidence": 0.4387,
+      "bbox_xyxy": [
+        333.0,
+        245.9,
+        423.0,
+        335.1
+      ]
+    },
+    {
+      "label": "vase",
+      "confidence": 0.4275,
+      "bbox_xyxy": [
+        210.0,
+        271.5,
+        284.2,
+        345.0
+      ]
+    },
+    {
+      "label": "laptop",
+      "confidence": 0.4126,
+      "bbox_xyxy": [
+        482.2,
+        187.5,
+        595.8,
+        337.0
+      ]
+    }
+  ],
+  "limitations": "Counts describe detections in one frame. Zero means not detected; objects can be missed. Confidence is not a calibrated probability."
+}

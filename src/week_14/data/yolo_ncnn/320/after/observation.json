@@ -1,0 +1,67 @@
+{
+  "schema_version": "pi-vision-v1",
+  "received_at_utc": null,
+  "processed_at_utc": "2026-11-02T04:22:08.430346+00:00",
+  "source": "../images/after_320.jpg",
+  "model": "models/ncnn320/yolo26n_ncnn_model",
+  "image_size": [
+    320,
+    240
+  ],
+  "input_size_requested": 320,
+  "predictor_image_size": [
+    320,
+    320
+  ],
+  "confidence_threshold": 0.4,
+  "counts": {
+    "person": 0,
+    "cup": 1,
+    "laptop": 0,
+    "chair": 2,
+    "potted plant": 1
+  },
+  "detections": [
+    {
+      "label": "chair",
+      "confidence": 0.8296,
+      "bbox_xyxy": [
+        0.1,
+        91.7,
+        56.1,
+        218.3
+      ]
+    },
+    {
+      "label": "chair",
+      "confidence": 0.7285,
+      "bbox_xyxy": [
+        66.7,
+        96.8,
+        119.8,
+        217.5
+      ]
+    },
+    {
+      "label": "cup",
+      "confidence": 0.4551,
+      "bbox_xyxy": [
+        263.4,
+        137.8,
+        295.6,
+        176.2
+      ]
+    },
+    {
+      "label": "potted plant",
+      "confidence": 0.4236,
+      "bbox_xyxy": [
+        110.2,
+        47.7,
+        166.0,
+        116.3
+      ]
+    }
+  ],
+  "limitations": "Counts describe detections in one frame. Zero means not detected; objects can be missed. Confidence is not a calibrated probability."
+}

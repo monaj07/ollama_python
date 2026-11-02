@@ -1,0 +1,7 @@
+model,task,per_image_resolution,images,load_seconds,prompt_eval_seconds,eval_seconds,total_seconds,prompt_tokens,output_tokens,qualitative_result,response_summary_not_verbatim
+lfm3-vl:2b,compare,640x480,2,17.959,191.218,6.647,215.863,656,72,incorrect,Claimed mug was replaced by a bowl and invented another bowl
+lfm3-vl:2b,single-after,640x480,1,18.192,95.835,7.863,121.917,341,87,correct-spatial,"Correctly placed patterned mug relative to bowl; generated approximate normalized boxes, unverified"
+lfm3-vl:2b,compare,480x360,2,3.375,105.517,9.228,118.139,386,102,partial,Identified mug on right; incorrectly described glass ornament as moved/swapped
+lfm3-vl:2b,compare,320x240,2,3.623,51.714,6.163,61.51,216,69,mostly-correct,Identified mug move left to right; added unsupported orange-color claim
+gemma4:e2b,compare,320x240,2,54.408,104.537,4.648,163.614,211,36,incorrect,Claimed glass ornament disappeared
+gemma4:e2b,single-after,320x240,1,55.012,52.501,1.867,109.394,115,23,correct-spatial,Correct spatial relation between mug and bowl

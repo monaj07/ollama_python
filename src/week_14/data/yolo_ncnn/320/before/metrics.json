@@ -1,0 +1,15 @@
+{
+  "model": "models/ncnn320/yolo26n_ncnn_model",
+  "input_size_requested": 320,
+  "predictor_image_size": [
+    320,
+    320
+  ],
+  "warm_runs": 10,
+  "model_construct_ms": 1.3,
+  "first_predict_ms": 1336.39,
+  "warm_predict_median_ms": 17.02,
+  "warm_predict_p95_ms": 25.74,
+  "predict_only_fps_equivalent": 58.76,
+  "note": "Repeated predictions of one loaded image; excludes camera, disk I/O, JSON, plot, and LLM. Some backends load lazily in first_predict."
+}

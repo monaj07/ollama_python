@@ -1,0 +1,39 @@
+{
+  "source_images": [
+    "before.jpg",
+    "after.jpg"
+  ],
+  "input_dimensions": [
+    640,
+    480
+  ],
+  "blur_kernel": [
+    3,
+    3
+  ],
+  "method": "absdiff(BGR blurred) -> grayscale -> Otsu threshold -> 8-connected components, top 2 by area",
+  "otsu_threshold": 41,
+  "percent_changed_pixels": 3.682,
+  "top_regions": [
+    {
+      "rank": 1,
+      "bbox_xywh": [
+        182,
+        272,
+        140,
+        84
+      ],
+      "area_pixels": 3856
+    },
+    {
+      "rank": 2,
+      "bbox_xywh": [
+        528,
+        276,
+        63,
+        76
+      ],
+      "area_pixels": 3557
+    }
+  ]
+}
