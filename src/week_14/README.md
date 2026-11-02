@@ -62,6 +62,12 @@ All durations are seconds; token counts are as reported by Ollama. See [machine-
 | Gemma4:e2b | Pair | 320×240 | 211 | 36 | 54.408 | 104.537 | 4.648 | 163.614 | Incorrect: claimed ornament disappeared |
 | Gemma4:e2b | Single AFTER | 320×240 | 115 | 23 | 55.012 | 52.501 | 1.867 | 109.394 | Correct mug-to-bowl spatial relation |
 
+For example here is the best response among all, which was yielded by `LFM3-VL:2b | Pair | 320×240` (fourth row):
+```
+In the first image, there is a mug on the table next to the glass jar, 
+while in the second image, the mug has been moved to the right side of the table, closer to the edge. 
+Additionally, the mug in the second image appears to have more orange coloring compared to the one in the first image.
+```
 **Interpretation:** Decreasing LFM3-VL's *per-image* size from 640×480 to 320×240 reduced prompt-eval time **191.218 → 51.714 s (3.70×)** and reported total time **215.863 → 61.510 s (3.51×)**, while reported input tokens dropped **656 → 216 (3.04×)**. The smaller pair was correctly interpreted in this one trial; **this is not evidence that downsampling generally improves visual reasoning**. The different model load times (3–18 s for LFM, 54–55 s for Gemma) must not be misattributed to image processing; residency/load state differs. Server `prompt_eval_duration` can include multimodal image processing, not just text-token prefill.
 
 In the 640×480 single-image LFM run, the model emitted candidate 0–1000-scale bounding boxes for mug `[822,571,925,738]` and bowl `[519,512,663,701]`. Those were **model outputs**, not measured bounding-box accuracy.
