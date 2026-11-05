@@ -163,6 +163,25 @@ results are not a production reliability ranking.
 prefix-cache tests, full/recent/summary context policies, measured prefill
 latencies, cache-behaviour gotchas, and a practical Pi-agent memory policy.
 
+## Week 14 — Edge vision, multimodal reasoning and inference runtimes
+
+The [Week 14 / Module 6 guide](src/week_14/README.md) documents Raspberry Pi 5
+experiments with local VLMs (LFM3-VL and Gemma4), YOLO26n, classical
+scene-change detection, portable ONNX export, PyTorch/ONNX
+Runtime/NCNN/MNN/LiteRT, FP16 and static INT8 precision trade-offs, live camera
+sensor-to-result latency, and asynchronous latest-frame capture. It includes
+actual Pi measurements, failure cases, numerical-validation gotchas, and a
+claim-level grounding/evaluation example.
+
+Highlights: **NCNN FP16 14.05 ms vs FP32 29.91 ms** for the tested model
+configuration; **LiteRT INT8 10.91 ms vs FP32 28.86 ms** (with detection drift
+and limited four-image calibration); normal camera streaming **29.65 FPS**; and
+artificial-overload streaming **9.97 FPS sequential vs 12.23 FPS async**, with
+a **frame-age penalty** (88.58 vs 106.81 ms). These use different measurement
+protocols and are **not one controlled leaderboard**. MNN raw-output
+equivalence remains unresolved. See the Week 14 README for conditions and
+limitations.
+
 ## Getting started
 
 Use Python 3.14 or newer with the `ollama` package installed and a Jupyter-compatible editor, such as VS Code. The extended and Week 3 notebooks also require Pydantic 2. Start Ollama locally and download the models used in the notebooks (`qwen3.5:2b` and `gemma4:e2b`), or update the model names to ones installed.
