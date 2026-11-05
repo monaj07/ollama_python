@@ -13,7 +13,6 @@
 5. [Classical CV: pixel differences and automatic Otsu](#5-classical-cv-pixel-differences-and-automatic-otsu)
 6. [Rerun and verify](#6-rerun-and-verify)
 7. [Engineering lessons and gotchas](#7-engineering-lessons-and-gotchas)
-8. [Module 6 scope and completion status](#8-module-6-scope-and-completion-status)
 9. [Dataset and artifacts](#9-dataset-and-artifacts)
 10. [Portable model export and numerical equivalence](#10-portable-model-export-and-numerical-equivalence)
 11. [Same-model runtime benchmarks and NCNN FP16 ablation](#11-same-model-runtime-benchmarks-and-ncnn-fp16-ablation)
@@ -249,27 +248,7 @@ print('Week 14 saved-data checks passed')
 11. **Check file size/resolution.** Pixel-diff artifacts and the user's Otsu rerun are **320×240**; full-resolution Otsu summary/metrics are **640×480**. Bounding boxes do not transfer without scaling.
 12. **Privacy:** the photos show a domestic interior. Review image artifacts before pushing to a public GitHub repository.
 
-### Stop decision
-
-We deliberately stopped change detection here. It supplied three useful baselines—**YOLO26n-NCNN (fast but imperfect), VLMs (expressive but expensive/fragile), and classical CV + Otsu (cheap but not semantic)**. More advanced fusion, tracking, background modelling and event-confidence strategies belong in the programme's **six major projects**, not this preliminary module.
-
-## 8. Module 6 scope and completion status
-
-| Topic | What we actually covered | Status |
-|---|---|---|
-| Image input / VLMs | Real indoor images; image resizing; LFM3-VL and Gemma4 single/two-image spatial and temporal reasoning | **Tested** |
-| Object detection and change detection | YOLO26n-NCNN (320/640), failures under class confusion; pixel differencing, Otsu and connected components | **Tested; baseline wrapped up** |
-| PyTorch and ONNX Runtime | Same YOLO26n checkpoint, export and FP32 numerical checks, controlled same-canvas predictions | **Tested** |
-| NCNN | ONNX/PyTorch comparison; FP16 arithmetic, storage and packing ablation | **Tested** |
-| MNN | ONNX conversion, Pi inference benchmark; large unresolved raw-output discrepancy | **Attempted; output validation unresolved** |
-| LiteRT | Pi FP32 vs static INT8; calibration limits; normalized box-coordinate convention and detection drift | **Tested; accuracy not established** |
-| ExecuTorch | `torch.export` → ExecuTorch `.pte` explained; no deployment benchmark | **Conceptual** |
-| Core ML / OpenVINO | Platform suitability and compatibility trade-offs | **Conceptual; no benchmark** |
-| Camera streaming | Picamera2 sensor timestamps; stage timings; intentional slowdown; latest-frame background capture | **Tested** |
-| Grounding and evaluation | Spatial/temporal grounding, claim-level precision/recall, selective visual reasoning | **Reviewed; labelled dataset deferred** |
-| Open-vocabulary detection, segmentation, optical flow, tracking, full hybrid agent | Related experience from Weeks 07–08; deeper Week 14 integration | **Deferred to later capstones** |
-
-We will use **same-weight, same-input, same-preprocessing** comparisons where technically feasible to distinguish architecture, runtime and quantisation effects. TorchScript is deprecated and is not part of this syllabus; `torch.export` / ExecuTorch are included instead.
+## 8. 
 
 ## 9. Dataset and artifacts
 
@@ -425,6 +404,9 @@ The first ten frame ages were approximately **87–90 ms**, while the last ten w
 
 A fresh-frame sequential policy may wait for the next frame after processing, losing throughput but often starting from a newer image.
 
+<img width="759" height="244" alt="image" src="https://github.com/user-attachments/assets/f673d8f9-e3a8-4043-a8a1-3508589e49a2" />
+
+
 ### 13.4 Asynchronous producer–consumer test
 
 We moved capture to a separate Python `threading.Thread` and passed `(frame, SensorTimestamp)` tuples through a shared, thread-safe `queue.Queue(maxsize=1)`. The producer replaces an unconsumed queued frame with the newest one; the main thread consumes frames and runs YOLO plus the same 60 ms simulated work. The queue is **for communication and bounded buffering**; the separate thread makes the pipeline concurrent. The GIL does not eliminate useful overlap in camera I/O and native inference.
@@ -447,6 +429,7 @@ Latest-frame:  camera thread -> replace single buffered frame
                                   |
                main thread -------+-> YOLO -> artificial work -> repeat
 ```
+<img width="759" height="391" alt="image" src="https://github.com/user-attachments/assets/589b07f3-485a-4c3d-a445-69fa6e254614" />
 
 **Concurrency details and gotchas:**
 
